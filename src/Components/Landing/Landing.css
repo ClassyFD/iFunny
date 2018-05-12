@@ -1,0 +1,341 @@
+.Landing {
+  background:#171a1e;
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  top: 55px;
+  padding-bottom: 100px;
+}
+.landing-main-container {
+  width: 90%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  margin: 50px auto;
+}
+.landing-left-section {
+  width: 60%;
+  min-height: 930px;
+  height: auto;
+  position: relative;
+}
+.landing-right-section {
+  min-height: 930px;
+  width: 350px;
+  justify-content: center;
+  display: grid;
+  grid-template: 29px 10px 230px 40px 90px 40px auto / 350px;
+  position: relative;
+}
+.landing-right-section-title {
+  display: grid;
+  grid-area: 1 / 1;
+  font-size: 24px;
+  line-height: 29px;
+  font-family: 'iFunnyExtraBold';
+  color: hsla(0,0%,100%,.3);
+  text-align: center;
+}
+h1 {
+  margin: 0;
+}
+.landing-right-section-app-container {
+  display: grid;
+  grid-area: 3 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+}
+.landing-right-section-app-top-image {
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+}
+.landing-right-section-app-bottom {
+  display: flex;
+  font-size: 14px;
+  font-family: 'iFunnyExtraBoldCond';
+  justify-content: space-between;
+  width: 300px;
+  color: white;
+  margin-top:2px;
+}
+.landing-right-section-app-bottom-left, .landing-right-section-app-bottom-left:hover, .landing-right-section-app-bottom-left:focus, .landing-right-section-app-bottom-left:link, .landing-right-section-app-bottom-left:visited, .landing-right-section-app-bottom-left:active {
+  background:#080d11;
+  height: 68px;
+  width: 98px;
+  border-bottom-left-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  color:white;
+}
+.landing-right-section-app-bottom-right:hover .landing-amazon-image {
+  background: url('https://ifunny.co/images/icons/amazon-active.svg') no-repeat center center;
+  text-decoration: none;
+  color:white;
+}
+.landing-right-section-app-bottom-middle:hover .landing-google-play-image {
+  background: url('https://ifunny.co/images/icons/google-play-active.svg') no-repeat center center;
+  text-decoration: none;
+  color:white;
+}
+.landing-app-store-image {
+  background: url('https://ifunny.co/images/icons/app-store.svg') no-repeat center center;
+  background-size: cover;
+  height: 24px;
+  width: 20px;
+  opacity: .5;
+}
+.landing-app-store-text {
+  opacity: .5;
+}
+.landing-right-section-app-bottom-middle, .landing-right-section-app-bottom-middle:link, .landing-right-section-app-bottom-middle:visited, .landing-right-section-app-bottom-middle:active, .landing-right-section-app-bottom-middle:focus {
+  background:#080d11;
+  height: 68px;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+.landing-google-play-image {
+  background: url('https://ifunny.co/images/icons/google-play.svg') no-repeat center center;
+  background-size: cover;
+  height: 22px;
+  width: 20px;
+  opacity: .5;
+}
+.landing-google-play-text {
+  opacity: .5;
+}
+.landing-right-section-app-bottom-right, .landing-right-section-app-bottom-right:visited, .landing-right-section-app-bottom-right:active, .landing-right-section-app-bottom-right:link, .landing-right-section-app-bottom-right:focus {
+  background:#080d11;
+  height: 68px;
+  width: 98px;
+  border-bottom-right-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+.landing-amazon-image {
+ background: url('https://ifunny.co/images/icons/amazon.svg') no-repeat center center;
+ background-size: cover;
+ height: 24px;
+ width: 25px;
+ opacity: .5;
+}
+.landing-amazon-text {
+  opacity: .5;
+}
+.landing-right-side-cam {
+  display: grid;
+  grid-area: 5 / 1;
+  background: url('https://ifunny.co/images/iFunnyCam.png') no-repeat center center;
+  background-size: cover;
+  width: 300px;
+  height: 90px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+.landing-right-side-sticky {
+  height: 83vh;
+  display: grid;
+  grid-area: 7 / 1;
+  top:400px;
+  position: relative;
+}
+.landing-right-side-sticky-active {
+  top: 450px;
+}
+.landing-sticky-section {
+  display: grid;
+  flex-direction: column;
+  grid-template: 29px 12px auto 40px 2px 12px 29px 12px 20px 30px 19px 12px 15px 12px 15px / auto;
+  width: 300px;
+}
+.landing-sticky-section-tags-title {
+  display: grid;
+  grid-area: 1 / 1;
+  font-size: 24px;
+  line-height: 29px;
+  font-family: 'iFunnyExtraBold';
+  color: hsla(0,0%,100%,.3);
+  text-align: center;
+}
+.landing-sticky-section-tags {
+  display: flex;
+  flex-wrap: wrap;
+  width: 350px;
+  margin: 10px auto;
+  justify-content: center;
+  align-items: center;
+}
+.landing-sticky-section-line {
+  display: grid;
+  height: 2px; 
+  width: 200px;
+  background-color: hsla(0,0%,30%,.3);
+  grid-area: 5 / 1;
+  margin: 0 auto;
+}
+.landing-sticky-section-follow-title {
+  display: grid;
+  grid-area: 7 / 1;
+  font-size: 24px;
+  line-height: 29px;
+  font-family: 'iFunnyExtraBold';
+  color: hsla(0,0%,100%,.3);
+  text-align: center;
+}
+.landing-sticky-section-follow-buttons {
+  display: flex;
+  grid-area: 9 / 1;
+  align-items: center;
+  justify-content: space-around;
+  width: 150px;
+  margin: 0 auto;
+}
+.landing-sticky-section-facebook {
+  background: url('../../Images/Icons/facebook-icon.png') no-repeat center center;
+  background-size: cover;
+  height: 30px;
+  width: 30px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.landing-sticky-section-twitter {
+  background: url('../../Images/Icons/twitter-icon.png') no-repeat center center;
+  background-size: cover;
+  height: 30px;
+  width: 30px;
+  border-radius: 8px; 
+  cursor: pointer;
+}
+.landing-sticky-section-instagram {
+  background: url('../../Images/Icons/instagram-icon.png') no-repeat center center;
+  background-size: cover;
+  height: 30px;
+  width: 30px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.landing-sticky-section-chef, .landing-sticky-section-chef:active, .landing-sticky-section-chef:link, .landing-sticky-section-chef:hover, .landing-sticky-section-chef:visited, .landing-sticky-section-chef:focus {
+  display: flex;
+  grid-area: 11 / 1;
+  margin: 0 auto;
+  justify-content: space-around;
+  align-items: center;
+  width: 120px;
+  cursor: pointer;
+  color: white;
+  opacity: .3;
+  text-decoration: none;
+}
+.landing-sticky-section-chef-logo {
+  background: url('https://ifunny.co/images/icons/twitter-small.svg') no-repeat center center;
+  background-size: cover;
+  height: 17px;
+  width: 20px;
+}
+.landing-sticky-section-chef-title {
+  font-family: 'iFunnyExtraBoldCond';
+  font-size: 20px;
+}
+.landing-sticky-section-links {
+  display: flex;
+  grid-area: 13 / 1;
+  margin: 0 auto;
+  justify-content: space-around;
+  align-items: center;
+  width: 150px;
+}
+.landing-sticky-section-privacy {
+  color: hsla(0,0%,100%,.3);
+  font-family: 'iFunnyBold';
+  font-size: 18px;
+  text-decoration: none;
+}
+.landing-sticky-section-dot {
+  color: white;
+  font-family: 'iFunnyBold';
+  font-size: 18px;
+  opacity: .3;
+}
+.landing-sticky-section-terms {
+  color: hsla(0,0%,100%,.3);
+  font-family: 'iFunnyBold';
+  font-size: 18px;
+  text-decoration: none;
+}
+.landing-sticky-section-copyright {
+  color: white;
+  font-family: 'iFunnyBold';
+  font-size: 18px;
+  grid-area: 15 / 1;
+  opacity: .3;
+  text-align: center;
+}
+.landing-tag-el, .landing-tag-el:visited, .landing-tag-el:active, .landing-tag-el:hover, .landing-tag-el:focus, .landing-tag-el:link {
+  border: 2px solid;
+  color: #fc0;
+  border-color: rgba(255,204,0,.3);
+  font-family: 'iFunnyBold';
+  border-radius: 20px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  width: auto;
+  margin: 6px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  text-decoration: none;
+}
+.landing-loading {
+  font-family: 'iFunnyBlack';
+  text-align: center;
+  margin-top: 250px;
+  font-size: 20px;
+  color: #d3d3d3;
+}
+.landing-loading-text {
+ color:#d3d3d3
+}
+.landing-loading-dots {
+  display: flex;
+  justify-content: center;
+}
+.landing-dots-el {
+  height: 10px;
+  width: 10px;
+  position: relative;
+  top: 30px;
+}
+.landing-dot-1 {
+  margin-right: 10px;
+}
+.landing-dot-3 {
+  margin-left: 10px;
+}
+@media (max-width:878px) {
+  .landing-right-section {
+    display: none;
+  }
+  .landing-left-section {
+    width: 100%;
+    margin-top: 0px;
+  }
+  .Landing {
+    top: 10px;
+  }
+}

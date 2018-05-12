@@ -1,0 +1,10 @@
+.tags-top-section-title {
+  font-size: 24px;
+  font-family: 'iFunnyBlack';
+  color:hsla(0,0%,100%,.3);
+}
+.tags-top-section-results {
+  color: hsla(0,0%,100%,.6);
+  font-family: 'iFunnyBold';
+  margin-top: 10px;
+}

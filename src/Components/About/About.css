@@ -1,0 +1,219 @@
+@import '../../../node_modules/react-responsive-carousel/lib/styles/carousel.css';
+.About {
+  display: flex;
+  flex-direction: column;
+
+}
+.about-top-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.about-top-section-image {
+  background: url('https://ifunny.co/images/about-hand.jpg') no-repeat center center;
+  background-size: cover;
+  height: 194px;
+  width: 156px;
+}
+.about-top-section-title {
+  font-family: 'iFunnyBlack';
+  font-size: 32px;
+  width: 350px;
+  color: hsla(0,0%,100%,.6);
+}
+.about-middle-section {
+  display: flex;
+  flex-direction: column;
+  height: 180px;
+  justify-content: space-between;
+  margin-top: 20px;
+  font-family: 'iFunnyMedium';
+  font-size: 19px;
+  color: hsla(0, 0%, 100%, .6);
+}
+.about-middle-popular-span {
+  margin-left: 5px;
+  color:#FC0;
+  text-decoration: none;
+}
+.about-middle-partnership-span {
+  margin-left: 5px;
+  color: #FC0;
+  text-decoration: none;
+}
+.about-middle-popular-span:visited {
+  color: #FC0
+}
+.about-middle-partnership-span:visited {
+  color: #FC0
+}
+.about-carousel-section {
+  width: 80%;
+  margin: 20px auto;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.about-carousel-carousel {
+  height: 300px;
+  display: flex;
+  align-items: center;
+}
+.about-carousel-element {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #171a1e;
+}
+.about-carousel-styled-element {
+  height: 300px;
+  width: 100%;
+  background: #080d11;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  flex-direction: column;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  padding-right:30px;
+  padding-top: 30px;
+  position: relative;
+}
+.about-carousel-styled-element-top-section {
+  height: 180px;
+  width: 100%;
+  overflow-y: auto;
+  font-size: 20px;
+  font-family: 'iFunnyMedium';
+  color: hsla(0, 0%, 100%, .6);
+  padding:10px;
+  display: flex;
+}
+
+.about-carousel-styled-element-top-section::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.4);
+	border-radius: 10px;
+  background-color: rgba(0,0,0,0.4);;
+}
+.about-carousel-styled-element-top-section::-webkit-scrollbar {
+  border-radius: 10px;
+  width: 6px;
+  background-color: rgba(0,0,0,0.4);
+}
+.about-carousel-styled-element-top-section::-webkit-scrollbar-thumb{
+  border-radius: 10px;
+	-webkit-box-shadow: inset 1px 1px 6px black;
+	background-color: #9f9fa6;
+}
+
+.about-carousel-styled-element-bottom-section {
+  display: flex;
+  align-items: center;
+}
+.about-carousel-styled-element-bottom-section-username {
+  margin-left: 10px;
+  color: hsla(0, 0%, 100%, .6);
+  font-family: 'iFunnyBlack'
+}
+.about-bottom-section {
+  display: flex;
+  flex-direction: column;
+}
+.about-bottom-section-seen {
+  color: hsla(0,0%,100%,.3);
+  border-bottom: 2px solid hsla(0,0%,100%,.07);
+  font-family: 'iFunnyBlack';
+  font-size: 24px;
+}
+.about-bottom-section-sources-container {
+  display: flex;
+  flex-direction: column;
+}
+.about-bottom-section-sources-top {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.about-bottom-section-sources-bottom {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.about-bottom-section-sources-wall {
+  background: url('https://ifunny.co/images/about-wall-street.svg') no-repeat center center;
+  background-size: cover;
+  height: 22px;
+  width: 259px;
+  opacity:.6;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.about-bottom-section-sources-tech {
+  background: url('https://ifunny.co/images/about-tech-crunch.svg') no-repeat center center;
+  background-size: cover;
+  height: 30px;
+  width: 213px;
+  opacity:.6;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.about-bottom-section-sources-wired {
+  background: url('https://ifunny.co/images/about-wired.svg') no-repeat center center;
+  background-size: cover;
+  height: 34px;
+  width: 164px;
+  opacity:.6;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.about-bottom-section-sources-forbes {
+  background: url('https://ifunny.co/images/about-forbes.svg') no-repeat center center;
+  background-size: cover;
+  height: 32px;
+  width: 128px;
+  opacity:.6;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+@media (max-width: 950px) {
+  .about-top-section-title {
+    justify-content: space-between;
+    width: 280px;
+  }
+}
+@media (max-width: 500px) {
+  .about-top-section{
+    flex-direction: column-reverse;
+  }
+  .about-top-section-title {
+    width: 100%;
+    text-align: center;
+    font-size: 24px;
+  }
+  .about-top-section-image {
+    margin-top: 20px;
+  }
+}
+@media (max-width: 878px) {
+  .about-top-section {
+    margin-top: 44px;
+  }
+}
+@media (min-width: 878px) {
+  .about-social-media-selector {
+    display: none;
+  }
+}
+@media (max-width:420px) {
+  .about-middle-section {
+    height: 210px;
+  }
+}
+@media (max-width: 550px) {
+  .about-bottom-section-sources-bottom {
+    flex-direction: column;
+  }
+  .about-bottom-section-sources-top {
+    flex-direction: column;
+  }
+}

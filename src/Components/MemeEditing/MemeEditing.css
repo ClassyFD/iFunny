@@ -1,0 +1,174 @@
+@import '../../../node_modules/react-selectize/themes/material.css';
+.MemeEditing {
+  background:#171a1e;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  top: 55px;
+  overflow-x: hidden;
+}
+.meme-editing-main-container {
+  width: 90%;
+  height: auto;
+  display: flex;
+  justify-content: space-between;
+  margin: 50px auto;
+  overflow-y: hidden;
+  overflow-x:hidden;
+}
+.meme-editing-left-section {
+  width: 50%;
+  position: relative;
+}
+.meme-editing-left-section-container {
+  display: flex;
+  align-items: center;
+  height: 100px;
+  justify-content: space-around;
+}
+.meme-editing-left-section-container-post, .meme-editing-left-section-container-crop, .meme-editing-left-section-container-replace {
+  border: 2px solid;
+  color: #fc0;
+  border-color: rgba(255,204,0,.3);
+  font-family: 'iFunnyBold';
+  border-radius: 20px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+}
+.meme-editing-multi-select {
+  width: 100px;
+}
+.multi-long {
+  font-family: 'iFunnyBold';
+  text-align: center;
+}
+.multi-short {
+  font-family: 'iFunnyBold';
+  text-align: center;
+}
+.multi-render-option {
+  font-family: 'iFunnyBold';
+  padding-left:16px;
+}
+input {
+  color:white;
+  font-family: 'iFunnyBold';
+}
+.multiselect {
+  margin: -40px auto;
+}
+.meme-editing-right-section-tag-title {
+  font-size: 24px;
+  line-height: 29px;
+  font-family: 'iFunnyExtraBold';
+  color: hsla(0,0%,100%,.3);
+  text-align: center;
+  margin: 62px auto;
+}
+.meme-editing-right-section-caption-title {
+  font-size: 24px;
+  line-height: 29px;
+  font-family: 'iFunnyExtraBold';
+  color: hsla(0,0%,100%,.3);
+  text-align: center;
+}
+.meme-editing-right-section {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.meme-editing-right-section-input {
+  margin: 20px auto;
+  width: 100%;
+  text-align: center;
+  color: black;
+  font-size: 20px;
+  height: 30px;
+}
+.meme-editing-right-section-post-meme {
+  border: 2px solid;
+  color: black;
+  border-color: black;
+  font-family: 'iFunnyBold';
+  border-radius: 20px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  text-align: center;
+  margin: 90px auto;
+  background: rgba(255,204,0,1);
+}
+.meme-editing-caption {
+  background: black;
+  width: 100%;
+  height: auto;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  text-align: center;
+  font-family: 'iFunnyBold';
+  font-size: 20px;
+  color: white;
+  word-wrap: break-word;
+}
+.meme-editing-right-section-error {
+  font-size: 24px;
+  line-height: 29px;
+  font-family: 'iFunnyExtraBold';
+  color: red;
+  text-align: center;
+  width: 300px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 300px;
+  margin-top: -100px;
+}
+.meme-editing-right-section-username-input {
+  color: black; 
+}
+.meme-editing-right-section-username-submit {
+  border: 2px solid;
+  color: black;
+  border-color: black;
+  font-family: 'iFunnyBold';
+  border-radius: 20px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  text-align: center;
+  height: 20px;
+  background: rgba(255,204,0,1);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.meme-editing-right-section-finished {
+  color: green;
+}
+@media (max-width:900px) {
+  .meme-editing-left-section-container-post {
+    display: none;
+  }
+}
+@media (max-width:950px) {
+  .meme-editing-main-container {
+    flex-direction: column;
+  }
+  .meme-editing-left-section {
+    width:100%;
+  }
+  .meme-editing-right-section {
+    width:100%;
+  }
+}

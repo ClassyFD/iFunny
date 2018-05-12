@@ -1,0 +1,92 @@
+.meme-details-details-featured-image {
+  background: url('../../Images/Icons/featured_star.png') no-repeat center center;
+  background-size: cover;
+  height: 30px;
+  width: 30px;
+}
+.collective-load-more {
+  background-color: #171a1e;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 50px;
+  margin-bottom: 100px;
+  font-family: 'iFunnyBold';
+  font-size: 25px;
+  text-shadow: gray 1px 1px;
+  position: relative;
+  height: 200px;
+  cursor: pointer;
+  border-bottom-left-radius: 40px;
+  border-bottom-right-radius: 40px;
+}
+.collective-load-more-title {
+  position: relative;
+  top: 35px;
+}
+.collective-load-more-arrow-1 {
+  height: 0;
+  width: 0;
+  position: absolute;
+  top: 70px;
+  user-select: none;
+}
+.collective-load-more-arrow-2 {
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  top: 70px;
+}
+.collective-load-more-arrow-3 {
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  top: 110px;
+}
+.collective-end {
+  width: 100%;
+  height: 50px;
+  background: #171a1e;
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 23px;
+  font-family: 'iFunnyBold';
+  color: white;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.collective-loading {
+  font-family: 'iFunnyBlack';
+  text-align: center;
+  margin-top: 50px;
+  font-size: 30px;
+  color: #d3d3d3;
+}
+.collective-loading-dots {
+  display: flex;
+  justify-content: center;
+}
+.collective-dots-el {
+  height: 15px;
+  width: 15px;
+  position: relative;
+  top: 30px;
+}
+.collective-dot-1 {
+  margin-right: 10px;
+}
+.collective-dot-3 {
+  margin-left: 10px;
+}
+.collective-memes-failed {
+  color:#d3d3d3;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 30px;
+  font-family: 'iFunnyBlack';
+}

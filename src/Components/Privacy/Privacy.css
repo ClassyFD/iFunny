@@ -1,0 +1,29 @@
+.privacy-main-heading {
+  color: hsla(0,0%,100%,.3);
+  font-family: 'iFunnyBlack';
+  font-size: 24px;
+  border-bottom: 2px solid hsla(0,0%,100%,.07);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+.privacy-heading {
+  color: white;
+  opacity:.8;
+  font-size: 18px;
+  line-height: 40px;
+  
+}
+.privacy-paragraph {
+  color: hsla(0,0%,100%,.6);
+  font-size: 18px;
+  font-family: 'iFunnyBold';
+}
+.privacy-span,.privacy-span:active, .privacy-span:hover, .privacy-span:visited,.privacy-span:link, .privacy-span:focus {
+  color: #fc0;
+  text-decoration: none;
+}
+@media(max-width:878px) {
+  .Privacy {
+    margin-top:45px;
+  }
+}

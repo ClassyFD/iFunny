@@ -1,0 +1,229 @@
+.MemeDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.meme-details-caption {
+  background: black;
+  width: 100%;
+  height: auto;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
+  text-align: center;
+  font-family: 'iFunnyBold';
+  font-size: 20px;
+  color: white;
+  word-wrap: break-word;
+  margin-top:-3px;
+}
+.meme-details-details-section {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  background: #080d11;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.meme-details-details-left-side {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.meme-details-details-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin: 5px;
+  margin-bottom: 0px;
+}
+.meme-details-details-tag-el {
+  border: 2px solid;
+  color: hsla(0,0%,100%,.3);
+  border-color: hsla(0,0%,100%,.1);
+  font-family: 'iFunnyBold';
+  font-size: 15px;
+  border-radius: 20px;
+  padding: 5px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+  text-align: center;
+  margin: 5px;
+  margin-left: 10px;
+  height: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  text-decoration: none;
+}
+.meme-details-details-username {
+  color: hsla(0,0%,100%,.3);
+  margin-left: 15px;
+  font-family: 'iFunnyExtraBoldCond';
+  display:flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.meme-details-details-username-text {
+  margin-left: 5px;
+  color: hsla(0,0%,100%,.6);
+  cursor: pointer;
+}
+.meme-details-details-social-media {
+  display: flex;
+  margin-left:15px;
+  width: 150px;
+  justify-content: space-between;
+  align-items: center;
+}
+.meme-details-details-right-side {
+  display: flex;
+  margin-top: 12px;
+}
+.meme-details-details-top-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+.meme-details-details-bottom-container {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  align-items: center;
+  width: 100%;
+}
+.meme-details-details-likes {
+  display: flex;
+  align-items: center;
+  width: 35px;
+  justify-content: space-between;
+  margin-right: 20px;
+  opacity: .5;
+  cursor: pointer;
+  margin-left: 15px;
+}
+.meme-details-likes-image {
+  background: url('../../Images/Icons/smile_icon_yellow.png') no-repeat center center;
+  background-size: cover;
+  height: 22px;
+  width: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  user-select: none;
+}
+.meme-details-details-likes-count {
+  margin: 0;
+  color: white;
+  height: 14px;
+  user-select: none;
+}
+.meme-details-details-comments {
+  display: flex;
+  align-items: center;
+  width: 35px;
+  justify-content: space-between;
+  margin-right: 15px;
+  opacity: .5;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+}
+.meme-details-details-comment-count {
+  margin: 0;
+  color: white;
+  height: 14px;
+}
+.meme-details-details-arrows {
+  display: flex;
+  justify-content: space-around;
+}
+.meme-details-details-back-arrow {
+  border: 2px solid #242424;
+  background: #080d11;
+  border-radius: 5px;
+  display: flex;
+  height: 34px;
+  width: 34px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+.meme-details-details-forward-arrow {
+  border: 2px solid #242424;
+  background: #080d11;
+  border-radius: 5px;
+  display: flex;
+  height: 34px;
+  width: 34px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.meme-details-details-more {
+  border: 2px solid #242424;
+  background: #080d11;
+  border-radius: 5px;
+  display: flex;
+  height: 34px;
+  width: 34px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+@media (max-width:450px) {
+  .meme-details-details-top-container {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+  .meme-details-details-bottom-container {
+    justify-content: space-around;
+    width: auto;
+    flex-direction: column;
+    width: 100%;
+  }
+  .meme-details-details-social-media {
+    width: 100%;
+    padding: 0;
+    margin-left:0;
+    margin-top: 10px;
+    justify-content: space-around;
+  }
+  .meme-details-details-right-side {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+  .meme-details-details-tags {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+  .meme-details-details-left-side {
+    flex-direction: column;
+  }
+  .meme-details-details-section {
+    display: flex;
+  }
+  .meme-details-details-arrows {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  .meme-details-details-back-arrow {
+    margin-left:20px;
+  }
+  .meme-details-details-username {
+    justify-content: flex-start;
+    line-height: 0px;
+  }
+  .meme-details-details-username-text {
+    margin-left: 10px;
+  }
+}

@@ -1,0 +1,165 @@
+.Header {
+  width: 100%;
+  height: 56px;
+  background: black;
+  position: fixed;
+  display: flex;
+  z-index: 1;
+}
+.header-left-section {
+  height: 56px;
+  display: flex;
+  width: 40%;
+  justify-content: space-around;
+  align-items: center;
+}
+.header-left-section-featured-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100px;
+}
+.header-left-section-featured-text {
+  color: white;
+  font-family: 'iFunnyBold';
+  font-size: 18px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.header-left-section-featured-image {
+  background: url('https://ifunny.co/images/icons/shuffle.svg') no-repeat center center;
+  background-size: cover;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+.header-left-section-collective-text {
+  color: white;
+  font-family: 'iFunnyBold';
+  font-size: 18px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.header-left-section-about-text {
+  color: white;
+  font-family: 'iFunnyBold';
+  font-size: 18px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.header-left-section-store-text {
+  color: white;
+  font-family: 'iFunnyBold';
+  font-size: 18px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.header-middle-section {
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 54px;
+}
+.header-middle-section-image {
+  background: url('https://ifunny.co/images/icons/ifunny-logo.svg') no-repeat center center;
+  background-size: cover;
+  height: 36px;
+  width: 36px;
+  cursor: pointer;
+}
+.header-right-section {
+  width: 36%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 54px;
+}
+.header-right-section-image {
+  background: url('https://ifunny.co/images/icons/search.svg') no-repeat center center;
+  background-size: cover;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+.header-right-section-login-container {
+  display: flex;
+  justify-content: space-between;
+  width: 80px;
+  align-items: center;
+}
+.header-right-section-login {
+  text-decoration: none;
+  color: white;
+  font-family: 'iFunnyBold';
+  font-size: 18px;
+  cursor: pointer;
+}
+a:hover, a:active, a:focus, a:visited { 
+  text-decoration: none; color:white 
+}
+.header-right-section-add-memes-li {
+  background: url('../../Images/Icons/plus-icon.png') no-repeat center center;
+  background-size: cover;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+.header-mobile-left-section {
+  display: none;
+}
+@media (max-width:878px) {
+  .header-mobile-left-section {
+    height: 56px;
+    display: flex;
+    width: 40%;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+  }
+  .header-left-section {
+    display: none;
+  }
+  .header-mobile-icon {
+    background: url('../../Images/Icons/hamburger_icon.png') no-repeat center center;
+    background-size: cover;
+    height: 30px;
+    width: 30px;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+  .header-right-section {
+    width: 36%;
+  }
+  .header-mobile-nav {
+    height: 50vh;
+    width: 50vw;
+    background: #060a0e;
+    font-family: 'iFunnyBold';
+    align-items: center;
+    color: white;
+    position: absolute;
+    top: 55px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    font-size: 25px;
+    border-right: 2px black solid;
+    border-bottom: 2px black solid;
+    left: -50.5vw;
+  }
+  .header-nav-link, .header-nav-link:visited, .header-nav-link:active, .header-nav-link:link, .header-nav-link:hover, .header-nav-link:focus {
+    background: #060a0e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    margin: 0;
+    width: 100%;
+    text-decoration: none;
+    position: relative;
+    border-right: 2px black solid;
+    border-bottom: 2px black solid;
+    margin-bottom: 0px;
+  }
+}

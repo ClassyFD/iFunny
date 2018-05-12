@@ -1,0 +1,7 @@
+@import '../../../node_modules/izitoast/dist/css/iziToast.min.css';
+.meme-details-meme-els {
+  margin-top: 40px;
+}
+.izishow-login {
+  font-family:'iFunnyBold';
+}

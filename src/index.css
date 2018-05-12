@@ -1,0 +1,30 @@
+@font-face {
+  font-family: 'iFunnyMedium';
+  font-weight: 500;
+  src: url('./Fonts/ProximaNovaCond-Regular.otf') format('opentype');
+}
+@font-face {
+  font-family: 'iFunnyBold';
+  font-weight: bold;
+  src: url('./Fonts/ProximaNovaCond-Bold.otf') format('opentype');
+}
+@font-face {
+  font-family: 'iFunnyExtraBoldCond';
+  font-weight: bold;
+  src: url('./Fonts/ProximaNovaExCn-Xbold.otf') format('opentype');
+}
+@font-face {
+  font-family: 'iFunnyBlack';
+  font-weight: bold;
+  src: url('./Fonts/ProximaNova-Black.otf') format('opentype');
+}
+@font-face {
+  font-family: 'iFunnyExtraBold';
+  font-weight: bold;
+  src: url('./Fonts/ProximaNova-Xbold.otf') format('opentype');
+}
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}

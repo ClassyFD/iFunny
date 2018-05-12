@@ -1,0 +1,196 @@
+.search-result-el {
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  background:#171a1e;
+  border-radius: 10px;
+}
+.search-result-el:visited {
+  color:hsla(0,0%,100%,.6);
+  text-decoration: none;
+}
+.search-result-el:hover {
+  color:hsla(0,0%,100%,.6);
+  text-decoration: none;
+}
+.search-main-input {
+  color:black;
+  font-family: 'iFunnyBold';
+  font-size: 20px;
+  height: 40px;
+  width: 85%;
+  padding-left: 7%;
+  padding-right: 8%;
+}
+.search-options-in-focus {
+  display: flex;
+  justify-content: space-around;
+  width: 70%;
+  margin:10px auto;
+  height: 50px;
+  align-items: center;
+}
+.search-options-in-focus div {
+  font-family: 'iFunnyBold';
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  padding: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: transparent;
+  color: hsla(0,0%,100%,.6);
+}
+.search-result-el-tag-left-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 10px;
+}
+.search-result-el-tag-left-container-icon {
+  background: url('https://ifunny.co/images/icons/hashtag.svg') no-repeat center center;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  height:16px;
+  width: 16px;
+  opacity: .2;
+}
+.search-result-el-tag-left-container-picture-container {
+  height:32px;
+  width:32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #080d11;
+  border-radius: 50%;
+}
+.search-result-el-tag-left-container-picture {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height:16px;
+  width: 16px;
+}
+.search-result-el-tag-left-container-tag {
+  color:hsla(0,0%,100%,.6);
+  font-family: 'iFunnyBold';
+  margin-left: 15px;
+  font-size: 20px;
+  flex-wrap: wrap;
+}
+.search-result-el-tag-number {
+  color:hsla(0,0%,100%,.3);
+  margin-right: 10px;
+}
+.search-result-el-users {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  width: 100%;
+  background:#171a1e;
+  border-radius: 10px;
+}
+.search-popular-tags-section {
+  display: flex;
+  flex-wrap:wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+.search-popular-tags-el {
+  width: 49%;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 115px;
+  text-decoration: none;
+  opacity: 1;
+}
+.search-popular-tags-el:visited {
+  color: white;
+}
+.search-popular-tags-text {
+  color: white;
+  font-family: 'iFunnyBold';
+  font-size: 20px;
+}
+.search-text-title {
+  color:hsla(0,0%,100%,.3);
+  font-family: 'iFunnyBold';
+  margin-left: 10px;
+}
+.search-text-clear {
+  color: hsla(0,0%,100%,.3);
+  font-family: 'iFunnyBold';
+  cursor: pointer;
+}
+.search-text-container {
+  display: flex;
+  justify-content: space-between;
+  height: 30px;
+  align-items: center;
+}
+.search-loading {
+  font-family: 'iFunnyBlack';
+  text-align: center;
+  margin-top: 240px;
+  font-size: 30px;
+  color: #d3d3d3;
+}
+.search-loading-dots {
+  display: flex;
+  justify-content: center;
+}
+.search-dots-el {
+  height: 15px;
+  width: 15px;
+  position: relative;
+  top: 30px;
+}
+.search-dot-1 {
+  margin-right: 10px;
+}
+.search-dot-3 {
+  margin-left: 10px;
+}
+@media (max-width:1000px) {
+  .search-popular-tags-text {
+    font-size: 18px;
+  }
+}
+@media (max-width:930px) {
+  .search-popular-tags-text {
+    font-size: 16px;
+  }
+}
+@media (max-width:878px) {
+  .search-popular-tags-text {
+    font-size: 20px;
+  }
+  .search-main-input {
+    margin-top: 30px;
+  }
+}
+@media (max-width:610px) {
+  .search-popular-tags-el {
+    width: 99%;
+    height: 150px;
+  }
+}
+@media (max-width:500px) {
+  .search-result-el-tag-left-container-tag {
+    width: 150px;
+    word-wrap: break-word;
+    text-align: left;
+  }
+}
