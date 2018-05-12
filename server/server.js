@@ -9,7 +9,7 @@ const express = require('express'),
       env = require('dotenv').config({path: './server/config/.env'}),
       app = express(),
       imageUpload = require('./aws/aws'),
-      port = 3001,
+      port = 3000,
       path = require('path');
 
 app.use(cors());
@@ -173,9 +173,9 @@ app.post('/api/upload',(req, res) => {
 })
 // finish
 
-// app.get('*', (req, res)=>{
-//   console.log(req.originalUrl)
-//   res.sendFile(path.join(__dirname, '../build/index.html'));
-// })
+app.get('*', (req, res)=>{
+  console.log(req.originalUrl)
+  res.sendFile(path.join(__dirname, '../build/index.html'));
+})
 
 app.listen(port, ()=> console.log(`listening on port ${port}`));

@@ -151,7 +151,7 @@ class About extends Component {
           </div>
         </section>
         <section className='about-carousel-section'>
-          <Carousel infiniteLoop={true} showIndicators={false} className='about-carousel-carousel'>
+          <Carousel showThumbs={false} infiniteLoop={true} showIndicators={false} className='about-carousel-carousel'>
             {carouselElements}
           </Carousel>
         </section>
