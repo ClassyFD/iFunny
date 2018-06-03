@@ -5,3 +5,11 @@
 .izishow-login {
   font-family:'iFunnyBold';
 }
+.meme-details-details-comments-image {
+  background: url('https://ifunny.co/images/icons/comments.svg') no-repeat center center;
+  background-size: cover;
+  height: 21px;
+  width: 21px;
+  min-height: 22px;
+  min-width: 22px;
+}

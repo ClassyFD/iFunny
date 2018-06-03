@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Carousel } from 'react-responsive-carousel';
 import { FacebookShareButton, FacebookIcon, TwitterShareButton, TwitterIcon } from 'react-share';
 import './About.css';
+import styles from 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { TimelineMax } from 'gsap';
 const ENV = require('../../frontenv');
 class About extends Component {
@@ -90,9 +91,9 @@ class About extends Component {
           `wink`,
           `yum`
         ]
-    for (var i = 0; i<26; i++) {
+    for (let i = 0; i<26; i++) {
       arr.push(
-        <main key={i} className='about-carousel-element'>
+        <div key={i} className='about-carousel-element'>
           <div className='about-carousel-styled-element'>
             <section className='about-carousel-styled-element-top-section'>
               <div className='about-carousel-styled-element-top-section-quote'>{quotes[i]}</div>
@@ -104,7 +105,7 @@ class About extends Component {
               </div>
             </section>
           </div>
-        </main>
+        </div>
       )
     }
     return arr;

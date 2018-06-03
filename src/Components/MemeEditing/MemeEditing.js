@@ -223,6 +223,14 @@ class MemeEditing extends Component {
       })
     }
   }
+  hoverButton(target) {
+    let tl = new TimelineMax();
+    tl.to(`.hover-button-${target}`, .2, {borderColor:'rgba(255,204,0,.7)'})
+  }
+  leaveButton(target) {
+    let tl = new TimelineMax();
+    tl.to(`.hover-button-${target}`, .2, {borderColor:'rgba(255,204,0,.3)'})
+  }
   render() {
     let state=this.state,
         props=this.props,
@@ -262,13 +270,13 @@ class MemeEditing extends Component {
               {caption}
             </div>
             <div className='meme-editing-left-section-container'>
-              <div onClick={()=>{this.switchMode()}} className='meme-editing-left-section-container-post'>
+              <div onMouseEnter={()=>{this.hoverButton('mode')}} onMouseLeave={()=>{this.leaveButton('mode')}} onClick={()=>{this.switchMode()}} className='meme-editing-left-section-container-post hover-button-mode'>
                 {!this.state.preview?'Preview Mode':'Crop Mode'}
               </div>
-              <div onClick={()=>{this.setState({image:'', replaced:false, imageHeight:''})}} className='meme-editing-left-section-container-replace'>
+              <div onMouseEnter={()=>{this.hoverButton('remove')}} onMouseLeave={()=>{this.leaveButton('remove')}} onClick={()=>{this.setState({image:'', replaced:false, imageHeight:''})}} className='meme-editing-left-section-container-replace hover-button-remove'>
                 Remove Image
               </div>
-              <div onClick={()=>{this.cropImage()}} style={{display:state.preview?'none':'inline'}} className='meme-editing-left-section-container-crop'>
+              <div onMouseEnter={()=>{this.hoverButton('crop')}} onMouseLeave={()=>{this.leaveButton('crop')}} onClick={()=>{this.cropImage()}} style={{display:state.preview?'none':'inline'}} className='meme-editing-left-section-container-crop hover-button-crop'>
                 Crop Image
               </div>
             </div>
@@ -328,7 +336,7 @@ class MemeEditing extends Component {
                     tagValues: values
                   })
               }}/>
-              <div onClick={()=>{this.postMeme()}} className='meme-editing-right-section-post-meme'>
+              <div onMouseEnter={()=>{this.hoverButton('post')}} onMouseLeave={()=>{this.leaveButton('post')}} onClick={()=>{this.postMeme()}} className='meme-editing-right-section-post-meme hover-button-post'>
                 Post Meme
               </div>
               <div className='meme-editing-right-section-error'>
@@ -346,7 +354,7 @@ class MemeEditing extends Component {
                   </div>
                 ) : null}
                 {state.error==='You currently do not have a username!'? (
-                  <div onClick={()=>{this.submitUsername(state.username)}} className='meme-editing-right-section-username-submit'>
+                  <div onMouseEnter={()=>{this.hoverButton('submit')}} onMouseLeave={()=>{this.leaveButton('submit')}} onClick={()=>{this.submitUsername(state.username)}} className='meme-editing-right-section-username-submit hover-button-submit'>
                     Submit Username
                   </div>
                 ) : null}

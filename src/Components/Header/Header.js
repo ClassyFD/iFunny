@@ -55,42 +55,53 @@ class Header extends Component {
       navExpanded:this.state.navExpanded?false:true
     })
   }
-
+  hoverLink(target) {
+    if (target!==this.props.comp || target==='icon' || target==='search' || target==='edit') {
+      let tl = new TimelineMax();
+      tl.to(`.hover-link-${target}`, .2, target==='icon'||target==='search' || target==='edit'?{opacity:.6}:{color:'#fc0'});
+    }
+  }
+  leaveLink(target) {
+    if (target!==this.props.comp || target==='icon' || target==='search' || target==='edit') {
+      let tl = new TimelineMax();
+      tl.to(`.hover-link-${target}`, .2, target==='icon'||target==='search' || target==='edit'?{opacity:1}:{color:'white'});
+    }
+  }
   render() {
     let props = this.props,
         login;
     if (props && props.user) {
       login = (
         <div className='header-right-section-login-container'>
-          <Link className='header-link header-left-section-profile-text header-right-section-login' to='/profile'>
+          <a onMouseEnter={()=>{this.hoverLink('logout')}} onMouseLeave={()=>{this.leaveLink('logout')}} className='header-link header-left-section-logout-text header-right-section-logout hover-link-logout' href={ENV.REACT_APP_BACKEND + '/auth/logout'}>
+            Log Out
+          </a>
+          <Link onMouseEnter={()=>{this.hoverLink('profile')}} onMouseLeave={()=>{this.leaveLink('profile')}} className='header-link header-left-section-profile-text header-right-section-login hover-link-profile' to='/profile'>
             Profile
           </Link>
-          <Link to='/edit' className='header-right-section-add-memes-li'/>
+          <Link onMouseEnter={()=>{this.hoverLink('edit')}} onMouseLeave={()=>{this.leaveLink('edit')}} to='/edit' className='header-right-section-add-memes-li hover-link-edit'/>
         </div>
       );
     } else {
       login = (
-        <a href={ENV.REACT_APP_BACKEND + '/auth'} className='header-right-section-login'>
-          Login
+        <a onMouseEnter={()=>{this.hoverLink('login')}} onMouseLeave={()=>{this.leaveLink('login')}} href={ENV.REACT_APP_BACKEND + '/auth'} className='header-right-section-login hover-link-login'>
+          Log In / Register
         </a>
       );
     }
     return (
       <main className='Header'>
         <section className='header-left-section'>
-          <div className='header-left-section-featured-container'>
-            <Link to='/' className='header-link header-left-section-featured-text'>
-              featured
-            </Link>
-            <div className='header-left-section-featured-image'/>
-          </div>
-          <Link to='/app/collective' className='header-link header-left-section-collective-text'>
+          <Link onMouseEnter={()=>{this.hoverLink('featured')}} onMouseLeave={()=>{this.leaveLink('featured')}} to='/' className='header-link header-left-section-featured-text hover-link-featured'>
+            featured
+          </Link>
+          <Link onMouseEnter={()=>{this.hoverLink('collective')}} onMouseLeave={()=>{this.leaveLink('collective')}} to='/app/collective' className='header-link header-left-section-collective-text hover-link-collective'>
             collective
           </Link>
-          <Link to='/app/about' className='header-link header-left-section-about-text'>
+          <Link onMouseEnter={()=>{this.hoverLink('about')}} onMouseLeave={()=>{this.leaveLink('about')}} to='/app/about' className='header-link header-left-section-about-text hover-link-about'>
             about
           </Link>
-          <a href='http://ifunnyoriginal.spreadshirt.com/' target='_blank' className='header-left-section-store-text'>
+          <a onMouseEnter={()=>{this.hoverLink('store')}} onMouseLeave={()=>{this.leaveLink('store')}} href='http://ifunnyoriginal.spreadshirt.com/' target='_blank' className='header-left-section-store-text hover-link-store'>
             store
           </a>
         </section>
@@ -122,10 +133,10 @@ class Header extends Component {
           </div>
         </section>
         <section className='header-middle-section'>
-          <Link to='/' className='header-middle-section-image'/>
+          <Link onMouseEnter={()=>{this.hoverLink('icon')}} onMouseLeave={()=>{this.leaveLink('icon')}} to='/' className='header-middle-section-image hover-link-icon'/>
         </section>
         <section className='header-right-section'>
-          <Link to='/app/search' className='header-right-section-image'/>
+          <Link onMouseEnter={()=>{this.hoverLink('search')}} onMouseLeave={()=>{this.leaveLink('search')}} to='/app/search' className='header-right-section-image hover-link-search'/>
           {login}
         </section>
       </main>

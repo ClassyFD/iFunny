@@ -1,0 +1,34 @@
+.terms-main-heading {
+  color: hsla(0,0%,100%,.3);
+  font-family: 'iFunnyBlack';
+  font-size: 24px;
+  border-bottom: 2px solid hsla(0,0%,100%,.07);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+.terms-heading {
+  color: white;
+  opacity:.8;
+  font-size: 18px;
+  line-height: 40px;
+  
+}
+.terms-paragraph {
+  color: hsla(0,0%,100%,.6);
+  font-size: 18px;
+  font-family: 'iFunnyBold';
+}
+.terms-number-span {
+  font-family: 'iFunnyBlack';
+  font-size: 18px;
+  margin-right: 2px;
+}
+.terms-span,.terms-span:active, .terms-span:hover, .terms-span:visited,.terms-span:link, .terms-span:focus {
+  color: #fc0;
+  text-decoration: none;
+}
+@media(max-width:878px) {
+  .Terms {
+    margin-top:45px;
+  }
+}
