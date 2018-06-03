@@ -141,6 +141,7 @@ app.get('/auth/logout', (req, res) => {
   req.logOut();
   res.redirect(302,  process.env.REACT_APP_HOST)
 })
+app.get('/api/getTopComments/:id', CTRL.getTopComments);
 app.get('/api/getMainSearches', CTRL.getMainSearches);
 app.get('/api/getUserSearchResults', CTRL.getUserSearchResults);
 app.get('/api/getRecentSearches', CTRL.getRecentSearches);
@@ -151,16 +152,24 @@ app.get('/api/getTrendingTags', CTRL.getTrendingTags);
 app.get('/api/checkLikes/:userid', CTRL.checkLikes);
 app.get('/api/getMemes', CTRL.getMemes);
 app.get('/api/likes/:memeid/:userid', CTRL.checkMemeLikes);
+app.get('/api/checkCommentLikes/:memeid/:userid', CTRL.checkCommentLikes);
 app.get('/api/getMemeDetails/:id', CTRL.getMemeDetails);
 app.get('/api/getFeaturedMemes', CTRL.getFeaturedMemes);
+app.get('/api/getReplies/:id', CTRL.getReplies);
 app.delete('/api/deleteRecentSearches', CTRL.deleteRecentSearches);
 app.post('/api/postRecentSearch', CTRL.postRecentSearch);
 app.post('/api/unlike/:memeid', CTRL.unlikeMeme);
 app.post('/api/like/:memeid', CTRL.likeMeme);
+app.post('/api/featuredUnlike/:memeid', CTRL.featuredUnlikeMeme);
+app.post('/api/featuredLike/:memeid', CTRL.featuredLikeMeme);
+app.post('/api/commentUnlike/:commentid', CTRL.unlikeComment);
+app.post('/api/commentLike/:commentid', CTRL.likeComment);
 app.post('/api/submitUsername', CTRL.submitUsername);
 app.post('/api/postMeme', CTRL.postMeme);
 app.post('/api/featureMeme', CTRL.featureMeme);
 app.post('/api/unfeatureMeme', CTRL.unfeatureMeme);
+app.post('/api/postComment', CTRL.postComment);
+app.post('/api/postReply', CTRL.postReply);
 app.post('/api/upload',(req, res) => {
   imageUpload.sendPics(req.body.pic, (response, err) => {
     if (err) {

@@ -113,11 +113,11 @@ class Featured extends Component {
   }
   hoverSocialMedia(target, num) {
     let tl = new TimelineMax();
-    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:1})
+    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:.7})
   }
   leaveSocialMedia(target, num) {
     let tl = new TimelineMax();
-    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:.7})
+    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:1})
   }
   hoverButton(target, num) {
     let tl = new TimelineMax();
@@ -135,7 +135,7 @@ class Featured extends Component {
         clickable:false,
         likeArr: state.likeArr.concat(id)
       })
-      axios.post(ENV.REACT_APP_BACKEND+'/api/like/'+id, {user:props.user, type:state.limit}).then((response)=>{
+      axios.post(ENV.REACT_APP_BACKEND+'/api/featuredLike/'+id, {user:props.user, type:state.limit}).then((response)=>{
         this.setState({
           likeArr:state.likeArr.concat(id),
           clickable:true,
@@ -157,7 +157,7 @@ class Featured extends Component {
           return el!==id
         })
       })
-      axios.post(ENV.REACT_APP_BACKEND+'/api/unlike/'+id, {user:props.user, type:state.limit}).then((response)=>{
+      axios.post(ENV.REACT_APP_BACKEND+'/api/featuredUnlike/'+id, {user:props.user, type:state.limit}).then((response)=>{
         this.setState({
           likeArr:state.likeArr.filter((el, i)=>{
             return el!==id
@@ -303,14 +303,14 @@ class Featured extends Component {
                           <p style={state.likeArr && state.likeArr.includes(el.id)?{color:'#fc0'}:{color:'white'}} className='meme-details-details-likes-count'>{el.likes}</p>
                         </div>
                         <Link to={`/app/memes/${el.id}`} className={`meme-details-details-comments meme-details-details-comments-${i}`} onMouseLeave={()=>{this.leaveStats('comments', i)}} onMouseEnter={()=>{this.hoverStats('comments', i)}}>
-                          <img className='meme-details-details-comments-image' src='https://ifunny.co/images/icons/comments.svg' style={{height:'22px', width:'22px'}}/>
+                          <div className='meme-details-details-comments-image'/>
                           <p className='meme-details-details-comment-count'>{el.comments}</p>
                         </Link>
                       </div>
                     </div>
                     <div className='meme-details-details-bottom-container'>  
                       <div style={el.tag_arr?null:{marginTop:'20px'}} className='meme-details-details-social-media'>
-                        <div style={{opacity:.7}} onMouseEnter={(e)=>{this.hoverSocialMedia('fb', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('fb', i)}} className={`meme-details-fb-hover meme-details-fb-${i}-hover`}>
+                        <div style={{opacity:1}} onMouseEnter={(e)=>{this.hoverSocialMedia('fb', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('fb', i)}} className={`meme-details-fb-hover meme-details-fb-${i}-hover`}>
                           <FacebookShareButton 
                             style={{height:'36px', width:'36px', borderRadius:'50%', outline:'none', cursor:'pointer'}}
                             url={ENV.REACT_APP_FRONTEND+`/app/memes/${el.id}`} 
@@ -321,7 +321,7 @@ class Featured extends Component {
                             <FacebookIcon size={36} round/>
                           </FacebookShareButton>
                         </div>
-                        <div style={{opacity:.7}} onMouseEnter={(e)=>{this.hoverSocialMedia('tt', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('tt', i)}} className={`meme-details-tt-hover meme-details-tt-${i}-hover`}>
+                        <div style={{opacity:1}} onMouseEnter={(e)=>{this.hoverSocialMedia('tt', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('tt', i)}} className={`meme-details-tt-hover meme-details-tt-${i}-hover`}>
                           <TwitterShareButton 
                             style={{height:'36px', width:'36px', borderRadius:'50%', outline:'none', cursor:'pointer'}}
                             title={el.caption}

@@ -93,22 +93,21 @@ input {
   height: 30px;
 }
 .meme-editing-right-section-post-meme {
+  text-align: center;
+  margin: 90px auto;
   border: 2px solid;
-  color: black;
-  border-color: black;
+  color: #fc0;
+  border-color: rgba(255,204,0,.3);
   font-family: 'iFunnyBold';
   border-radius: 20px;
   padding: 5px;
   padding-left: 15px;
   padding-right: 15px;
   cursor: pointer;
-  text-align: center;
-  margin: 90px auto;
-  background: rgba(255,204,0,1);
 }
 .meme-editing-caption {
   background: black;
-  width: 100%;
+  width: 90%;
   height: auto;
   padding-top: 30px;
   padding-bottom: 30px;
@@ -136,22 +135,20 @@ input {
   color: black; 
 }
 .meme-editing-right-section-username-submit {
-  border: 2px solid;
-  color: black;
-  border-color: black;
   font-family: 'iFunnyBold';
   border-radius: 20px;
   padding: 5px;
   padding-left: 15px;
   padding-right: 15px;
-  cursor: pointer;
-  text-align: center;
   height: 20px;
-  background: rgba(255,204,0,1);
   font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 2px solid;
+  color: #fc0;
+  border-color: rgba(255,204,0,.3);
+  cursor: pointer;
 }
 .meme-editing-right-section-finished {
   color: green;

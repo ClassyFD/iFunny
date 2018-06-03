@@ -28,8 +28,6 @@ class Tags extends Component {
     });
     loadingtl.staggerTo('.collective-dots-el', .3, {top:10, height:20, width:20}, .1)
     .staggerTo('.collective-dots-el', .3, {top:30, height:15, width:15}, .1, '-=.1');
-    let ltl = new TimelineMax();
-        ltl.to(window, 1, {scrollTo:0})
     this.props.dispatch({
       type: 'MOUNT_COMP',
       val: 'tags'
@@ -57,9 +55,13 @@ class Tags extends Component {
         })
       }
     })
+    let ltl = new TimelineMax();
     setTimeout(() => {
       this.likedStatus();
     }, 800);
+    setTimeout(() => {
+      ltl.to(window, 1, {scrollTo:0})
+    }, 100);
     this.getResults();
   }
   likedStatus() {
@@ -110,11 +112,11 @@ class Tags extends Component {
   }
   hoverSocialMedia(target, num) {
     let tl = new TimelineMax();
-    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:1})
+    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:.7})
   }
   leaveSocialMedia(target, num) {
     let tl = new TimelineMax();
-    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:.7})
+    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:1})
   }
   hoverButton(target, num) {
     let tl = new TimelineMax();
@@ -230,13 +232,17 @@ class Tags extends Component {
           this.likedStatus();
         }, 800);
         let tl = new TimelineMax();
-            tl.to(window, 0, {scrollTo:0});
+        tl.to(window, 0, {scrollTo:0});
+        let itl = new TimelineMax();
+        itl.to('.collective-load-more-arrow-1', 0, {height: '0px', width: '0px', top: '70px', ease:Power2.easeOut})
+          .to('.collective-load-more-arrow-2', 0, {top:'70px', ease:Power2.easeOut})
+          .to('.collective-load-more-arrow-3', 0, {top:'110px', height: '100px', width: '100px', ease:Power2.easeOut})
         let ctl = new TimelineMax({
           repeat: -1
         });
         ctl.to('.collective-load-more-arrow-1', .5, {height: '100px', width: '100px', top: '70px', ease:Power2.easeOut})
-          .to('.collective-load-more-arrow-2', .5, {top:'110px', ease:Power2.easeOut}, '-=.5')
-          .to('.collective-load-more-arrow-3', .5, {top:'190px', height: '0px', width: '0px', ease:Power2.easeOut}, '-=.5')    
+        .to('.collective-load-more-arrow-2', .5, {top:'110px', ease:Power2.easeOut}, '-=.5')
+        .to('.collective-load-more-arrow-3', .5, {top:'190px', height: '0px', width: '0px', ease:Power2.easeOut}, '-=.5')    
       });
     }
   }
@@ -269,7 +275,7 @@ class Tags extends Component {
           </section>
         ),
         loadMore;
-    if (state.loadMore%10 === 0 && state.memes.length>0) {
+    if (state.loadMore%10 === 0 && state.memes.length>0 && state.memeStatus) {
       loadMore = (
         <div onClick={()=>{this.loadMore()}} onMouseEnter={()=>{this.enterLoadMore()}} onMouseLeave={()=>{this.leaveLoadMore()}} className='collective-load-more'>
           <div className='collective-load-more-title'>
@@ -340,7 +346,7 @@ class Tags extends Component {
                     </div>
                     <div className='meme-details-details-bottom-container'>  
                       <div style={el.tag_arr?null:{marginTop:'20px'}} className='meme-details-details-social-media'>
-                        <div style={{opacity:.7}} onMouseEnter={(e)=>{this.hoverSocialMedia('fb', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('fb', i)}} className={`meme-details-fb-hover meme-details-fb-${i}-hover`}>
+                        <div style={{opacity:1}} onMouseEnter={(e)=>{this.hoverSocialMedia('fb', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('fb', i)}} className={`meme-details-fb-hover meme-details-fb-${i}-hover`}>
                           <FacebookShareButton 
                             style={{height:'36px', width:'36px', borderRadius:'50%', outline:'none', cursor:'pointer'}}
                             url={ENV.REACT_APP_FRONTEND+`/app/memes/${el.id}`} 
@@ -351,7 +357,7 @@ class Tags extends Component {
                             <FacebookIcon size={36} round/>
                           </FacebookShareButton>
                         </div>
-                        <div style={{opacity:.7}} onMouseEnter={(e)=>{this.hoverSocialMedia('tt', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('tt', i)}} className={`meme-details-tt-hover meme-details-tt-${i}-hover`}>
+                        <div style={{opacity:1}} onMouseEnter={(e)=>{this.hoverSocialMedia('tt', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('tt', i)}} className={`meme-details-tt-hover meme-details-tt-${i}-hover`}>
                           <TwitterShareButton 
                             style={{height:'36px', width:'36px', borderRadius:'50%', outline:'none', cursor:'pointer'}}
                             title={el.caption}

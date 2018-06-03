@@ -1,5 +1,43 @@
 const moment = require('moment');
 module.exports = {
+  postReply: (req, res)=>{
+    let db = req.app.get('db'),
+        {user, date, comment, replyid, memeid} = req.body,
+        obj = {};
+    console.log(req.body);
+    db.postReply([date, comment, user.id, memeid, replyid]).then((response)=>{
+      db.updateCommentReplies([replyid]).then((response)=>{
+        obj = Object.assign({}, obj, {comment: response});
+        db.getReplies([replyid]).then((response)=>{
+          obj = Object.assign({}, obj, {replies: response});
+          res.status(200).send(obj);
+        })
+      })
+    })
+  },
+  getReplies: (req, res)=>{
+    let db = req.app.get('db'),
+        id = req.params.id;
+    db.getReplies([id]).then((response)=>{
+      res.status(200).send(response);
+    })
+  },
+  getTopComments: (req, res)=>{
+    let db = req.app.get('db'),
+        meme = req.params.id;
+    db.getTopComments([meme]).then((response)=>{
+      res.status(200).send(response);
+    })
+  },
+  postComment: (req, res)=>{
+    let db = req.app.get('db'),
+        { user, date, comment, meme } = req.body;
+    db.updateMemeComments([meme.details.id]).then((response)=>{
+      db.postComment([user.id, meme.details.id, date, comment]).then((response)=>{
+        res.status(200).send(response);
+      })
+    })
+  },
   unfeatureMeme: (req, res)=>{
     let db = req.app.get('db'),
         meme = req.query.id;
@@ -97,6 +135,15 @@ module.exports = {
       res.status(200).send(response);
     })
   },
+  checkCommentLikes: (req, res)=>{
+    let db = req.app.get('db'),
+        user = req.params.userid,
+        meme = req.params.memeid,
+        offset = req.query.offset;
+    db.checkCommentLikes([user, meme, offset]).then((response)=>{
+      res.status(200).send(response);
+    })
+  },
   getFeaturedMemes: (req, res)=>{
     let db = req.app.get('db'),
         limit = req.query.limit;
@@ -131,17 +178,16 @@ module.exports = {
       })
     })
   },
-  likeMeme: (req, res)=>{
+  featuredUnlikeMeme: (req, res)=>{
     let db = req.app.get('db'),
         user = req.body.user,
         meme = req.params.memeid,
-        date = new Date(),
         type = req.body.type,
         obj = {};
-    db.likeMeme([date, user.id, meme]).then((response)=>{
-      db.updateMemeLikes([meme]).then((response)=>{
+    db.unlikeMeme([user.id, meme]).then((response)=>{
+      db.updateMemeUnlikes([meme]).then((response)=>{
         if (type >= 0) {
-          db.getMemes([type]).then((response)=>{
+          db.getFeaturedMemes([type]).then((response)=>{
             res.status(200).send(response);
           })
         } else {
@@ -152,9 +198,82 @@ module.exports = {
       })
     })
   },
+  likeMeme: (req, res)=>{
+    let db = req.app.get('db'),
+    user = req.body.user,
+    meme = req.params.memeid,
+    date = new Date(),
+        type = req.body.type,
+        obj = {};
+        db.likeMeme([date, user.id, meme]).then((response)=>{
+          db.updateMemeLikes([meme]).then((response)=>{
+            if (type >= 0) {
+              db.getMemes([type]).then((response)=>{
+                res.status(200).send(response);
+              })
+            } else {
+              db.getMemeDetails([meme]).then((response)=>{
+            res.status(200).send(response);
+          })
+        }
+      })
+    })
+  },
+  featuredLikeMeme: (req, res)=>{
+    let db = req.app.get('db'),
+    user = req.body.user,
+        meme = req.params.memeid,
+        date = new Date(),
+        type = req.body.type,
+        obj = {};
+        db.likeMeme([date, user.id, meme]).then((response)=>{
+          db.updateMemeLikes([meme]).then((response)=>{
+            if (type >= 0) {
+              db.getFeaturedMemes([type]).then((response)=>{
+                res.status(200).send(response);
+              })
+            } else {
+              db.getMemeDetails([meme]).then((response)=>{
+                res.status(200).send(response);
+              })
+        }
+      })
+    })
+  },
+  likeComment: (req, res)=>{
+    let db = req.app.get('db'),
+        user = req.body.user,
+        comment = req.params.commentid,
+        meme = req.body.meme,
+        date = new Date(),
+        type = req.body.type,
+        TC1 = req.body.TC1, 
+        TC2 = req.body.TC2,
+        offset = req.body.offset;
+    db.likeComment([date, user.id, meme, comment]).then((response)=>{
+      db.updateCommentLikes([comment]).then((response)=>{
+        res.status(200).send(type);
+      })
+    })
+  },
+  unlikeComment: (req, res)=>{
+    let db = req.app.get('db'),
+        user = req.body.user,
+        comment = req.params.commentid,
+        meme = req.body.meme,
+        type = req.body.type,
+        TC1 = req.body.TC1, 
+        TC2 = req.body.TC2,
+        offset = req.body.offset;
+    db.unlikeComment([user.id, comment]).then((response)=>{
+      db.updateCommentUnlikes([comment]).then((response)=>{
+        res.status(200).send(type)
+      })
+    })
+  },
   checkMemeLikes: (req, res)=>{
     let db = req.app.get('db'),
-        user = req.params.userid,
+    user = req.params.userid,
         meme = req.params.memeid;
     db.checkLikes([user, meme]).then((response)=>{
       if (response[0]) {
@@ -164,6 +283,7 @@ module.exports = {
       }
     })
   },
+  
   getMemeDetails: (req, res)=>{
     let db = req.app.get('db'),
         id = req.params.id,
@@ -172,12 +292,20 @@ module.exports = {
         meme_id,
         prev_id,
         next_id;
+    let TC1 = 0,
+        TC2 = 0;
+    if (req.query.tc1 !== 'undefined') {
+      TC1 = req.query.tc1;
+    }
+    if (req.query.tc2 !== 'undefined') {
+      TC2 = req.query.tc2;
+    }
     db.getMemeDetails([id]).then((response)=>{
       meme_id = response[0].meme_id;
       obj = Object.assign({}, obj, {details:response[0]});
       db.getMemeTags([meme_id]).then((response)=>{
         obj = Object.assign({}, obj, {tags:response})
-        db.getMemeComments([meme_id, (query-1)*20]).then((response)=>{
+        db.getMemeComments([id, (query-1)*10, TC1, TC2]).then((response)=>{
           obj = Object.assign({}, obj, {}, {comments:response});
           db.getSideMemes([id]).then((response)=>{
             if (response[0].next_id) {
@@ -188,7 +316,6 @@ module.exports = {
             }
             if (prev_id && next_id) {
               obj = Object.assign({}, obj, {prev_id, next_id})
-              
               res.status(200).send(obj);
             } else if (!prev_id) {
               db.getLastMeme().then((response)=>{

@@ -67,6 +67,7 @@ class Collective extends Component {
     let likeArr = [];
     if (this.props.user) {
       axios.get(ENV.REACT_APP_BACKEND+'/api/checkLikes/'+this.props.user.id + '?offset='+this.state.limit).then((response)=>{
+        console.log(response.data)
         if (response.data && this.state.memes) {
           this.state.memes.map((el, i)=>{
             response.data.map((resEl, resI)=>{
@@ -81,6 +82,7 @@ class Collective extends Component {
         }
       })
     }
+    console.log(likeArr);
   }
   
   hoverStats(target, num, id) {
@@ -114,11 +116,11 @@ class Collective extends Component {
   }
   hoverSocialMedia(target, num) {
     let tl = new TimelineMax();
-    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:1})
+    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:.7})
   }
   leaveSocialMedia(target, num) {
     let tl = new TimelineMax();
-    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:.7})
+    tl.to(`.meme-details-${target}-${num}-hover`, .1, {opacity:1})
   }
   hoverButton(target, num) {
     let tl = new TimelineMax();
@@ -311,7 +313,7 @@ class Collective extends Component {
                     </div>
                     <div className='meme-details-details-bottom-container'>  
                       <div style={el.tag_arr?null:{marginTop:'20px'}} className='meme-details-details-social-media'>
-                        <div style={{opacity:.7}} onMouseEnter={(e)=>{this.hoverSocialMedia('fb', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('fb', i)}} className={`meme-details-fb-hover meme-details-fb-${i}-hover`}>
+                        <div style={{opacity:1}} onMouseEnter={(e)=>{this.hoverSocialMedia('fb', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('fb', i)}} className={`meme-details-fb-hover meme-details-fb-${i}-hover`}>
                           <FacebookShareButton 
                             style={{height:'36px', width:'36px', borderRadius:'50%', outline:'none', cursor:'pointer'}}
                             url={ENV.REACT_APP_FRONTEND+`/app/memes/${el.id}`} 
@@ -322,7 +324,7 @@ class Collective extends Component {
                             <FacebookIcon size={36} round/>
                           </FacebookShareButton>
                         </div>
-                        <div style={{opacity:.7}} onMouseEnter={(e)=>{this.hoverSocialMedia('tt', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('tt', i)}} className={`meme-details-tt-hover meme-details-tt-${i}-hover`}>
+                        <div style={{opacity:1}} onMouseEnter={(e)=>{this.hoverSocialMedia('tt', i)}} onMouseLeave={(e)=>{this.leaveSocialMedia('tt', i)}} className={`meme-details-tt-hover meme-details-tt-${i}-hover`}>
                           <TwitterShareButton 
                             style={{height:'36px', width:'36px', borderRadius:'50%', outline:'none', cursor:'pointer'}}
                             title={el.caption}
