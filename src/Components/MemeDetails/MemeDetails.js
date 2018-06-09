@@ -3,7 +3,7 @@ import './MemeDetails.css';
 import axios from 'axios';
 import moment from 'moment';
 import { FacebookShareButton, FacebookIcon, TwitterShareButton, TwitterIcon } from 'react-share';
-import { TimelineMax } from 'gsap';
+import { TimelineMax, Ease, Power0, Power4, Power2, Back } from 'gsap';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import IziToast from 'izitoast';
@@ -18,16 +18,15 @@ class MemeDetails extends Component {
       clickable:true,
       commentClickable:true,
       commentExpanded:[],
-      topCommentExpanded:[],
       replyClickable:true,
-      replies: []
+      replies: [],
+      replyLimit:10,
     };
   }
   componentDidMount() {
     axios.get(ENV.REACT_APP_BACKEND + '/api/getTopComments/'+this.props.match.params.id).then((res)=>{
       let TC1,
           TC2;
-      console.log(res.data)
       if (res.data && res.data[0]) {
         TC1 = res.data[0].id
       }
@@ -35,10 +34,9 @@ class MemeDetails extends Component {
         TC2 = res.data[1].id
       }
       axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+this.state.commentPage+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
-        let commentExpanded = [],
-            topCommentExpanded = [];
+        let commentExpanded = [];
         res.data.map((el, i)=>{
-          topCommentExpanded.push({id:el.id, status:false})
+          commentExpanded.push({id:el.id, status:false})
         })
         response.data.comments.map((el, i)=>{
           commentExpanded.push({id:el.id, status:false})
@@ -49,7 +47,6 @@ class MemeDetails extends Component {
           TC1,
           TC2,
           commentExpanded,
-          topCommentExpanded
         })
       });
     })
@@ -61,7 +58,6 @@ class MemeDetails extends Component {
         tl.to(window, .5, {scrollTo:0});
     setTimeout(() => {
       this.likedStatus();
-      console.log(this.state)
     }, 800);
   }
   likedStatus() {
@@ -77,7 +73,6 @@ class MemeDetails extends Component {
       if (this.props.user) {
         axios.get(ENV.REACT_APP_BACKEND+'/api/checkCommentLikes/'+this.props.match.params.id+'/'+this.props.user.id + '?offset='+this.state.commentPage).then((response)=>{
           if (response.data) {
-            console.log('liked status')
             if (this.state.memeDetails.comments) {
               this.state.memeDetails.comments.map((el, i)=>{
                 response.data.map((resEl, resI)=>{
@@ -97,11 +92,8 @@ class MemeDetails extends Component {
               })
             }
             if (this.state.replies) {
-              console.log(this.state.replies)
               this.state.replies.map((el, i)=>{
-                console.log(el);
                 response.data.map((resEl, resI)=>{
-                  console.log(resEl)
                   if (el.id === resEl.comment_id) {
                     commentLikeArr.push(el.id);
                   }
@@ -111,7 +103,6 @@ class MemeDetails extends Component {
             this.setState({
               commentLikeArr
             })
-            console.log(commentLikeArr)
           }
         })
       }
@@ -132,10 +123,9 @@ class MemeDetails extends Component {
           TC2 = res.data[1].id
         }
         axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+prevState.method + '?commentPage='+this.state.commentPage+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
-          let commentExpanded = [],
-              topCommentExpanded = [];
+          let commentExpanded = [];
           res.data.map((el, i)=>{
-            topCommentExpanded.push({id:el.id, status:false})
+            commentExpanded.push({id:el.id, status:false})
           })
           response.data.comments.map((el, i)=>{
             commentExpanded.push({id:el.id, status:false})
@@ -145,7 +135,6 @@ class MemeDetails extends Component {
             memeDetails:response.data,
             liked:false,
             commentExpanded,
-            topCommentExpanded
           })
           setTimeout(() => {
             this.likedStatus();
@@ -168,10 +157,9 @@ class MemeDetails extends Component {
           TC2 = res.data[1].id
         }
         axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+this.state.commentPage+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
-          let commentExpanded = [],
-              topCommentExpanded = [];
+          let commentExpanded = [];
           res.data.map((el, i)=>{
-            topCommentExpanded.push({id:el.id, status:false})
+            commentExpanded.push({id:el.id, status:false})
           })
           response.data.comments.map((el, i)=>{
             commentExpanded.push({id:el.id, status:false})
@@ -182,7 +170,6 @@ class MemeDetails extends Component {
             liked:false,
             method: this.props.match.params.id,
             commentExpanded,
-            topCommentExpanded
           })
           setTimeout(() => {
             this.likedStatus();
@@ -194,9 +181,15 @@ class MemeDetails extends Component {
     }
   }
   featureMeme(meme) {
-    console.log(meme);
     axios.post(ENV.REACT_APP_BACKEND+'/api/featureMeme?id='+meme.id).then((response)=>{
-      console.log(response);
+      IziToast.show({
+        title:'Featured!',
+        message:'Check the featured page to see this meme at the top!',
+        timeout:2000,
+        color:'green',
+        class:'izishow-login',
+        theme:'light'
+      })
     })
   }
   hoverTag(num) {
@@ -327,15 +320,10 @@ class MemeDetails extends Component {
               if (res.data && res.data[1]) {
                 TC2 = res.data[1].id
               }
-              console.log('reached1')
               axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage=1'+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
-                console.log(response, 'response');
-                console.log(res, 'res');
-                console.log('reached2')
-                let commentExpanded = [],
-                    topCommentExpanded = [];
+                let commentExpanded = [];
                 res.data.map((el, i)=>{
-                  topCommentExpanded.push({id:el.id, status:false})
+                  commentExpanded.push({id:el.id, status:false})
                 })
                 response.data.comments.map((el, i)=>{
                   commentExpanded.push({id:el.id, status:false})
@@ -345,7 +333,6 @@ class MemeDetails extends Component {
                   commentPage:1,
                   topComments:res.data,
                   commentExpanded,
-                  topCommentExpanded
                 })
               });
               this.setState({
@@ -382,48 +369,68 @@ class MemeDetails extends Component {
     }
   }
   updateComments(type) {
-    if (type === 'back' && this.state.commentPage > 1) {
-      this.setState({
-        commentPage: this.state.commentPage - 1
-      })
-      axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage - 1)+'&tc1='+this.state.TC1+'&tc2='+this.state.TC2).then((response)=>{
-        let commentExpanded = [];
-        response.data.comments.map((el, i)=>{
-          commentExpanded.push({id:el.id, status:false})
-        })
-        this.setState({
-          memeDetails: response.data,
-          commentExpanded
-        })
-      }).catch((err)=>{
-        if (err) {
-          this.setState({
-            commentPage:this.state.commentPage + 1
-          })
-        }
-      });
-    } else {
-      this.setState({
-        commentPage: this.state.commentPage + 1
-      })
-      console.log(type);
-
-      axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage + 1)+'&tc1='+this.state.TC1+'&tc2='+this.state.TC2).then((response)=>{
-        console.log(response);
-        let commentExpanded = [];
-        response.data.comments.map((el, i)=>{
-          commentExpanded.push({id:el.id, status:false})
-        })
-        this.setState({
-          memeDetails: response.data,
-          commentExpanded
-        })
-      }).catch((err)=>{
+    let tl = new TimelineMax(),
+        target = `.meme-details-leave-comment-section`;
+    axios.get(ENV.REACT_APP_BACKEND + '/api/getTopComments/'+this.props.match.params.id).then((res)=>{
+      let TC1,
+          TC2;
+      if (res.data && res.data[0]) {
+        TC1 = res.data[0].id
+      }
+      if (res.data && res.data[1]) {
+        TC2 = res.data[1].id
+      }
+      if (type === 'back' && this.state.commentPage > 1) {
         this.setState({
           commentPage: this.state.commentPage - 1
         })
-      });
-    }
+        axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage - 1)+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
+          let commentExpanded = [];
+          response.data.comments.map((el, i)=>{
+            commentExpanded.push({id:el.id, status:false})
+          })
+          res.data.map((el, i)=>{
+            commentExpanded.push({id:el.id, status:false})
+          })
+          this.setState({
+            memeDetails: response.data,
+            commentExpanded,
+            topComments:res.data,
+          })
+          tl.to(window, .7, {scrollTo:target});
+        }).catch((err)=>{
+          if (err) {
+            this.setState({
+              commentPage:this.state.commentPage + 1
+            })
+          }
+        });
+      } else {
+        this.setState({
+          commentPage: this.state.commentPage + 1
+        })
+        axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage + 1)+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
+          let commentExpanded = [];
+          response.data.comments.map((el, i)=>{
+            commentExpanded.push({id:el.id, status:false})
+          })
+          res.data.map((el, i)=>{
+            commentExpanded.push({id:el.id, status:false})
+          })
+          this.setState({
+            memeDetails: response.data,
+            commentExpanded,
+            topComments:res.data,
+          })
+          tl.to(window, .7, {scrollTo:target});
+        }).catch((err)=>{
+          this.setState({
+            commentPage: this.state.commentPage - 1
+          })
+        });
+      }
+    })
+    
   }
   likeComment(id, type) {
     let state = this.state,
@@ -433,10 +440,8 @@ class MemeDetails extends Component {
         commentClickable:false,
         commentLikeArr: state.commentLikeArr.concat(id)
       })
-      console.log(type);
       if (type==='top') {
         this.state.topComments.map((el, i)=>{
-          console.log(el)
           if (el.id === id) {
             el.likes += 1;
           }
@@ -463,7 +468,6 @@ class MemeDetails extends Component {
         console.log(err)
         if (type==='top') {
           this.state.topComments.map((el, i)=>{
-            console.log(el)
             if (el.id === id) {
               el.likes -= 1;
             }
@@ -505,7 +509,6 @@ class MemeDetails extends Component {
       })
       if (type==='top') {
         this.state.topComments.map((el, i)=>{
-          console.log(el)
           if (el.id === id) {
             el.likes -= 1;
           }
@@ -523,7 +526,6 @@ class MemeDetails extends Component {
           }
         })
       }
-      console.log('unlike')
       axios.post(ENV.REACT_APP_BACKEND+'/api/commentUnlike/'+id, {user:props.user, type, meme: props.match.params.id, TC1: state.TC1, TC2: state.TC2, offset:state.commentPage}).then((response)=>{
         this.setState({
           commentLikeArr:state.commentLikeArr.filter((el, i)=>{
@@ -535,7 +537,6 @@ class MemeDetails extends Component {
         console.log(err)
         if (type==='top') {
           this.state.topComments.map((el, i)=>{
-            console.log(el)
             if (el.id === id) {
               el.likes += 1;
             }
@@ -577,21 +578,37 @@ class MemeDetails extends Component {
       })
     }
   }
-  showReplies(type, id) {
+  showReplies(id, element, type) {
+    let target;
+    if (type === 'regular') {
+      target = `.meme-details-comments-element-bottom-top-${element-1}`;
+    } else {
+      target = `.meme-details-comments-element-bottom-${element-1}`;
+    }
+    if (element === 0 && type !== 'regular') {
+      target = `.meme-details-leave-comment-section`
+    } else if (element === 0 && type === 'regular') {
+      target = `.meme-details-comments-element-bottom-1`
+    }
     if (this.state.replyClickable) {
       this.setState({
-        replies: []
+        replies: [],
+        replyLimit:10
       })
-      this.state.topCommentExpanded.map((el, i)=>{
+      this.state.commentExpanded.map((el, i)=>{
         if (el.id === id && !el.status) {
           this.setState({
             replyClickable:false,
           })
-          axios.get(ENV.REACT_APP_BACKEND + '/api/getReplies/'+id).then((response)=>{
+          axios.get(ENV.REACT_APP_BACKEND + '/api/getReplies/'+id+'?limit='+this.state.replyLimit).then((response)=>{
             this.setState({
               replyClickable:true,
               replies: response.data
             })
+            let tl = new TimelineMax({});
+            setTimeout(() => {
+              tl.to(window, .7, {scrollTo:target});
+            }, 50);
           })
           el.status = true;
         } else if (el.id === id && el.status) {
@@ -600,38 +617,19 @@ class MemeDetails extends Component {
           el.status = false;
         }
       })
-      this.state.commentExpanded.map((el, i)=>{
-        if (el.id === id) {
-          if (el.id === id && !el.status) {
-            this.setState({
-              replyClickable:false,
-            })
-            axios.get(ENV.REACT_APP_BACKEND + '/api/getReplies/'+id).then((response)=>{
-              this.setState({
-                replyClickable:true,
-                replies: response.data
-              })
-            })
-            el.status = true;
-          } else if (el.id === id && el.status) {
-            el.status = false;
-          } else {
-            el.status = false;
-          }
-        }
-      })
       this.forceUpdate();
       this.likedStatus();
     }
   }
   reply(id, type) {
     let props = this.props,
-        state = this.state,
-        memeid = props.match.params.id,
-        user = props.user,
-        comment = this.topInputRef.value,
-        date = new Date(),
-        replyid = id;
+    state = this.state,
+    memeid = props.match.params.id,
+    user = props.user,
+    comment = this.topInputRef.value,
+    date = new Date(),
+    replyid = id,
+    limit = this.state.replyLimit;
     if (!props.user) {
       IziToast.show({
         title:'Not Logged In!',
@@ -643,14 +641,39 @@ class MemeDetails extends Component {
       })
     } else {
       if (this.topInputRef.value.length > 0) {
+        if (type === 'top') {
+          state.topComments.map((el, i)=>{
+            if (el.id === id) {
+              el.replies += 1;
+            }
+          })
+        } else {
+          state.memeDetails.comments.map((el, i)=>{
+            if (el.id === id) {
+              el.replies += 1;
+            }
+          })
+        }
         this.topInputRef.value = '';
-        axios.post(ENV.REACT_APP_BACKEND + '/api/postReply/', {user, date, comment, replyid, memeid}).then((response)=>{
-          console.log(response.data);
+        axios.post(ENV.REACT_APP_BACKEND + '/api/postReply/', {user, date, comment, replyid, memeid, limit}).then((response)=>{
           this.setState({
             replies: response.data.replies
           })
         }).catch((err)=>{
           if (err) {
+            if (type === 'top') {
+              state.topComments.map((el, i)=>{
+                if (el.id === id) {
+                  el.replies -= 1;
+                }
+              })
+            } else {
+              state.memeDetails.comments.map((el, i)=>{
+                if (el.id === id) {
+                  el.replies -= 1;
+                }
+              })
+            }
             IziToast.show({
               title:'Posting Failed!',
               message:'Please check your internet connection, or wait a few moments and try again.',
@@ -663,6 +686,23 @@ class MemeDetails extends Component {
         })
       }
     } 
+  }
+  hoverLoadMore() {
+    let tl = new TimelineMax();
+    tl.to(`.meme-details-comments-load-more-replies`, .1, {opacity: 1});
+  }
+  leaveLoadMore() {
+    let tl = new TimelineMax();
+    tl.to(`.meme-details-comments-load-more-replies`, .1, {opacity: .7});
+  }
+  loadMoreReplies(id) {
+    axios.get(ENV.REACT_APP_BACKEND + '/api/getReplies/'+id+'?limit='+this.state.replyLimit+10).then((response)=>{
+      this.setState({
+        replyClickable:true,
+        replies: response.data,
+        replyLimit: this.state.replyLimit + 10
+      })
+    })
   }
   render() {
     let match = this.props.match,
@@ -699,16 +739,16 @@ class MemeDetails extends Component {
                 <h1 className={`meme-details-comments-login-heading`}>
                   Log in to leave comments!
                 </h1>
-                <a href={ENV.REACT_APP_BACKEND+'/auth'} onMouseEnter={()=>{this.hoverCommentButtons('login')}} onMouseLeave={()=>{this.leaveCommentButtons('login')}} className={`meme-details-comments-login-button`}>
+                <a href={ENV.REACT_APP_BACKEND+'/auth'} onMouseEnter={()=>{this.hoverCommentButtons('login')}} onMouseLeave={()=>{this.leaveCommentButtons('login')}} className={`meme-details-leave-comment-section meme-details-comments-login-button`}>
                   Log In / Register
                 </a>
               </section>
             )
           } else {
             leaveComment = (
-              <section className={`-section`}>
+              <section className={``}>
                 <textarea ref={el => this.commentRef = el} className={'meme-details-comments-textarea'} maxLength={300} placeholder={'Write something funny!'}/>
-                <div className={`meme-details-comments-submit`}>
+                <div className={`meme-details-leave-comment-section meme-details-comments-submit`}>
                   <div onClick={(e)=>{this.submitComment(e)}} onMouseEnter={()=>{this.hoverCommentButtons('submit')}} onMouseLeave={()=>{this.leaveCommentButtons('submit')}} className={`meme-details-comments-submit-button`}>Comment</div>
                   <div onClick={(e)=>{this.commentRef.value = ''}} onMouseEnter={()=>{this.hoverCommentButtons('clear')}} onMouseLeave={()=>{this.leaveCommentButtons('clear')}} className={`meme-details-comments-clear-button`}>Clear</div>
                 </div>
@@ -744,7 +784,7 @@ class MemeDetails extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className={`meme-details-comments-element-bottom`}>
+                    <div className={`meme-details-comments-element-bottom meme-details-comments-element-bottom-${i}`}>
                       <div className={`meme-details-comments-element-space`}/>
                       <div onClick={()=>{this.likeComment(el.id, 'top')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
                         {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
@@ -753,22 +793,22 @@ class MemeDetails extends Component {
                         </p>
                       </div>
                       <div className={`meme-details-comments-element-replies`}>
-                        <div onClick={()=>{this.showReplies('top', el.id)}} className={`meme-details-comments-element-replies-image`}/>
+                        <div onClick={()=>{this.showReplies(el.id, i)}} className={`meme-details-comments-element-replies-image`}/>
                         <p className={`meme-details-comments-element-replies-paragraph meme-details-comments-element-replies-paragraph-${el.id}`}>
                           {el.replies}
                         </p>
                       </div>
                     </div>
-                    {state.topCommentExpanded.map((cmtEl, i)=>{
+                    {state.commentExpanded.map((cmtEl, i)=>{
                       if (cmtEl.id === el.id && cmtEl.status) {
                         return (
                           <section key={i} className={`meme-details-comments-element-replies-section`}>
-                            <div className={`meme-details-comments-element-replies-input-container`}>
+                            {props.user?(<div className={`meme-details-comments-element-replies-input-container`}>
                               <input ref={el=>this.topInputRef = el} maxLength={300} placeholder={'Write something funny!'} className={`meme-details-comments-element-replies-input`}/>
                               <div onClick={()=>{this.reply(el.id, 'top')}} className={`meme-details-comments-element-replies-button`}>
                                 Reply
                               </div>
-                            </div>
+                            </div>):null}
                             {state.replies.map((el, i)=>{
                               return (
                                 <section style={{backgroundColor: props.user && props.user.id === el.user_id? 'rgba(8, 13, 17, .3)' : 'transparent'}} key={i} className={`meme-details-comments-element-section`}>
@@ -800,6 +840,11 @@ class MemeDetails extends Component {
                                 </section>
                               )
                             })}
+                            {state.replies.length%10 === 0 && state.replies.length>0? (
+                              <div onClick={()=>this.loadMoreReplies(el.id)} onMouseEnter={()=>{this.hoverLoadMore()}} onMouseLeave={()=>{this.leaveLoadMore()}} className={`meme-details-comments-load-more-replies`}>
+                                Load more replies
+                              </div>
+                            ):null}
                           </section>
                         )
                       }
@@ -826,7 +871,7 @@ class MemeDetails extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className={`meme-details-comments-element-bottom`}>
+                    <div className={`meme-details-comments-element-bottom meme-details-comments-element-bottom-top-${i}`}>
                       <div className={`meme-details-comments-element-space`}/>
                       <div onClick={()=>{this.likeComment(el.id, 'regular')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
                         {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
@@ -835,13 +880,62 @@ class MemeDetails extends Component {
                         </p>
                       </div>
                       <div className={`meme-details-comments-element-replies`}>
-                        <div onClick={()=>{this.showReplies('regular', el.id)}} className={`meme-details-comments-element-replies-image`}/>
+                        <div onClick={()=>{this.showReplies(el.id, i, 'regular')}} className={`meme-details-comments-element-replies-image`}/>
                         <p className={`meme-details-comments-element-replies-paragraph meme-details-comments-element-replies-paragraph-${el.id}`}>
                           {el.replies}
                         </p>
                       </div>
-                      {''}
                     </div>
+                    {state.commentExpanded.map((cmtEl, i)=>{
+                      if (cmtEl.id === el.id && cmtEl.status) {
+                        return (
+                          <section key={i} className={`meme-details-comments-element-replies-section`}>
+                            {props.user?(<div className={`meme-details-comments-element-replies-input-container`}>
+                              <input ref={el=>this.topInputRef = el} maxLength={300} placeholder={'Write something funny!'} className={`meme-details-comments-element-replies-input`}/>
+                              <div onClick={()=>{this.reply(el.id, 'regular')}} className={`meme-details-comments-element-replies-button`}>
+                                Reply
+                              </div>
+                            </div>):null}
+                            {state.replies.map((el, i)=>{
+                              return (
+                                <section style={{backgroundColor: props.user && props.user.id === el.user_id? 'rgba(8, 13, 17, .3)' : 'transparent'}} key={i} className={`meme-details-comments-element-section`}>
+                                  <div className={`meme-details-comments-element-top`}>
+                                    <div style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
+                                    <div className={`meme-details-comments-element-right-side`}>
+                                      <p className={`meme-details-comments-element-paragraph`}>
+                                        {el.comment}
+                                      </p>
+                                      <div className={`meme-details-comments-element-user-container`}>
+                                        <p className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                                          {el.username}
+                                        </p>
+                                        <p className={`meme-details-comments-element-date-paragraph`}>
+                                          {moment(el.date).fromNow()}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className={`meme-details-comments-element-bottom`}>
+                                    <div className={`meme-details-comments-element-space`}/>
+                                    <div onClick={()=>{this.likeComment(el.id, 'topreply')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
+                                      {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
+                                      <p style={{color: state.commentLikeArr && state.commentLikeArr.includes(el.id)?'#fc0':'white'}} className={`meme-details-comments-element-likes-paragraph meme-details-comments-element-likes-paragraph-${el.id}`}>
+                                        {el.likes}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </section>
+                              )
+                            })}
+                            {state.replies.length%10 === 0 && state.replies.length>0? (
+                              <div onClick={()=>this.loadMoreReplies(el.id)} onMouseEnter={()=>{this.hoverLoadMore()}} onMouseLeave={()=>{this.leaveLoadMore()}} className={`meme-details-comments-load-more-replies`}>
+                                Load more replies
+                              </div>
+                            ):null}
+                          </section>
+                        )
+                      }
+                    })}
                   </section>
                 )
               })}

@@ -2,13 +2,13 @@ const moment = require('moment');
 module.exports = {
   postReply: (req, res)=>{
     let db = req.app.get('db'),
-        {user, date, comment, replyid, memeid} = req.body,
+        {user, date, comment, replyid, memeid, limit} = req.body,
         obj = {};
     console.log(req.body);
     db.postReply([date, comment, user.id, memeid, replyid]).then((response)=>{
       db.updateCommentReplies([replyid]).then((response)=>{
         obj = Object.assign({}, obj, {comment: response});
-        db.getReplies([replyid]).then((response)=>{
+        db.getReplies([replyid, limit]).then((response)=>{
           obj = Object.assign({}, obj, {replies: response});
           res.status(200).send(obj);
         })
@@ -17,8 +17,9 @@ module.exports = {
   },
   getReplies: (req, res)=>{
     let db = req.app.get('db'),
-        id = req.params.id;
-    db.getReplies([id]).then((response)=>{
+        id = req.params.id,
+        limit = req.query.limit;
+    db.getReplies([id, limit]).then((response)=>{
       res.status(200).send(response);
     })
   },

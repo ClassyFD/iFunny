@@ -32,11 +32,13 @@ class MemeEditing extends Component {
   componentWillMount() {
     this.props.dispatch({
       type: 'MOUNT_COMP',
-      val: 'editing'
+      val: 'edit'
     })
-    if (this.props && !this.props.user) {
-      this.props.history.goBack();
-    }
+    setTimeout(() => {
+      if (this.props && !this.props.user) {
+        this.props.history.goBack();
+      }
+    }, 200);
   }
   componentDidMount() {
 

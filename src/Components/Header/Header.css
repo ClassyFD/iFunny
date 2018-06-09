@@ -71,7 +71,7 @@
 .header-right-section {
   width: 36%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   height: 54px;
 }
@@ -84,8 +84,8 @@
 }
 .header-right-section-login-container {
   display: flex;
-  justify-content: space-between;
-  width: 200px;
+  justify-content: space-around;
+  width: 250px;
   align-items: center;
 }
 .header-right-section-login {
@@ -107,6 +107,16 @@ a:hover, a:active, a:focus, a:visited, a:link {
   text-decoration: none; 
   color:white; 
 }
+.hover-link-edit {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 80px;
+}
+.header-right-section-upload-heading {
+  font-size: 18px;
+  font-family: 'iFunnyBold';
+}
 .header-right-section-add-memes-li {
   background: url('../../Images/Icons/plus-icon.png') no-repeat center center;
   background-size: cover;
@@ -118,6 +128,12 @@ a:hover, a:active, a:focus, a:visited, a:link {
   display: none;
 }
 @media (max-width:878px) {
+  .header-right-section-logout {
+    display: none;
+  }
+  .header-left-section-profile-text {
+    display: none;
+  }
   .header-mobile-left-section {
     height: 56px;
     display: flex;
