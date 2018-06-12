@@ -323,6 +323,16 @@
   display: flex;
   margin-top: 5px;
   margin-bottom: 20px;
+  align-items: center;
+}
+.meme-details-comments-element-delete {
+  background: url('../../Images/Icons/x-icon.png') no-repeat center center;
+  background-size: cover;
+  height: 13px;
+  width: 13px;
+  margin-left: 20px;
+  opacity: .3;
+  cursor: pointer;
 }
 .meme-details-comments-element-space {
   width: 57px;

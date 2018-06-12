@@ -60,6 +60,39 @@ module.exports = {
       res.status(200).send(response);
     })
   },
+  deleteComment: (req, res)=>{
+    let db = req.app.get('db'),
+        id = req.query.id,
+        type = req.query.type,
+        memeid = req.params.memeid,
+        replyid = req.params.replyid;
+    if (type === 'topreply' || type === 'reply') {
+      db.deleteCommentLike([id]).then((response)=>{
+        db.deleteComment([id]).then((response)=>{
+          db.updateMemeRepliesCount([replyid]).then((response)=>{
+            res.status(200).send(response);
+          })
+        })
+      })
+    } else {
+      db.getCommentLikesToDelete([id]).then((response)=>{
+        if (response) {
+          response.map((el, i)=>{
+            db.deleteCommentLike([el.id]);
+          })
+        }
+        db.deleteCommentLike([id]).then((response)=>{
+          db.deleteReplies([id]).then((response)=>{
+            db.deleteComment([id]).then((response)=>{
+              db.updateMemeCommentsCount([memeid]).then((response)=>{
+                res.status(200).send(response);
+              })
+            })
+          })
+        });
+      })
+    }
+  },
   getMainSearches: (req, res)=>{
     let db = req.app.get('db'),
         date = req.query.date;

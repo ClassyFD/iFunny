@@ -21,6 +21,7 @@ class MemeDetails extends Component {
       replyClickable:true,
       replies: [],
       replyLimit:10,
+      instance:false
     };
   }
   componentDidMount() {
@@ -704,6 +705,146 @@ class MemeDetails extends Component {
       })
     })
   }
+  hoverDelete(i, type) {
+    console.log(type)
+    if (type === 'topreply') {
+      let tl = new TimelineMax();
+      tl.to(`.meme-details-comments-element-delete-topreply-${i}`, .2, {opacity:1});
+    } else if (type === 'reply') {
+      let tl = new TimelineMax();
+      tl.to(`.meme-details-comments-element-delete-reply-${i}`, .2, {opacity:1});
+    } else if (type === 'regular') {
+      let tl = new TimelineMax();
+      tl.to(`.meme-details-comments-element-delete-regular-${i}`, .2, {opacity:1});
+    } else {
+      let tl = new TimelineMax();
+      tl.to(`.meme-details-comments-element-delete-top-${i}`, .2, {opacity:1});
+    }
+  }
+  leaveDelete(i, type) {
+    if (type === 'topreply') {
+      let tl = new TimelineMax();
+      tl.to(`.meme-details-comments-element-delete-topreply-${i}`, .2, {opacity:.3});
+    } else if (type === 'reply') {
+      let tl = new TimelineMax();
+      tl.to(`.meme-details-comments-element-delete-reply-${i}`, .2, {opacity:.3});
+    } else if (type === 'regular') {
+      let tl = new TimelineMax();
+      tl.to(`.meme-details-comments-element-delete-regular-${i}`, .2, {opacity:.3});
+    } else{
+      let tl = new TimelineMax();
+      tl.to(`.meme-details-comments-element-delete-top-${i}`, .2, {opacity:.3});
+    }
+  }
+  deleteComment(element, type) {
+    if (!this.state.instance) {
+      let id = element.id;
+      let replyid;
+        if (element.reply_id) {
+          replyid = element.reply_id
+        }
+      console.log(element)
+      console.log(this.state.memeDetails)
+      IziToast.show({
+        theme: 'dark',
+        title: 'Are you sure you want to delete this comment?',
+        position: 'center',
+        class:'izishow-login',
+        buttons: [
+            ['<button>Yes, delete.</button>', (instance, toast)=>{
+              instance.hide({}, toast, 'buttonName');
+              if (type==='topreply') {
+                this.state.topComments.map((el, i)=>{
+                  if (el.id === replyid) {
+                    el.replies -=1;
+                  }
+                })
+                this.forceUpdate();
+              } else if (type==='reply') {
+                this.state.memeDetails.comments.map((el, i)=>{
+                  if (el.id === replyid) {
+                    el.replies -=1;
+                  }
+                })
+                this.forceUpdate();
+              } else {
+                this.setState({
+                  memeDetails: Object.assign({}, this.state.memeDetails, {details: Object.assign({}, this.state.memeDetails.details, {comments: this.state.memeDetails.details.comments - 1})}),
+                })
+              }
+              axios.delete(ENV.REACT_APP_BACKEND+'/api/deleteComment/'+this.props.match.params.id+'/'+replyid+'?id='+id + '&type=' + type).then((response)=>{
+                if (type === 'top') {
+                  this.setState({
+                    topComments: this.state.topComments.filter((el, i)=>{
+                      return el.id !== id
+                    })
+                  })
+                } else if (type === 'regular') {
+                  this.setState({
+                    memeDetails:Object.assign({}, this.state.memeDetails, {comments: this.state.memeDetails.comments.filter((el, i)=>{
+                      return el.id !== id
+                    })})
+                  })
+                } else {
+                  this.setState({
+                    replies: this.state.replies.filter((el, i)=>{
+                      return el.id !== id
+                    })
+                  })
+                }
+                IziToast.show({
+                  theme:'dark',
+                  title:'deleted.',
+                  position:'center',
+                  class:'izishow-login',
+                  timeout:2000,
+                })
+              }).catch((err)=>{
+                IziToast.show({
+                  color:'red',
+                  title:'Error',
+                  message:'Failed to delete comment. Please check your internet connection!',
+                  position:'bottomRight',
+                  class:'izishow-login',
+                })
+                if (type==='topreply') {
+                  this.state.topComments.map((el, i)=>{
+                    if (el.id === replyid) {
+                      el.replies +=1;
+                    }
+                  })
+                  this.forceUpdate();
+                } else if (type==='reply') {
+                  this.state.memeDetails.comments.map((el, i)=>{
+                    if (el.id === id) {
+                      el.comments +=1;
+                    }
+                  })
+                  this.forceUpdate();
+                } else {
+                  this.setState({
+                    memeDetails: Object.assign({}, this.state.memeDetails, {details: Object.assign({}, this.state.memeDetails.details, {comments: this.state.memeDetails.details.comments + 1})})
+                  })
+                }
+              })
+            }],
+            ['<button>No, keep.</button>', (instance, toast)=>{
+                instance.hide({}, toast, 'buttonName');
+            }, true]
+        ],
+        onOpening: (instance, toast)=>{
+          this.setState({
+            instance: true
+          })
+        },
+        onClosing: (instance, toast, closedBy)=>{
+          this.setState({
+            instance: false
+          })
+        }
+      });
+    }
+  }
   render() {
     let match = this.props.match,
         props = this.props,
@@ -798,6 +939,7 @@ class MemeDetails extends Component {
                           {el.replies}
                         </p>
                       </div>
+                      {props.user && props.user.id === el.user_id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'top')}} onMouseLeave={()=>{this.leaveDelete(i, 'top')}} onClick={()=>{this.deleteComment(el, 'top')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-top-${i}`}/>):null}
                     </div>
                     {state.commentExpanded.map((cmtEl, i)=>{
                       if (cmtEl.id === el.id && cmtEl.status) {
@@ -836,6 +978,7 @@ class MemeDetails extends Component {
                                         {el.likes}
                                       </p>
                                     </div>
+                                    {props.user && props.user.id === el.user_id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'topreply')}} onMouseLeave={()=>{this.leaveDelete(i, 'topreply')}} onClick={()=>{this.deleteComment(el, 'topreply')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-topreply-${i}`}/>):null}
                                   </div>
                                 </section>
                               )
@@ -885,6 +1028,7 @@ class MemeDetails extends Component {
                           {el.replies}
                         </p>
                       </div>
+                      {props.user && props.user.id === el.user_id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'regular')}} onMouseLeave={()=>{this.leaveDelete(i, 'regular')}} onClick={()=>{this.deleteComment(el, 'regular')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-regular-${i}`}/>):null}
                     </div>
                     {state.commentExpanded.map((cmtEl, i)=>{
                       if (cmtEl.id === el.id && cmtEl.status) {
@@ -923,6 +1067,7 @@ class MemeDetails extends Component {
                                         {el.likes}
                                       </p>
                                     </div>
+                                    {props.user && props.user.id === el.user_id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'reply')}} onMouseLeave={()=>{this.leaveDelete(i, 'reply')}} onClick={()=>{this.deleteComment(el, 'reply')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-reply-${i}`}/>):null}
                                   </div>
                                 </section>
                               )
