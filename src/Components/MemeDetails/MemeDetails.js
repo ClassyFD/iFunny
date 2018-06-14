@@ -49,7 +49,7 @@ class MemeDetails extends Component {
           TC2,
           commentExpanded,
         })
-      });
+      })
     })
     this.props.dispatch({
       type: 'MOUNT_COMP',
@@ -845,6 +845,26 @@ class MemeDetails extends Component {
       });
     }
   }
+  hoverLike(element, type, condition) {
+    let tl = new TimelineMax();
+    if (!condition) {
+      tl.to(`.meme-details-comments-element-likes-${type}-${element}`, .2, {opacity:1});
+    }
+  }
+  leaveLike(element, type, condition) {
+    let tl = new TimelineMax();
+    if (!condition) {
+      tl.to(`.meme-details-comments-element-likes-${type}-${element}`, .2, {opacity:.3});
+    }
+  }
+  hoverComment(element, type) {
+    let tl = new TimelineMax();
+    tl.to(`.meme-details-comments-element-replies-${type}-${element}`, .2, {opacity:1});
+  }
+  leaveComment(element, type) {
+    let tl = new TimelineMax();
+    tl.to(`.meme-details-comments-element-replies-${type}-${element}`, .2, {opacity:.3});
+  }
   render() {
     let match = this.props.match,
         props = this.props,
@@ -927,13 +947,13 @@ class MemeDetails extends Component {
                     </div>
                     <div className={`meme-details-comments-element-bottom meme-details-comments-element-bottom-${i}`}>
                       <div className={`meme-details-comments-element-space`}/>
-                      <div onClick={()=>{this.likeComment(el.id, 'top')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
+                      <div onMouseEnter={()=>{this.hoverLike(i, 'top', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onMouseLeave={()=>{this.leaveLike(i, 'top', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onClick={()=>{this.likeComment(el.id, 'top')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes meme-details-comments-element-likes-top-${i}`}>
                         {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
                         <p style={{color: state.commentLikeArr && state.commentLikeArr.includes(el.id)?'#fc0':'white'}} className={`meme-details-comments-element-likes-paragraph meme-details-comments-element-likes-paragraph-${el.id}`}>
                           {el.likes}
                         </p>
                       </div>
-                      <div className={`meme-details-comments-element-replies`}>
+                      <div onMouseEnter={()=>{this.hoverComment(i, 'top')}} onMouseLeave={()=>{this.leaveComment(i, 'top')}} className={`meme-details-comments-element-replies meme-details-comments-element-replies-top-${i}`}>
                         <div onClick={()=>{this.showReplies(el.id, i)}} className={`meme-details-comments-element-replies-image`}/>
                         <p className={`meme-details-comments-element-replies-paragraph meme-details-comments-element-replies-paragraph-${el.id}`}>
                           {el.replies}
@@ -972,7 +992,7 @@ class MemeDetails extends Component {
                                   </div>
                                   <div className={`meme-details-comments-element-bottom`}>
                                     <div className={`meme-details-comments-element-space`}/>
-                                    <div onClick={()=>{this.likeComment(el.id, 'topreply')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
+                                    <div onMouseEnter={()=>{this.hoverLike(i, 'topreply', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onMouseLeave={()=>{this.leaveLike(i, 'topreply', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onClick={()=>{this.likeComment(el.id, 'topreply')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes meme-details-comments-element-likes-topreply-${i}`}>
                                       {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
                                       <p style={{color: state.commentLikeArr && state.commentLikeArr.includes(el.id)?'#fc0':'white'}} className={`meme-details-comments-element-likes-paragraph meme-details-comments-element-likes-paragraph-${el.id}`}>
                                         {el.likes}
@@ -1016,13 +1036,13 @@ class MemeDetails extends Component {
                     </div>
                     <div className={`meme-details-comments-element-bottom meme-details-comments-element-bottom-top-${i}`}>
                       <div className={`meme-details-comments-element-space`}/>
-                      <div onClick={()=>{this.likeComment(el.id, 'regular')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
+                      <div onMouseEnter={()=>{this.hoverLike(i, 'regular', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onMouseLeave={()=>{this.leaveLike(i, 'regular', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onClick={()=>{this.likeComment(el.id, 'regular')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes meme-details-comments-element-likes-regular-${i}`}>
                         {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
                         <p style={{color: state.commentLikeArr && state.commentLikeArr.includes(el.id)?'#fc0':'white'}} className={`meme-details-comments-element-likes-paragraph meme-details-comments-element-likes-paragraph-${el.id}`}>
                           {el.likes}
                         </p>
                       </div>
-                      <div className={`meme-details-comments-element-replies`}>
+                      <div onMouseEnter={()=>{this.hoverComment(i, 'regular')}} onMouseLeave={()=>{this.leaveComment(i, 'regular')}} className={`meme-details-comments-element-replies meme-details-comments-element-replies-regular-${i}`}>
                         <div onClick={()=>{this.showReplies(el.id, i, 'regular')}} className={`meme-details-comments-element-replies-image`}/>
                         <p className={`meme-details-comments-element-replies-paragraph meme-details-comments-element-replies-paragraph-${el.id}`}>
                           {el.replies}
@@ -1061,7 +1081,7 @@ class MemeDetails extends Component {
                                   </div>
                                   <div className={`meme-details-comments-element-bottom`}>
                                     <div className={`meme-details-comments-element-space`}/>
-                                    <div onClick={()=>{this.likeComment(el.id, 'topreply')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
+                                    <div onMouseEnter={()=>{this.hoverLike(i, 'reply', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onMouseLeave={()=>{this.leaveLike(i, 'reply', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onClick={()=>{this.likeComment(el.id, 'topreply')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes meme-details-comments-element-likes-reply-${i}`}>
                                       {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
                                       <p style={{color: state.commentLikeArr && state.commentLikeArr.includes(el.id)?'#fc0':'white'}} className={`meme-details-comments-element-likes-paragraph meme-details-comments-element-likes-paragraph-${el.id}`}>
                                         {el.likes}
@@ -1142,7 +1162,7 @@ class MemeDetails extends Component {
                       <div style={{opacity:1}} onMouseEnter={(e)=>{this.hoverSocialMedia('fb')}} onMouseLeave={(e)=>{this.leaveSocialMedia('fb')}} className='meme-details-fb-hover'>
                         <FacebookShareButton 
                           style={{height:'36px', width:'36px', borderRadius:'50%', outline:'none', cursor:'pointer'}}
-                          url={'https://classyfd.github.io/deliwin2.0'} 
+                          url={ENV.REACT_APP_FRONTEND+'/app/memes/'+this.props.match.params.id} 
                           quote={state.memeDetails.details.caption} 
                           windowWidth={800}
                           windowHeight={530}
@@ -1157,7 +1177,7 @@ class MemeDetails extends Component {
                           hashtags={state.memeDetails.tags.map((el)=>{return el.tag_text})}
                           windowWidth={800}
                           windowHeight={530}
-                          url={'http://classyfd.github.io/deliwin2.0'}
+                          url={ENV.REACT_APP_FRONTEND+'/app/memes/'+this.props.match.params.id}
                           >   
                           <TwitterIcon size={36} round/>
                         </TwitterShareButton>
