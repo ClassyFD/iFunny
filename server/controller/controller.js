@@ -53,6 +53,22 @@ module.exports = {
       res.status(200).send(response);
     })
   },
+  deleteMeme: (req, res)=>{
+    let db = req.app.get('db'),
+        memeid = req.params.memeid,
+        exactid = req.params.exactid;
+    db.deleteAllCommentLikes([memeid]).then((response)=>{
+      db.deleteAllComments([memeid]).then((response)=>{
+        db.deleteAllTags([exactid]).then((response)=>{
+          db.deleteAllLikes([memeid]).then((response)=>{
+            db.deleteMeme([memeid]).then((response)=>{
+              res.status(200).send(response);
+            })
+          })
+        })
+      })
+    });
+  },
   deleteRecentSearches: (req, res)=>{
     let db = req.app.get('db'),
         user = req.query.user;

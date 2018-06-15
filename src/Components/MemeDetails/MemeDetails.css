@@ -334,6 +334,14 @@
   opacity: .3;
   cursor: pointer;
 }
+.meme-details-comments-element-delete-meme {
+  background: url('../../Images/Icons/x-icon.png') no-repeat center center;
+  background-size: cover;
+  height: 16px;
+  width: 16px;
+  opacity: .3;
+  cursor: pointer;
+}
 .meme-details-comments-element-space {
   width: 57px;
 }

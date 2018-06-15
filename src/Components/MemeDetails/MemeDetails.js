@@ -108,6 +108,18 @@ class MemeDetails extends Component {
         })
       }
     }
+    if (!this.state.memeDetails) {
+      IziToast.show({
+        title:'Meme not found!',
+        position:'bottomRight',
+        message:`either that page doesn't exist or monkeys stole your internet!`,
+        timeout:3000,
+        color:'red',
+        class:'izishow-login',
+        theme:'light'
+      })
+      this.props.history.goBack();
+    }
   }
   componentWillReceiveProps(props) {
   }
@@ -706,35 +718,18 @@ class MemeDetails extends Component {
     })
   }
   hoverDelete(i, type) {
-    console.log(type)
-    if (type === 'topreply') {
-      let tl = new TimelineMax();
-      tl.to(`.meme-details-comments-element-delete-topreply-${i}`, .2, {opacity:1});
-    } else if (type === 'reply') {
-      let tl = new TimelineMax();
-      tl.to(`.meme-details-comments-element-delete-reply-${i}`, .2, {opacity:1});
-    } else if (type === 'regular') {
-      let tl = new TimelineMax();
-      tl.to(`.meme-details-comments-element-delete-regular-${i}`, .2, {opacity:1});
-    } else {
-      let tl = new TimelineMax();
-      tl.to(`.meme-details-comments-element-delete-top-${i}`, .2, {opacity:1});
+    let tl = new TimelineMax();
+    if (!i && !type) {
+      tl.to(`.meme-details-comments-element-delete-meme`, .2, {opacity:1});
     }
+      tl.to(`.meme-details-comments-element-delete-${type}-${i}`, .2, {opacity:1});
   }
   leaveDelete(i, type) {
-    if (type === 'topreply') {
-      let tl = new TimelineMax();
-      tl.to(`.meme-details-comments-element-delete-topreply-${i}`, .2, {opacity:.3});
-    } else if (type === 'reply') {
-      let tl = new TimelineMax();
-      tl.to(`.meme-details-comments-element-delete-reply-${i}`, .2, {opacity:.3});
-    } else if (type === 'regular') {
-      let tl = new TimelineMax();
-      tl.to(`.meme-details-comments-element-delete-regular-${i}`, .2, {opacity:.3});
-    } else{
-      let tl = new TimelineMax();
-      tl.to(`.meme-details-comments-element-delete-top-${i}`, .2, {opacity:.3});
+    let tl = new TimelineMax();
+    if (!i && !type) {
+      tl.to(`.meme-details-comments-element-delete-meme`, .2, {opacity:.3});
     }
+      tl.to(`.meme-details-comments-element-delete-${type}-${i}`, .2, {opacity:.3});
   }
   deleteComment(element, type) {
     if (!this.state.instance) {
@@ -865,6 +860,51 @@ class MemeDetails extends Component {
     let tl = new TimelineMax();
     tl.to(`.meme-details-comments-element-replies-${type}-${element}`, .2, {opacity:.3});
   }
+  deleteMeme() {
+    let {props, state} = this;
+    IziToast.show({
+      theme: 'dark',
+      title: 'Are you sure you want to delete this meme?',
+      position: 'center',
+      class:'izishow-login',
+      buttons: [
+          ['<button>Yes, delete.</button>', (instance, toast)=>{
+            instance.hide({}, toast, 'buttonName');
+            axios.delete(ENV.REACT_APP_BACKEND + '/api/deleteMeme/'+props.match.params.id+'/'+state.memeDetails.details.meme_id).then((response)=>{
+              IziToast.show({
+                theme:'dark',
+                title:'deleted.',
+                position:'center',
+                class:'izishow-login',
+                timeout:2000,
+              })
+              this.props.history.goBack();
+            }).catch((err)=>{
+              IziToast.show({
+                color:'red',
+                title:'Error',
+                message:'Failed to delete meme. Please check your internet connection!',
+                position:'bottomRight',
+                class:'izishow-login',
+              })
+            })
+          }],
+          ['<button>No, keep.</button>', (instance, toast)=>{
+              instance.hide({}, toast, 'buttonName');
+          }, true]
+      ],
+      onOpening: (instance, toast)=>{
+        this.setState({
+          instance: true
+        })
+      },
+      onClosing: (instance, toast, closedBy)=>{
+        this.setState({
+          instance: false
+        })
+      }
+    });
+  }
   render() {
     let match = this.props.match,
         props = this.props,
@@ -959,7 +999,7 @@ class MemeDetails extends Component {
                           {el.replies}
                         </p>
                       </div>
-                      {props.user && props.user.id === el.user_id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'top')}} onMouseLeave={()=>{this.leaveDelete(i, 'top')}} onClick={()=>{this.deleteComment(el, 'top')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-top-${i}`}/>):null}
+                      {props.user.id === el.user_id || props.user.user_type==='admin' || state.memeDetails.details.user_id===props.user.id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'top')}} onMouseLeave={()=>{this.leaveDelete(i, 'top')}} onClick={()=>{this.deleteComment(el, 'top')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-top-${i}`}/>):null}
                     </div>
                     {state.commentExpanded.map((cmtEl, i)=>{
                       if (cmtEl.id === el.id && cmtEl.status) {
@@ -998,7 +1038,7 @@ class MemeDetails extends Component {
                                         {el.likes}
                                       </p>
                                     </div>
-                                    {props.user && props.user.id === el.user_id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'topreply')}} onMouseLeave={()=>{this.leaveDelete(i, 'topreply')}} onClick={()=>{this.deleteComment(el, 'topreply')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-topreply-${i}`}/>):null}
+                                    {props.user.id === el.user_id || props.user.user_type==='admin' || state.memeDetails.details.user_id===props.user.id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'topreply')}} onMouseLeave={()=>{this.leaveDelete(i, 'topreply')}} onClick={()=>{this.deleteComment(el, 'topreply')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-topreply-${i}`}/>):null}
                                   </div>
                                 </section>
                               )
@@ -1048,7 +1088,7 @@ class MemeDetails extends Component {
                           {el.replies}
                         </p>
                       </div>
-                      {props.user && props.user.id === el.user_id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'regular')}} onMouseLeave={()=>{this.leaveDelete(i, 'regular')}} onClick={()=>{this.deleteComment(el, 'regular')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-regular-${i}`}/>):null}
+                      {props.user.id === el.user_id || props.user.user_type==='admin' || state.memeDetails.details.user_id===props.user.id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'regular')}} onMouseLeave={()=>{this.leaveDelete(i, 'regular')}} onClick={()=>{this.deleteComment(el, 'regular')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-regular-${i}`}/>):null}
                     </div>
                     {state.commentExpanded.map((cmtEl, i)=>{
                       if (cmtEl.id === el.id && cmtEl.status) {
@@ -1087,7 +1127,7 @@ class MemeDetails extends Component {
                                         {el.likes}
                                       </p>
                                     </div>
-                                    {props.user && props.user.id === el.user_id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'reply')}} onMouseLeave={()=>{this.leaveDelete(i, 'reply')}} onClick={()=>{this.deleteComment(el, 'reply')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-reply-${i}`}/>):null}
+                                    {props.user.id === el.user_id || props.user.user_type==='admin' || state.memeDetails.details.user_id===props.user.id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'reply')}} onMouseLeave={()=>{this.leaveDelete(i, 'reply')}} onClick={()=>{this.deleteComment(el, 'reply')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-reply-${i}`}/>):null}
                                   </div>
                                 </section>
                               )
@@ -1183,9 +1223,13 @@ class MemeDetails extends Component {
                         </TwitterShareButton>
                       </div>
                       {this.props.user.user_type==='admin'?
-                          (<div className={`meme-details-details-more`} onMouseLeave={(e)=>{this.leaveButton('more')}} onMouseEnter={(e)=>{this.hoverButton('more')}}>
-                            <div onClick={()=>{this.featureMeme(state.memeDetails.details)}} className='meme-details-details-featured-image'/>
-                          </div>):null}
+                      (<div className={`meme-details-details-more`} onMouseLeave={(e)=>{this.leaveButton('more')}} onMouseEnter={(e)=>{this.hoverButton('more')}}>
+                        <div onClick={()=>{this.featureMeme(state.memeDetails.details)}} className='meme-details-details-featured-image'/>
+                      </div>):null}
+                      {state.memeDetails.details.user_id===props.user.id || this.props.user.user_type==='admin'? 
+                      (<div className={``}>
+                        {<div onMouseEnter={()=>{this.hoverDelete()}} onMouseLeave={()=>{this.leaveDelete()}} onClick={()=>{this.deleteMeme()}} className={`meme-details-comments-element-delete-meme`}/>}
+                      </div>):null}
                     </div>
                     <div className='meme-details-details-arrows'>
                       <div onClick={()=>{this.setState({method:state.memeDetails.prev_id}),this.props.history.push(`/app/memes/${state.memeDetails.prev_id}`)}} className='meme-details-details-back-arrow' onMouseLeave={(e)=>{this.leaveButton('back-arrow')}} onMouseEnter={(e)=>{this.hoverButton('back-arrow')}}>
