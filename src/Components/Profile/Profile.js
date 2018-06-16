@@ -14,6 +14,7 @@ class Profile extends Component {
       type:'MOUNT_COMP',
       val:'profile'
     })
+    this.props.history.push('/')
   }
 
   componentWillReceiveProps(props) {
