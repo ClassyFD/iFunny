@@ -157,6 +157,8 @@ app.get('/api/getMemeDetails/:id', CTRL.getMemeDetails);
 app.get('/api/getFeaturedMemes', CTRL.getFeaturedMemes);
 app.get('/api/getReplies/:id', CTRL.getReplies);
 app.delete('/api/deleteRecentSearches', CTRL.deleteRecentSearches);
+app.delete('/api/deleteComment/:memeid/:replyid', CTRL.deleteComment);
+app.delete('/api/deleteMeme/:memeid/:exactid', CTRL.deleteMeme);
 app.post('/api/postRecentSearch', CTRL.postRecentSearch);
 app.post('/api/unlike/:memeid', CTRL.unlikeMeme);
 app.post('/api/like/:memeid', CTRL.likeMeme);

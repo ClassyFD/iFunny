@@ -33,13 +33,25 @@ class Header extends Component {
 
   componentWillReceiveProps(props) {
     let mtl = new TimelineMax(),
-        tl = new TimelineMax();
+        tl = new TimelineMax(),
+        etl = new TimelineMax();
+        console.log(this.state.mountedComp)
     if (this.state.mountedComp !== props.comp) {
       tl.to(`.header-link`, .5, {color:'white'});
       mtl.to(`.header-nav-link`, .5, {color:'white'});
     }
+    if (props.comp !== 'edit') {
+      etl.to(`.header-right-section-add-memes-li`, .5, {opacity:1})
+         .to(`.header-right-section-upload-heading`, .5, {color:'white'}, '-=.2');
+    }
     tl.to(`.header-left-section-${props.comp}-text`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
-    mtl.to(`.header-mobile-nav-${props.comp}`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
+    mtl.to(`.header-mobile-nav-${props.comp}`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');  
+    if (props.comp === 'edit') {
+      console.log('edit')
+      setTimeout(() => {
+        etl.to(`.header-right-section-upload-heading`, .5, {color:'#fc0'});
+      }, 50);
+    }
     this.setState({
       mountedComp:props.comp
     })
@@ -56,15 +68,23 @@ class Header extends Component {
     })
   }
   hoverLink(target) {
-    if (target!==this.props.comp || target==='icon' || target==='search' || target==='edit') {
+    if (target==='edit') {
       let tl = new TimelineMax();
-      tl.to(`.hover-link-${target}`, .2, target==='icon'||target==='search' || target==='edit'?{opacity:.6}:{color:'#fc0'});
+      tl.to(`.header-right-section-add-memes-li`, .2, {opacity:.6})
+        .to(target!==this.props.comp?`.header-right-section-upload-heading`:`null`, .2, {color:'#fc0'}, '-=.2');
+    } else if (target!==this.props.comp || target==='icon' || target==='search') {
+      let tl = new TimelineMax();
+      tl.to(`.hover-link-${target}`, .2, target==='icon'||target==='search'?{opacity:.6}:{color:'#fc0'});
     }
   }
   leaveLink(target) {
-    if (target!==this.props.comp || target==='icon' || target==='search' || target==='edit') {
+    if (target==='edit') {
       let tl = new TimelineMax();
-      tl.to(`.hover-link-${target}`, .2, target==='icon'||target==='search' || target==='edit'?{opacity:1}:{color:'white'});
+      tl.to(`.header-right-section-add-memes-li`, .2, {opacity:1})
+        .to(target!==this.props.comp?`.header-right-section-upload-heading`:`null`, .2, {color:'white'}, '-=.2');
+    } else if (target!==this.props.comp || target==='icon' || target==='search') {
+      let tl = new TimelineMax();
+      tl.to(`.hover-link-${target}`, .2, target==='icon'||target==='search'?{opacity:1}:{color:'white'});
     }
   }
   render() {
@@ -74,18 +94,23 @@ class Header extends Component {
       login = (
         <div className='header-right-section-login-container'>
           <a onMouseEnter={()=>{this.hoverLink('logout')}} onMouseLeave={()=>{this.leaveLink('logout')}} className='header-link header-left-section-logout-text header-right-section-logout hover-link-logout' href={ENV.REACT_APP_BACKEND + '/auth/logout'}>
-            Log Out
+            log Out
           </a>
           <Link onMouseEnter={()=>{this.hoverLink('profile')}} onMouseLeave={()=>{this.leaveLink('profile')}} className='header-link header-left-section-profile-text header-right-section-login hover-link-profile' to='/profile'>
-            Profile
+            profile
           </Link>
-          <Link onMouseEnter={()=>{this.hoverLink('edit')}} onMouseLeave={()=>{this.leaveLink('edit')}} to='/edit' className='header-right-section-add-memes-li hover-link-edit'/>
+          <Link onMouseEnter={()=>{this.hoverLink('edit')}} onMouseLeave={()=>{this.leaveLink('edit')}} to='/edit' className={`hover-link-edit`}>
+            <h1 className={`header-right-section-upload-heading .header-left-section-edit-text`}>
+              upload
+            </h1>
+            <div className='header-right-section-add-memes-li'/>
+          </Link>
         </div>
       );
     } else {
       login = (
         <a onMouseEnter={()=>{this.hoverLink('login')}} onMouseLeave={()=>{this.leaveLink('login')}} href={ENV.REACT_APP_BACKEND + '/auth'} className='header-right-section-login hover-link-login'>
-          Log In / Register
+          log in / register
         </a>
       );
     }
@@ -120,9 +145,9 @@ class Header extends Component {
             <a href={'http://ifunnyoriginal.spreadshirt.com/'} target='_blank' className='header-nav-link header-mobile-nav-store'>
               store
             </a>
-            <a href={'https://twitter.com/iFunnyChef'} target='_blank' className='header-nav-link header-mobile-nav-chef'>
-              iFunnyChef
-            </a>
+            {this.props.user?(<Link to={'/profile'} className='header-nav-link header-mobile-nav-profile'>
+              profile
+            </Link>):null}
             <Link to={'/app/privacy'} className='header-nav-link header-mobile-nav-privacy'>
               privacy
             </Link>

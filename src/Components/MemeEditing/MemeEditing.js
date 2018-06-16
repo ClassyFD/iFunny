@@ -32,11 +32,13 @@ class MemeEditing extends Component {
   componentWillMount() {
     this.props.dispatch({
       type: 'MOUNT_COMP',
-      val: 'editing'
+      val: 'edit'
     })
-    if (this.props && !this.props.user) {
-      this.props.history.goBack();
-    }
+    setTimeout(() => {
+      if (this.props && !this.props.user) {
+        this.props.history.goBack();
+      }
+    }, 200);
   }
   componentDidMount() {
 
@@ -238,7 +240,7 @@ class MemeEditing extends Component {
         caption;
     if (state.preview && state.image) {
       image = (
-        <img src={state.image.Location} style={{width:'90%', height: 'auto', margin: '0 auto' }}/>
+        <img src={state.image.Location} style={{width:'100%', height: 'auto', margin: '0 auto' }}/>
       )
     } else if (state.image) {
       image = (

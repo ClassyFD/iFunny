@@ -1,0 +1,9 @@
+.Profile {
+  background:#171a1e;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  position: relative;
+  top: 55px;
+  overflow-x: hidden;
+}

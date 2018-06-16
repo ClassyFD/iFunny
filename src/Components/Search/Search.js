@@ -46,6 +46,32 @@ class Search extends Component {
       this.setState({
         popularTags:response.data
       })
+      if (response.data.length < 14) {
+        date = moment(date).subtract(90, 'days').utc().format('MM-DD-YYYY')
+        axios.get(ENV.REACT_APP_BACKEND+`/api/getMainSearches?date=${date}`).then((response)=>{
+          this.setState({
+            popularTags:response.data
+          })
+          if (response.data.length < 14) {
+            date = moment(date).subtract(99999, 'days').utc().format('MM-DD-YYYY')
+            axios.get(ENV.REACT_APP_BACKEND+`/api/getMainSearches?date=${date}`).then((response)=>{
+              this.setState({
+                popularTags:response.data
+              })
+            }).catch((err)=>{
+              console.log(err);
+              this.setState({
+                popularStatus:false
+              })
+            })
+          }
+        }).catch((err)=>{
+          console.log(err);
+          this.setState({
+            popularStatus:false
+          })
+        })
+      }
     }).catch((err)=>{
       console.log(err);
       this.setState({

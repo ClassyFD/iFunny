@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import './Profile.css';
 
 class Profile extends Component {
@@ -13,6 +14,7 @@ class Profile extends Component {
       type:'MOUNT_COMP',
       val:'profile'
     })
+    this.props.history.push('/')
   }
 
   componentWillReceiveProps(props) {
@@ -28,7 +30,7 @@ class Profile extends Component {
 }
 function mapStateToProps(state) {
   return {
-
+    user:state.sessionUser
   }
 }
-export default connect(mapStateToProps)(Profile);
+export default withRouter(connect(mapStateToProps)(Profile));

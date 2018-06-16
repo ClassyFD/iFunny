@@ -3,7 +3,7 @@ import './MemeDetails.css';
 import axios from 'axios';
 import moment from 'moment';
 import { FacebookShareButton, FacebookIcon, TwitterShareButton, TwitterIcon } from 'react-share';
-import { TimelineMax } from 'gsap';
+import { TimelineMax, Ease, Power0, Power4, Power2, Back } from 'gsap';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import IziToast from 'izitoast';
@@ -18,16 +18,16 @@ class MemeDetails extends Component {
       clickable:true,
       commentClickable:true,
       commentExpanded:[],
-      topCommentExpanded:[],
       replyClickable:true,
-      replies: []
+      replies: [],
+      replyLimit:10,
+      instance:false
     };
   }
   componentDidMount() {
     axios.get(ENV.REACT_APP_BACKEND + '/api/getTopComments/'+this.props.match.params.id).then((res)=>{
       let TC1,
           TC2;
-      console.log(res.data)
       if (res.data && res.data[0]) {
         TC1 = res.data[0].id
       }
@@ -35,10 +35,9 @@ class MemeDetails extends Component {
         TC2 = res.data[1].id
       }
       axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+this.state.commentPage+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
-        let commentExpanded = [],
-            topCommentExpanded = [];
+        let commentExpanded = [];
         res.data.map((el, i)=>{
-          topCommentExpanded.push({id:el.id, status:false})
+          commentExpanded.push({id:el.id, status:false})
         })
         response.data.comments.map((el, i)=>{
           commentExpanded.push({id:el.id, status:false})
@@ -49,9 +48,8 @@ class MemeDetails extends Component {
           TC1,
           TC2,
           commentExpanded,
-          topCommentExpanded
         })
-      });
+      })
     })
     this.props.dispatch({
       type: 'MOUNT_COMP',
@@ -61,7 +59,6 @@ class MemeDetails extends Component {
         tl.to(window, .5, {scrollTo:0});
     setTimeout(() => {
       this.likedStatus();
-      console.log(this.state)
     }, 800);
   }
   likedStatus() {
@@ -77,7 +74,6 @@ class MemeDetails extends Component {
       if (this.props.user) {
         axios.get(ENV.REACT_APP_BACKEND+'/api/checkCommentLikes/'+this.props.match.params.id+'/'+this.props.user.id + '?offset='+this.state.commentPage).then((response)=>{
           if (response.data) {
-            console.log('liked status')
             if (this.state.memeDetails.comments) {
               this.state.memeDetails.comments.map((el, i)=>{
                 response.data.map((resEl, resI)=>{
@@ -97,11 +93,8 @@ class MemeDetails extends Component {
               })
             }
             if (this.state.replies) {
-              console.log(this.state.replies)
               this.state.replies.map((el, i)=>{
-                console.log(el);
                 response.data.map((resEl, resI)=>{
-                  console.log(resEl)
                   if (el.id === resEl.comment_id) {
                     commentLikeArr.push(el.id);
                   }
@@ -111,10 +104,21 @@ class MemeDetails extends Component {
             this.setState({
               commentLikeArr
             })
-            console.log(commentLikeArr)
           }
         })
       }
+    }
+    if (!this.state.memeDetails) {
+      IziToast.show({
+        title:'Meme not found!',
+        position:'bottomRight',
+        message:`either that page doesn't exist or monkeys stole your internet!`,
+        timeout:3000,
+        color:'red',
+        class:'izishow-login',
+        theme:'light'
+      })
+      this.props.history.goBack();
     }
   }
   componentWillReceiveProps(props) {
@@ -132,10 +136,9 @@ class MemeDetails extends Component {
           TC2 = res.data[1].id
         }
         axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+prevState.method + '?commentPage='+this.state.commentPage+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
-          let commentExpanded = [],
-              topCommentExpanded = [];
+          let commentExpanded = [];
           res.data.map((el, i)=>{
-            topCommentExpanded.push({id:el.id, status:false})
+            commentExpanded.push({id:el.id, status:false})
           })
           response.data.comments.map((el, i)=>{
             commentExpanded.push({id:el.id, status:false})
@@ -145,7 +148,6 @@ class MemeDetails extends Component {
             memeDetails:response.data,
             liked:false,
             commentExpanded,
-            topCommentExpanded
           })
           setTimeout(() => {
             this.likedStatus();
@@ -168,10 +170,9 @@ class MemeDetails extends Component {
           TC2 = res.data[1].id
         }
         axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+this.state.commentPage+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
-          let commentExpanded = [],
-              topCommentExpanded = [];
+          let commentExpanded = [];
           res.data.map((el, i)=>{
-            topCommentExpanded.push({id:el.id, status:false})
+            commentExpanded.push({id:el.id, status:false})
           })
           response.data.comments.map((el, i)=>{
             commentExpanded.push({id:el.id, status:false})
@@ -182,7 +183,6 @@ class MemeDetails extends Component {
             liked:false,
             method: this.props.match.params.id,
             commentExpanded,
-            topCommentExpanded
           })
           setTimeout(() => {
             this.likedStatus();
@@ -194,9 +194,15 @@ class MemeDetails extends Component {
     }
   }
   featureMeme(meme) {
-    console.log(meme);
     axios.post(ENV.REACT_APP_BACKEND+'/api/featureMeme?id='+meme.id).then((response)=>{
-      console.log(response);
+      IziToast.show({
+        title:'Featured!',
+        message:'Check the featured page to see this meme at the top!',
+        timeout:2000,
+        color:'green',
+        class:'izishow-login',
+        theme:'light'
+      })
     })
   }
   hoverTag(num) {
@@ -327,15 +333,10 @@ class MemeDetails extends Component {
               if (res.data && res.data[1]) {
                 TC2 = res.data[1].id
               }
-              console.log('reached1')
               axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage=1'+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
-                console.log(response, 'response');
-                console.log(res, 'res');
-                console.log('reached2')
-                let commentExpanded = [],
-                    topCommentExpanded = [];
+                let commentExpanded = [];
                 res.data.map((el, i)=>{
-                  topCommentExpanded.push({id:el.id, status:false})
+                  commentExpanded.push({id:el.id, status:false})
                 })
                 response.data.comments.map((el, i)=>{
                   commentExpanded.push({id:el.id, status:false})
@@ -345,7 +346,6 @@ class MemeDetails extends Component {
                   commentPage:1,
                   topComments:res.data,
                   commentExpanded,
-                  topCommentExpanded
                 })
               });
               this.setState({
@@ -382,48 +382,68 @@ class MemeDetails extends Component {
     }
   }
   updateComments(type) {
-    if (type === 'back' && this.state.commentPage > 1) {
-      this.setState({
-        commentPage: this.state.commentPage - 1
-      })
-      axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage - 1)+'&tc1='+this.state.TC1+'&tc2='+this.state.TC2).then((response)=>{
-        let commentExpanded = [];
-        response.data.comments.map((el, i)=>{
-          commentExpanded.push({id:el.id, status:false})
-        })
-        this.setState({
-          memeDetails: response.data,
-          commentExpanded
-        })
-      }).catch((err)=>{
-        if (err) {
-          this.setState({
-            commentPage:this.state.commentPage + 1
-          })
-        }
-      });
-    } else {
-      this.setState({
-        commentPage: this.state.commentPage + 1
-      })
-      console.log(type);
-
-      axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage + 1)+'&tc1='+this.state.TC1+'&tc2='+this.state.TC2).then((response)=>{
-        console.log(response);
-        let commentExpanded = [];
-        response.data.comments.map((el, i)=>{
-          commentExpanded.push({id:el.id, status:false})
-        })
-        this.setState({
-          memeDetails: response.data,
-          commentExpanded
-        })
-      }).catch((err)=>{
+    let tl = new TimelineMax(),
+        target = `.meme-details-leave-comment-section`;
+    axios.get(ENV.REACT_APP_BACKEND + '/api/getTopComments/'+this.props.match.params.id).then((res)=>{
+      let TC1,
+          TC2;
+      if (res.data && res.data[0]) {
+        TC1 = res.data[0].id
+      }
+      if (res.data && res.data[1]) {
+        TC2 = res.data[1].id
+      }
+      if (type === 'back' && this.state.commentPage > 1) {
         this.setState({
           commentPage: this.state.commentPage - 1
         })
-      });
-    }
+        axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage - 1)+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
+          let commentExpanded = [];
+          response.data.comments.map((el, i)=>{
+            commentExpanded.push({id:el.id, status:false})
+          })
+          res.data.map((el, i)=>{
+            commentExpanded.push({id:el.id, status:false})
+          })
+          this.setState({
+            memeDetails: response.data,
+            commentExpanded,
+            topComments:res.data,
+          })
+          tl.to(window, .7, {scrollTo:target});
+        }).catch((err)=>{
+          if (err) {
+            this.setState({
+              commentPage:this.state.commentPage + 1
+            })
+          }
+        });
+      } else {
+        this.setState({
+          commentPage: this.state.commentPage + 1
+        })
+        axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage + 1)+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
+          let commentExpanded = [];
+          response.data.comments.map((el, i)=>{
+            commentExpanded.push({id:el.id, status:false})
+          })
+          res.data.map((el, i)=>{
+            commentExpanded.push({id:el.id, status:false})
+          })
+          this.setState({
+            memeDetails: response.data,
+            commentExpanded,
+            topComments:res.data,
+          })
+          tl.to(window, .7, {scrollTo:target});
+        }).catch((err)=>{
+          this.setState({
+            commentPage: this.state.commentPage - 1
+          })
+        });
+      }
+    })
+    
   }
   likeComment(id, type) {
     let state = this.state,
@@ -433,10 +453,8 @@ class MemeDetails extends Component {
         commentClickable:false,
         commentLikeArr: state.commentLikeArr.concat(id)
       })
-      console.log(type);
       if (type==='top') {
         this.state.topComments.map((el, i)=>{
-          console.log(el)
           if (el.id === id) {
             el.likes += 1;
           }
@@ -463,7 +481,6 @@ class MemeDetails extends Component {
         console.log(err)
         if (type==='top') {
           this.state.topComments.map((el, i)=>{
-            console.log(el)
             if (el.id === id) {
               el.likes -= 1;
             }
@@ -505,7 +522,6 @@ class MemeDetails extends Component {
       })
       if (type==='top') {
         this.state.topComments.map((el, i)=>{
-          console.log(el)
           if (el.id === id) {
             el.likes -= 1;
           }
@@ -523,7 +539,6 @@ class MemeDetails extends Component {
           }
         })
       }
-      console.log('unlike')
       axios.post(ENV.REACT_APP_BACKEND+'/api/commentUnlike/'+id, {user:props.user, type, meme: props.match.params.id, TC1: state.TC1, TC2: state.TC2, offset:state.commentPage}).then((response)=>{
         this.setState({
           commentLikeArr:state.commentLikeArr.filter((el, i)=>{
@@ -535,7 +550,6 @@ class MemeDetails extends Component {
         console.log(err)
         if (type==='top') {
           this.state.topComments.map((el, i)=>{
-            console.log(el)
             if (el.id === id) {
               el.likes += 1;
             }
@@ -577,21 +591,37 @@ class MemeDetails extends Component {
       })
     }
   }
-  showReplies(type, id) {
+  showReplies(id, element, type) {
+    let target;
+    if (type === 'regular') {
+      target = `.meme-details-comments-element-bottom-top-${element-1}`;
+    } else {
+      target = `.meme-details-comments-element-bottom-${element-1}`;
+    }
+    if (element === 0 && type !== 'regular') {
+      target = `.meme-details-leave-comment-section`
+    } else if (element === 0 && type === 'regular') {
+      target = `.meme-details-comments-element-bottom-1`
+    }
     if (this.state.replyClickable) {
       this.setState({
-        replies: []
+        replies: [],
+        replyLimit:10
       })
-      this.state.topCommentExpanded.map((el, i)=>{
+      this.state.commentExpanded.map((el, i)=>{
         if (el.id === id && !el.status) {
           this.setState({
             replyClickable:false,
           })
-          axios.get(ENV.REACT_APP_BACKEND + '/api/getReplies/'+id).then((response)=>{
+          axios.get(ENV.REACT_APP_BACKEND + '/api/getReplies/'+id+'?limit='+this.state.replyLimit).then((response)=>{
             this.setState({
               replyClickable:true,
               replies: response.data
             })
+            let tl = new TimelineMax({});
+            setTimeout(() => {
+              tl.to(window, .7, {scrollTo:target});
+            }, 50);
           })
           el.status = true;
         } else if (el.id === id && el.status) {
@@ -600,38 +630,19 @@ class MemeDetails extends Component {
           el.status = false;
         }
       })
-      this.state.commentExpanded.map((el, i)=>{
-        if (el.id === id) {
-          if (el.id === id && !el.status) {
-            this.setState({
-              replyClickable:false,
-            })
-            axios.get(ENV.REACT_APP_BACKEND + '/api/getReplies/'+id).then((response)=>{
-              this.setState({
-                replyClickable:true,
-                replies: response.data
-              })
-            })
-            el.status = true;
-          } else if (el.id === id && el.status) {
-            el.status = false;
-          } else {
-            el.status = false;
-          }
-        }
-      })
       this.forceUpdate();
       this.likedStatus();
     }
   }
   reply(id, type) {
     let props = this.props,
-        state = this.state,
-        memeid = props.match.params.id,
-        user = props.user,
-        comment = this.topInputRef.value,
-        date = new Date(),
-        replyid = id;
+    state = this.state,
+    memeid = props.match.params.id,
+    user = props.user,
+    comment = this.topInputRef.value,
+    date = new Date(),
+    replyid = id,
+    limit = this.state.replyLimit;
     if (!props.user) {
       IziToast.show({
         title:'Not Logged In!',
@@ -643,14 +654,39 @@ class MemeDetails extends Component {
       })
     } else {
       if (this.topInputRef.value.length > 0) {
+        if (type === 'top') {
+          state.topComments.map((el, i)=>{
+            if (el.id === id) {
+              el.replies += 1;
+            }
+          })
+        } else {
+          state.memeDetails.comments.map((el, i)=>{
+            if (el.id === id) {
+              el.replies += 1;
+            }
+          })
+        }
         this.topInputRef.value = '';
-        axios.post(ENV.REACT_APP_BACKEND + '/api/postReply/', {user, date, comment, replyid, memeid}).then((response)=>{
-          console.log(response.data);
+        axios.post(ENV.REACT_APP_BACKEND + '/api/postReply/', {user, date, comment, replyid, memeid, limit}).then((response)=>{
           this.setState({
             replies: response.data.replies
           })
         }).catch((err)=>{
           if (err) {
+            if (type === 'top') {
+              state.topComments.map((el, i)=>{
+                if (el.id === id) {
+                  el.replies -= 1;
+                }
+              })
+            } else {
+              state.memeDetails.comments.map((el, i)=>{
+                if (el.id === id) {
+                  el.replies -= 1;
+                }
+              })
+            }
             IziToast.show({
               title:'Posting Failed!',
               message:'Please check your internet connection, or wait a few moments and try again.',
@@ -663,6 +699,211 @@ class MemeDetails extends Component {
         })
       }
     } 
+  }
+  hoverLoadMore() {
+    let tl = new TimelineMax();
+    tl.to(`.meme-details-comments-load-more-replies`, .1, {opacity: 1});
+  }
+  leaveLoadMore() {
+    let tl = new TimelineMax();
+    tl.to(`.meme-details-comments-load-more-replies`, .1, {opacity: .7});
+  }
+  loadMoreReplies(id) {
+    axios.get(ENV.REACT_APP_BACKEND + '/api/getReplies/'+id+'?limit='+this.state.replyLimit+10).then((response)=>{
+      this.setState({
+        replyClickable:true,
+        replies: response.data,
+        replyLimit: this.state.replyLimit + 10
+      })
+    })
+  }
+  hoverDelete(i, type) {
+    let tl = new TimelineMax();
+    if (!i && !type) {
+      tl.to(`.meme-details-comments-element-delete-meme`, .2, {opacity:1});
+    }
+      tl.to(`.meme-details-comments-element-delete-${type}-${i}`, .2, {opacity:1});
+  }
+  leaveDelete(i, type) {
+    let tl = new TimelineMax();
+    if (!i && !type) {
+      tl.to(`.meme-details-comments-element-delete-meme`, .2, {opacity:.3});
+    }
+      tl.to(`.meme-details-comments-element-delete-${type}-${i}`, .2, {opacity:.3});
+  }
+  deleteComment(element, type) {
+    if (!this.state.instance) {
+      let id = element.id;
+      let replyid;
+        if (element.reply_id) {
+          replyid = element.reply_id
+        }
+      console.log(element)
+      console.log(this.state.memeDetails)
+      IziToast.show({
+        theme: 'dark',
+        title: 'Are you sure you want to delete this comment?',
+        position: 'center',
+        class:'izishow-login',
+        buttons: [
+            ['<button>Yes, delete.</button>', (instance, toast)=>{
+              instance.hide({}, toast, 'buttonName');
+              if (type==='topreply') {
+                this.state.topComments.map((el, i)=>{
+                  if (el.id === replyid) {
+                    el.replies -=1;
+                  }
+                })
+                this.forceUpdate();
+              } else if (type==='reply') {
+                this.state.memeDetails.comments.map((el, i)=>{
+                  if (el.id === replyid) {
+                    el.replies -=1;
+                  }
+                })
+                this.forceUpdate();
+              } else {
+                this.setState({
+                  memeDetails: Object.assign({}, this.state.memeDetails, {details: Object.assign({}, this.state.memeDetails.details, {comments: this.state.memeDetails.details.comments - 1})}),
+                })
+              }
+              axios.delete(ENV.REACT_APP_BACKEND+'/api/deleteComment/'+this.props.match.params.id+'/'+replyid+'?id='+id + '&type=' + type).then((response)=>{
+                if (type === 'top') {
+                  this.setState({
+                    topComments: this.state.topComments.filter((el, i)=>{
+                      return el.id !== id
+                    })
+                  })
+                } else if (type === 'regular') {
+                  this.setState({
+                    memeDetails:Object.assign({}, this.state.memeDetails, {comments: this.state.memeDetails.comments.filter((el, i)=>{
+                      return el.id !== id
+                    })})
+                  })
+                } else {
+                  this.setState({
+                    replies: this.state.replies.filter((el, i)=>{
+                      return el.id !== id
+                    })
+                  })
+                }
+                IziToast.show({
+                  theme:'dark',
+                  title:'deleted.',
+                  position:'center',
+                  class:'izishow-login',
+                  timeout:2000,
+                })
+              }).catch((err)=>{
+                IziToast.show({
+                  color:'red',
+                  title:'Error',
+                  message:'Failed to delete comment. Please check your internet connection!',
+                  position:'bottomRight',
+                  class:'izishow-login',
+                })
+                if (type==='topreply') {
+                  this.state.topComments.map((el, i)=>{
+                    if (el.id === replyid) {
+                      el.replies +=1;
+                    }
+                  })
+                  this.forceUpdate();
+                } else if (type==='reply') {
+                  this.state.memeDetails.comments.map((el, i)=>{
+                    if (el.id === id) {
+                      el.comments +=1;
+                    }
+                  })
+                  this.forceUpdate();
+                } else {
+                  this.setState({
+                    memeDetails: Object.assign({}, this.state.memeDetails, {details: Object.assign({}, this.state.memeDetails.details, {comments: this.state.memeDetails.details.comments + 1})})
+                  })
+                }
+              })
+            }],
+            ['<button>No, keep.</button>', (instance, toast)=>{
+                instance.hide({}, toast, 'buttonName');
+            }, true]
+        ],
+        onOpening: (instance, toast)=>{
+          this.setState({
+            instance: true
+          })
+        },
+        onClosing: (instance, toast, closedBy)=>{
+          this.setState({
+            instance: false
+          })
+        }
+      });
+    }
+  }
+  hoverLike(element, type, condition) {
+    let tl = new TimelineMax();
+    if (!condition) {
+      tl.to(`.meme-details-comments-element-likes-${type}-${element}`, .2, {opacity:1});
+    }
+  }
+  leaveLike(element, type, condition) {
+    let tl = new TimelineMax();
+    if (!condition) {
+      tl.to(`.meme-details-comments-element-likes-${type}-${element}`, .2, {opacity:.3});
+    }
+  }
+  hoverComment(element, type) {
+    let tl = new TimelineMax();
+    tl.to(`.meme-details-comments-element-replies-${type}-${element}`, .2, {opacity:1});
+  }
+  leaveComment(element, type) {
+    let tl = new TimelineMax();
+    tl.to(`.meme-details-comments-element-replies-${type}-${element}`, .2, {opacity:.3});
+  }
+  deleteMeme() {
+    let {props, state} = this;
+    IziToast.show({
+      theme: 'dark',
+      title: 'Are you sure you want to delete this meme?',
+      position: 'center',
+      class:'izishow-login',
+      buttons: [
+          ['<button>Yes, delete.</button>', (instance, toast)=>{
+            instance.hide({}, toast, 'buttonName');
+            axios.delete(ENV.REACT_APP_BACKEND + '/api/deleteMeme/'+props.match.params.id+'/'+state.memeDetails.details.meme_id).then((response)=>{
+              IziToast.show({
+                theme:'dark',
+                title:'deleted.',
+                position:'center',
+                class:'izishow-login',
+                timeout:2000,
+              })
+              this.props.history.goBack();
+            }).catch((err)=>{
+              IziToast.show({
+                color:'red',
+                title:'Error',
+                message:'Failed to delete meme. Please check your internet connection!',
+                position:'bottomRight',
+                class:'izishow-login',
+              })
+            })
+          }],
+          ['<button>No, keep.</button>', (instance, toast)=>{
+              instance.hide({}, toast, 'buttonName');
+          }, true]
+      ],
+      onOpening: (instance, toast)=>{
+        this.setState({
+          instance: true
+        })
+      },
+      onClosing: (instance, toast, closedBy)=>{
+        this.setState({
+          instance: false
+        })
+      }
+    });
   }
   render() {
     let match = this.props.match,
@@ -699,16 +940,16 @@ class MemeDetails extends Component {
                 <h1 className={`meme-details-comments-login-heading`}>
                   Log in to leave comments!
                 </h1>
-                <a href={ENV.REACT_APP_BACKEND+'/auth'} onMouseEnter={()=>{this.hoverCommentButtons('login')}} onMouseLeave={()=>{this.leaveCommentButtons('login')}} className={`meme-details-comments-login-button`}>
+                <a href={ENV.REACT_APP_BACKEND+'/auth'} onMouseEnter={()=>{this.hoverCommentButtons('login')}} onMouseLeave={()=>{this.leaveCommentButtons('login')}} className={`meme-details-leave-comment-section meme-details-comments-login-button`}>
                   Log In / Register
                 </a>
               </section>
             )
           } else {
             leaveComment = (
-              <section className={`-section`}>
+              <section className={``}>
                 <textarea ref={el => this.commentRef = el} className={'meme-details-comments-textarea'} maxLength={300} placeholder={'Write something funny!'}/>
-                <div className={`meme-details-comments-submit`}>
+                <div className={`meme-details-leave-comment-section meme-details-comments-submit`}>
                   <div onClick={(e)=>{this.submitComment(e)}} onMouseEnter={()=>{this.hoverCommentButtons('submit')}} onMouseLeave={()=>{this.leaveCommentButtons('submit')}} className={`meme-details-comments-submit-button`}>Comment</div>
                   <div onClick={(e)=>{this.commentRef.value = ''}} onMouseEnter={()=>{this.hoverCommentButtons('clear')}} onMouseLeave={()=>{this.leaveCommentButtons('clear')}} className={`meme-details-comments-clear-button`}>Clear</div>
                 </div>
@@ -744,31 +985,32 @@ class MemeDetails extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className={`meme-details-comments-element-bottom`}>
+                    <div className={`meme-details-comments-element-bottom meme-details-comments-element-bottom-${i}`}>
                       <div className={`meme-details-comments-element-space`}/>
-                      <div onClick={()=>{this.likeComment(el.id, 'top')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
+                      <div onMouseEnter={()=>{this.hoverLike(i, 'top', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onMouseLeave={()=>{this.leaveLike(i, 'top', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onClick={()=>{this.likeComment(el.id, 'top')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes meme-details-comments-element-likes-top-${i}`}>
                         {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
                         <p style={{color: state.commentLikeArr && state.commentLikeArr.includes(el.id)?'#fc0':'white'}} className={`meme-details-comments-element-likes-paragraph meme-details-comments-element-likes-paragraph-${el.id}`}>
                           {el.likes}
                         </p>
                       </div>
-                      <div className={`meme-details-comments-element-replies`}>
-                        <div onClick={()=>{this.showReplies('top', el.id)}} className={`meme-details-comments-element-replies-image`}/>
+                      <div onMouseEnter={()=>{this.hoverComment(i, 'top')}} onMouseLeave={()=>{this.leaveComment(i, 'top')}} className={`meme-details-comments-element-replies meme-details-comments-element-replies-top-${i}`}>
+                        <div onClick={()=>{this.showReplies(el.id, i)}} className={`meme-details-comments-element-replies-image`}/>
                         <p className={`meme-details-comments-element-replies-paragraph meme-details-comments-element-replies-paragraph-${el.id}`}>
                           {el.replies}
                         </p>
                       </div>
+                      {props.user.id === el.user_id || props.user.user_type==='admin' || state.memeDetails.details.user_id===props.user.id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'top')}} onMouseLeave={()=>{this.leaveDelete(i, 'top')}} onClick={()=>{this.deleteComment(el, 'top')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-top-${i}`}/>):null}
                     </div>
-                    {state.topCommentExpanded.map((cmtEl, i)=>{
+                    {state.commentExpanded.map((cmtEl, i)=>{
                       if (cmtEl.id === el.id && cmtEl.status) {
                         return (
                           <section key={i} className={`meme-details-comments-element-replies-section`}>
-                            <div className={`meme-details-comments-element-replies-input-container`}>
+                            {props.user?(<div className={`meme-details-comments-element-replies-input-container`}>
                               <input ref={el=>this.topInputRef = el} maxLength={300} placeholder={'Write something funny!'} className={`meme-details-comments-element-replies-input`}/>
                               <div onClick={()=>{this.reply(el.id, 'top')}} className={`meme-details-comments-element-replies-button`}>
                                 Reply
                               </div>
-                            </div>
+                            </div>):null}
                             {state.replies.map((el, i)=>{
                               return (
                                 <section style={{backgroundColor: props.user && props.user.id === el.user_id? 'rgba(8, 13, 17, .3)' : 'transparent'}} key={i} className={`meme-details-comments-element-section`}>
@@ -790,16 +1032,22 @@ class MemeDetails extends Component {
                                   </div>
                                   <div className={`meme-details-comments-element-bottom`}>
                                     <div className={`meme-details-comments-element-space`}/>
-                                    <div onClick={()=>{this.likeComment(el.id, 'topreply')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
+                                    <div onMouseEnter={()=>{this.hoverLike(i, 'topreply', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onMouseLeave={()=>{this.leaveLike(i, 'topreply', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onClick={()=>{this.likeComment(el.id, 'topreply')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes meme-details-comments-element-likes-topreply-${i}`}>
                                       {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
                                       <p style={{color: state.commentLikeArr && state.commentLikeArr.includes(el.id)?'#fc0':'white'}} className={`meme-details-comments-element-likes-paragraph meme-details-comments-element-likes-paragraph-${el.id}`}>
                                         {el.likes}
                                       </p>
                                     </div>
+                                    {props.user.id === el.user_id || props.user.user_type==='admin' || state.memeDetails.details.user_id===props.user.id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'topreply')}} onMouseLeave={()=>{this.leaveDelete(i, 'topreply')}} onClick={()=>{this.deleteComment(el, 'topreply')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-topreply-${i}`}/>):null}
                                   </div>
                                 </section>
                               )
                             })}
+                            {state.replies.length%10 === 0 && state.replies.length>0? (
+                              <div onClick={()=>this.loadMoreReplies(el.id)} onMouseEnter={()=>{this.hoverLoadMore()}} onMouseLeave={()=>{this.leaveLoadMore()}} className={`meme-details-comments-load-more-replies`}>
+                                Load more replies
+                              </div>
+                            ):null}
                           </section>
                         )
                       }
@@ -826,22 +1074,73 @@ class MemeDetails extends Component {
                         </div>
                       </div>
                     </div>
-                    <div className={`meme-details-comments-element-bottom`}>
+                    <div className={`meme-details-comments-element-bottom meme-details-comments-element-bottom-top-${i}`}>
                       <div className={`meme-details-comments-element-space`}/>
-                      <div onClick={()=>{this.likeComment(el.id, 'regular')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes`}>
+                      <div onMouseEnter={()=>{this.hoverLike(i, 'regular', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onMouseLeave={()=>{this.leaveLike(i, 'regular', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onClick={()=>{this.likeComment(el.id, 'regular')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes meme-details-comments-element-likes-regular-${i}`}>
                         {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
                         <p style={{color: state.commentLikeArr && state.commentLikeArr.includes(el.id)?'#fc0':'white'}} className={`meme-details-comments-element-likes-paragraph meme-details-comments-element-likes-paragraph-${el.id}`}>
                           {el.likes}
                         </p>
                       </div>
-                      <div className={`meme-details-comments-element-replies`}>
-                        <div onClick={()=>{this.showReplies('regular', el.id)}} className={`meme-details-comments-element-replies-image`}/>
+                      <div onMouseEnter={()=>{this.hoverComment(i, 'regular')}} onMouseLeave={()=>{this.leaveComment(i, 'regular')}} className={`meme-details-comments-element-replies meme-details-comments-element-replies-regular-${i}`}>
+                        <div onClick={()=>{this.showReplies(el.id, i, 'regular')}} className={`meme-details-comments-element-replies-image`}/>
                         <p className={`meme-details-comments-element-replies-paragraph meme-details-comments-element-replies-paragraph-${el.id}`}>
                           {el.replies}
                         </p>
                       </div>
-                      {''}
+                      {props.user.id === el.user_id || props.user.user_type==='admin' || state.memeDetails.details.user_id===props.user.id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'regular')}} onMouseLeave={()=>{this.leaveDelete(i, 'regular')}} onClick={()=>{this.deleteComment(el, 'regular')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-regular-${i}`}/>):null}
                     </div>
+                    {state.commentExpanded.map((cmtEl, i)=>{
+                      if (cmtEl.id === el.id && cmtEl.status) {
+                        return (
+                          <section key={i} className={`meme-details-comments-element-replies-section`}>
+                            {props.user?(<div className={`meme-details-comments-element-replies-input-container`}>
+                              <input ref={el=>this.topInputRef = el} maxLength={300} placeholder={'Write something funny!'} className={`meme-details-comments-element-replies-input`}/>
+                              <div onClick={()=>{this.reply(el.id, 'regular')}} className={`meme-details-comments-element-replies-button`}>
+                                Reply
+                              </div>
+                            </div>):null}
+                            {state.replies.map((el, i)=>{
+                              return (
+                                <section style={{backgroundColor: props.user && props.user.id === el.user_id? 'rgba(8, 13, 17, .3)' : 'transparent'}} key={i} className={`meme-details-comments-element-section`}>
+                                  <div className={`meme-details-comments-element-top`}>
+                                    <div style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
+                                    <div className={`meme-details-comments-element-right-side`}>
+                                      <p className={`meme-details-comments-element-paragraph`}>
+                                        {el.comment}
+                                      </p>
+                                      <div className={`meme-details-comments-element-user-container`}>
+                                        <p className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                                          {el.username}
+                                        </p>
+                                        <p className={`meme-details-comments-element-date-paragraph`}>
+                                          {moment(el.date).fromNow()}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className={`meme-details-comments-element-bottom`}>
+                                    <div className={`meme-details-comments-element-space`}/>
+                                    <div onMouseEnter={()=>{this.hoverLike(i, 'reply', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onMouseLeave={()=>{this.leaveLike(i, 'reply', state.commentLikeArr && state.commentLikeArr.includes(el.id)? true:false)}} onClick={()=>{this.likeComment(el.id, 'topreply')}} style={state.commentLikeArr && state.commentLikeArr.includes(el.id)?{opacity:1}:{opacity:.3}} className={`meme-details-comments-element-likes meme-details-comments-element-likes-reply-${i}`}>
+                                      {state.commentLikeArr && state.commentLikeArr.includes(el.id)? (<div className='meme-details-likes-image'/>):(<div className={`meme-details-comments-element-likes-image`}/>)}
+                                      <p style={{color: state.commentLikeArr && state.commentLikeArr.includes(el.id)?'#fc0':'white'}} className={`meme-details-comments-element-likes-paragraph meme-details-comments-element-likes-paragraph-${el.id}`}>
+                                        {el.likes}
+                                      </p>
+                                    </div>
+                                    {props.user.id === el.user_id || props.user.user_type==='admin' || state.memeDetails.details.user_id===props.user.id?(<div onMouseEnter={()=>{this.hoverDelete(i, 'reply')}} onMouseLeave={()=>{this.leaveDelete(i, 'reply')}} onClick={()=>{this.deleteComment(el, 'reply')}} className={`meme-details-comments-element-delete meme-details-comments-element-delete-reply-${i}`}/>):null}
+                                  </div>
+                                </section>
+                              )
+                            })}
+                            {state.replies.length%10 === 0 && state.replies.length>0? (
+                              <div onClick={()=>this.loadMoreReplies(el.id)} onMouseEnter={()=>{this.hoverLoadMore()}} onMouseLeave={()=>{this.leaveLoadMore()}} className={`meme-details-comments-load-more-replies`}>
+                                Load more replies
+                              </div>
+                            ):null}
+                          </section>
+                        )
+                      }
+                    })}
                   </section>
                 )
               })}
@@ -903,7 +1202,7 @@ class MemeDetails extends Component {
                       <div style={{opacity:1}} onMouseEnter={(e)=>{this.hoverSocialMedia('fb')}} onMouseLeave={(e)=>{this.leaveSocialMedia('fb')}} className='meme-details-fb-hover'>
                         <FacebookShareButton 
                           style={{height:'36px', width:'36px', borderRadius:'50%', outline:'none', cursor:'pointer'}}
-                          url={'https://classyfd.github.io/deliwin2.0'} 
+                          url={ENV.REACT_APP_FRONTEND+'/app/memes/'+this.props.match.params.id} 
                           quote={state.memeDetails.details.caption} 
                           windowWidth={800}
                           windowHeight={530}
@@ -918,15 +1217,19 @@ class MemeDetails extends Component {
                           hashtags={state.memeDetails.tags.map((el)=>{return el.tag_text})}
                           windowWidth={800}
                           windowHeight={530}
-                          url={'http://classyfd.github.io/deliwin2.0'}
+                          url={ENV.REACT_APP_FRONTEND+'/app/memes/'+this.props.match.params.id}
                           >   
                           <TwitterIcon size={36} round/>
                         </TwitterShareButton>
                       </div>
                       {this.props.user.user_type==='admin'?
-                          (<div className={`meme-details-details-more`} onMouseLeave={(e)=>{this.leaveButton('more')}} onMouseEnter={(e)=>{this.hoverButton('more')}}>
-                            <div onClick={()=>{this.featureMeme(state.memeDetails.details)}} className='meme-details-details-featured-image'/>
-                          </div>):null}
+                      (<div className={`meme-details-details-more`} onMouseLeave={(e)=>{this.leaveButton('more')}} onMouseEnter={(e)=>{this.hoverButton('more')}}>
+                        <div onClick={()=>{this.featureMeme(state.memeDetails.details)}} className='meme-details-details-featured-image'/>
+                      </div>):null}
+                      {state.memeDetails.details.user_id===props.user.id || this.props.user.user_type==='admin'? 
+                      (<div className={``}>
+                        {<div onMouseEnter={()=>{this.hoverDelete()}} onMouseLeave={()=>{this.leaveDelete()}} onClick={()=>{this.deleteMeme()}} className={`meme-details-comments-element-delete-meme`}/>}
+                      </div>):null}
                     </div>
                     <div className='meme-details-details-arrows'>
                       <div onClick={()=>{this.setState({method:state.memeDetails.prev_id}),this.props.history.push(`/app/memes/${state.memeDetails.prev_id}`)}} className='meme-details-details-back-arrow' onMouseLeave={(e)=>{this.leaveButton('back-arrow')}} onMouseEnter={(e)=>{this.hoverButton('back-arrow')}}>

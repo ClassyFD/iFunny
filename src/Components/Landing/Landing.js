@@ -36,6 +36,34 @@ class Landing extends Component {
       this.setState({
         tags:response.data,
       })
+      if (response.data.length < 14) {
+        date = moment(date).subtract(90, 'days').utc().format('MM-DD-YYYY')
+        axios.get(ENV.REACT_APP_BACKEND+`/api/getTrendingTags?date=${date}`).then((response)=>{
+          this.setState({
+            tags:response.data,
+          })
+          if (response.data.length < 14) {
+            date = moment(date).subtract(99999, 'days').utc().format('MM-DD-YYYY')
+            axios.get(ENV.REACT_APP_BACKEND+`/api/getTrendingTags?date=${date}`).then((response)=>{
+              this.setState({
+                tags:response.data,
+              })
+            }).catch((err)=>{
+              if (err) {
+                this.setState({
+                  memeStatus:false
+                })
+              }
+            })
+          }
+        }).catch((err)=>{
+          if (err) {
+            this.setState({
+              memeStatus:false
+            })
+          }
+        })
+      }
     }).catch((err)=>{
       if (err) {
         this.setState({
