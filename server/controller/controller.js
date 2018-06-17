@@ -1,5 +1,28 @@
 const moment = require('moment');
 module.exports = {
+  // getting top comments by url meme id
+  getTopComments: (req, res)=>{
+    let db = req.app.get('db'),
+        meme = req.params.id;
+    db.getTopComments([meme]).then((response)=>{
+      res.status(200).send(response);
+    })
+  },
+  getMainSearches: (req, res)=>{
+    let db = req.app.get('db'),
+        date = req.query.date;
+    db.getMainSearches([date]).then((response)=>{
+      res.status(200).send(response);
+    })
+  },
+  // getting usernames by user input
+  getUserSearchResults: (req, res)=>{
+    let db = req.app.get('db'),
+        user = req.query.user;
+    db.getUserSearchResults([user]).then((response)=>{
+      res.status(200).send(response);
+    })
+  },
   postReply: (req, res)=>{
     let db = req.app.get('db'),
         {user, date, comment, replyid, memeid, limit} = req.body,
@@ -20,13 +43,6 @@ module.exports = {
         id = req.params.id,
         limit = req.query.limit;
     db.getReplies([id, limit]).then((response)=>{
-      res.status(200).send(response);
-    })
-  },
-  getTopComments: (req, res)=>{
-    let db = req.app.get('db'),
-        meme = req.params.id;
-    db.getTopComments([meme]).then((response)=>{
       res.status(200).send(response);
     })
   },
@@ -108,20 +124,6 @@ module.exports = {
         });
       })
     }
-  },
-  getMainSearches: (req, res)=>{
-    let db = req.app.get('db'),
-        date = req.query.date;
-    db.getMainSearches([date]).then((response)=>{
-      res.status(200).send(response);
-    })
-  },
-  getUserSearchResults: (req, res)=>{
-    let db = req.app.get('db'),
-        user = req.query.user;
-    db.getUserSearchResults([user]).then((response)=>{
-      res.status(200).send(response);
-    })
   },
   postRecentSearch:(req, res)=>{
     let db = req.app.get('db'),
@@ -350,14 +352,14 @@ module.exports = {
     if (req.query.tc2 !== 'undefined') {
       TC2 = req.query.tc2;
     }
-    db.getMemeDetails([id]).then((response)=>{
+    db.getMemeDetails([id]).then((response)=>{ // getting the meme itself. (picture, caption, etc.)
       meme_id = response[0].meme_id;
       obj = Object.assign({}, obj, {details:response[0]});
-      db.getMemeTags([meme_id]).then((response)=>{
+      db.getMemeTags([meme_id]).then((response)=>{ // getting the tags to display for a meme.
         obj = Object.assign({}, obj, {tags:response})
-        db.getMemeComments([id, (query-1)*10, TC1, TC2]).then((response)=>{
+        db.getMemeComments([id, (query-1)*10, TC1, TC2]).then((response)=>{ // getting the (regular & top) comments to display for a meme. (limited by page.)
           obj = Object.assign({}, obj, {}, {comments:response});
-          db.getSideMemes([id]).then((response)=>{
+          db.getSideMemes([id]).then((response)=>{ // getting memes to display so that users can click arrows to cycle through memes.
             if (response[0].next_id) {
               next_id = response[0].next_id;
             }
@@ -368,12 +370,12 @@ module.exports = {
               obj = Object.assign({}, obj, {prev_id, next_id})
               res.status(200).send(obj);
             } else if (!prev_id) {
-              db.getLastMeme().then((response)=>{
+              db.getLastMeme().then((response)=>{ // getting the very last meme for whenever a user is on the first meme and they click the back arrow.
                 obj = Object.assign({}, obj, {prev_id:response[0].id, next_id});
                 res.status(200).send(obj);
               })
             } else {
-              db.getFirstMeme().then((response)=>{
+              db.getFirstMeme().then((response)=>{ // getting the very first meme for whenever a user is on the last meme and they click the forward arrow.
                 obj = Object.assign({}, obj, {prev_id, next_id:response[0].id});
                 res.status(200).send(obj);
               })
@@ -387,9 +389,9 @@ module.exports = {
     let username = (req.body.username).toLowerCase(),
         user = req.body.user,
         db = req.app.get('db');
-    db.checkUsername([username]).then((response)=>{
+    db.checkUsername([username]).then((response)=>{ // checks to see if the username already exists.
       if (response.length===0) {
-        db.submitUsername([username, user.id]).then((response)=>{
+        db.submitUsername([username, user.id]).then((response)=>{ // inserts the username into the user table.
           res.status(200).send(response);
         })
       } else {
@@ -402,17 +404,18 @@ module.exports = {
         date = req.body.date,
         db = req.app.get('db');
     db.addMeme([meme.image.Location, 0, 0, meme.tags? meme.tags.length : 0, meme.caption, meme.image.key, req.body.user.id, (req.body.user.memes+1)]).then((finish)=>{
+      // updates the user table to add +1 memes. also inserts the meme into the memes table
       res.status(200).send(finish);
       if (meme.tags[0]) {
-        db.addTags([meme.tags[0].label, meme.image.key, date]).then((response)=>{
+        db.addTags([meme.tags[0].label, meme.image.key, date]).then((response)=>{ // inserts the first tag into the tags table (if exists)
           if (meme.tags[1]) {
-            db.addTags([meme.tags[1].label, meme.image.key, date]).then((response)=>{
+            db.addTags([meme.tags[1].label, meme.image.key, date]).then((response)=>{ // inserts the second tag into the tags table (if exists)
               if (meme.tags[2]) {
-                db.addTags([meme.tags[2].label, meme.image.key, date]).then((response)=>{
+                db.addTags([meme.tags[2].label, meme.image.key, date]).then((response)=>{ // inserts the third tag into the tags table (if exists)
                   if (meme.tags[3]) {
-                    db.addTags([meme.tags[3].label, meme.image.key, date]).then((response)=>{
+                    db.addTags([meme.tags[3].label, meme.image.key, date]).then((response)=>{ // inserts the fourth tag into the tags table (if exists)
                       if (meme.tags[4]) {
-                        db.addTags([meme.tags[4].label, meme.image.key, date]).then((response)=>{
+                        db.addTags([meme.tags[4].label, meme.image.key, date]).then((response)=>{ // inserts the fifth tag into the tags table (if exists)
                            res.status(200).end();
                         })
                       }

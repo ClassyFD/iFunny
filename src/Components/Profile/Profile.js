@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import ENV from '../../frontenv';
 import './Profile.css';
 
 class Profile extends Component {
@@ -10,11 +11,14 @@ class Profile extends Component {
   }
 
   componentDidMount() {
+    let {props, state} = this;
     this.props.dispatch({
       type:'MOUNT_COMP',
       val:'profile'
     })
-    this.props.history.push('/')
+    // axios.get(ENV.REACT_APP_BACKEND+'/api/getUserProfile/'+this.props.match.params.id).then((response)=>{
+    //   console.log(response);
+    // })
   }
 
   componentWillReceiveProps(props) {

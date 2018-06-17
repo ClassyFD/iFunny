@@ -67,6 +67,7 @@ passport.use(new auth0Strategy({
       let email = '',
           picture = '',
           subscriptions = 0,
+          subscribers = 0,
           memes = 0,
           likes = 0,
           comments = 0,
@@ -93,7 +94,7 @@ passport.use(new auth0Strategy({
       } else if (profile.emails[0].value) {
         email = profile.emails[0].value;
       }
-      db.createUser([email, picture, subscriptions, memes, likes, comments, username, headline, userId, name]).then((response)=>{
+      db.createUser([email, picture, subscriptions, subscribers, memes, likes, comments, username, headline, userId, name]).then((response)=>{
         return done(null, { user_id: response[0].user_id })
       })
     }
@@ -141,21 +142,23 @@ app.get('/auth/logout', (req, res) => {
   req.logOut();
   res.redirect(302,  process.env.REACT_APP_HOST)
 })
-app.get('/api/getTopComments/:id', CTRL.getTopComments);
-app.get('/api/getMainSearches', CTRL.getMainSearches);
-app.get('/api/getUserSearchResults', CTRL.getUserSearchResults);
-app.get('/api/getRecentSearches', CTRL.getRecentSearches);
-app.get('/api/getSearchResults', CTRL.getSearchResults);
-app.get('/api/getResults', CTRL.getResults);
-app.get('/api/getMemesByTag', CTRL.getMemesByTag);
-app.get('/api/getTrendingTags', CTRL.getTrendingTags);
-app.get('/api/checkLikes/:userid', CTRL.checkLikes);
-app.get('/api/getMemes', CTRL.getMemes);
-app.get('/api/likes/:memeid/:userid', CTRL.checkMemeLikes);
-app.get('/api/checkCommentLikes/:memeid/:userid', CTRL.checkCommentLikes);
-app.get('/api/getMemeDetails/:id', CTRL.getMemeDetails);
-app.get('/api/getFeaturedMemes', CTRL.getFeaturedMemes);
-app.get('/api/getReplies/:id', CTRL.getReplies);
+// GET REQUESTS
+app.get('/api/getTopComments/:id', CTRL.getTopComments); // getting top comments by url meme id. 
+app.get('/api/getMainSearches', CTRL.getMainSearches); // getting popular seatches within certain date. 
+app.get('/api/getUserSearchResults', CTRL.getUserSearchResults); // getting usernames by user input. 
+app.get('/api/getRecentSearches', CTRL.getRecentSearches); // getting recent searches by user id. 
+app.get('/api/getSearchResults', CTRL.getSearchResults); // getting tags by user input. 
+app.get('/api/getResults', CTRL.getResults); // getting number of results found by tag. 
+app.get('/api/getMemesByTag', CTRL.getMemesByTag); // getting memes by tag. 
+app.get('/api/getTrendingTags', CTRL.getTrendingTags); // getting tags by number of times they appear within certain date.
+app.get('/api/checkLikes/:userid', CTRL.checkLikes); // getting liked memes by user id.
+app.get('/api/getMemes', CTRL.getMemes); // getting memes to display in collective.
+app.get('/api/getFeaturedMemes', CTRL.getFeaturedMemes); // getting memes to display in featured.
+app.get('/api/likes/:memeid/:userid', CTRL.checkMemeLikes); // getting liked memes by user and meme id.
+app.get('/api/checkCommentLikes/:memeid/:userid', CTRL.checkCommentLikes); // getting liked comments by user id and meme id
+app.get('/api/getReplies/:id', CTRL.getReplies); // getting replies by comment id.
+// app.get('/api/getUserProfile/:id', CTRL.getUserProfile); // getting profile page by user id.
+app.get('/api/getMemeDetails/:id', CTRL.getMemeDetails); // getting meme details by meme id. ()
 app.delete('/api/deleteRecentSearches', CTRL.deleteRecentSearches);
 app.delete('/api/deleteComment/:memeid/:replyid', CTRL.deleteComment);
 app.delete('/api/deleteMeme/:memeid/:exactid', CTRL.deleteMeme);

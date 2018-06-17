@@ -96,7 +96,7 @@ class Header extends Component {
           <a onMouseEnter={()=>{this.hoverLink('logout')}} onMouseLeave={()=>{this.leaveLink('logout')}} className='header-link header-left-section-logout-text header-right-section-logout hover-link-logout' href={ENV.REACT_APP_BACKEND + '/auth/logout'}>
             log Out
           </a>
-          <Link onMouseEnter={()=>{this.hoverLink('profile')}} onMouseLeave={()=>{this.leaveLink('profile')}} className='header-link header-left-section-profile-text header-right-section-login hover-link-profile' to='/profile'>
+          <Link onMouseEnter={()=>{this.hoverLink('profile')}} onMouseLeave={()=>{this.leaveLink('profile')}} className='header-link header-left-section-profile-text header-right-section-login hover-link-profile' to={`/profile/${props.user.id}`}>
             profile
           </Link>
           <Link onMouseEnter={()=>{this.hoverLink('edit')}} onMouseLeave={()=>{this.leaveLink('edit')}} to='/edit' className={`hover-link-edit`}>

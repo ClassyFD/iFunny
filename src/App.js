@@ -22,7 +22,7 @@ class App extends Component {
             <Route path='/app' component={Landing}/>
             <Route path='/edit' component={MemeEditing}/>
             <Route path='/cam' component={Cam}/>
-            <Route path='/profile' component={Profile}/>
+            <Route path='/profile/:id' component={Profile}/>
             <Redirect from='*' to='/404'/>
           </Switch>
         </main>
