@@ -13,7 +13,7 @@ const express = require('express'),
       path = require('path');
 
 app.use(cors());
-app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.json({limit: '50mb'})); // set limit to give access to bigger files.
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -47,7 +47,8 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-app.use(express.static(__dirname + '/../build'));
+app.use(express.static(__dirname + '/../build')); 
+
 // auth0 section
 
 app.use(passport.initialize());
@@ -60,7 +61,7 @@ passport.use(new auth0Strategy({
   callbackURL: process.env.AUTH_CALLBACK,
 }, function(accessToken, refreshToken, extraParams, profile, done) {
   const db = app.get('db')
-  db.findUser([(profile.identities[0].user_id).toString()]).then((response)=>{
+  db.findUser([(profile.identities[0].user_id).toString()]).then((response)=>{ // attempts to find the user in the db. if found, return user. otherwise, create one.
     if (response[0]) {
         return done(null, { user_id: response[0].user_id })
     } else {
@@ -94,19 +95,19 @@ passport.use(new auth0Strategy({
       } else if (profile.emails[0].value) {
         email = profile.emails[0].value;
       }
-      db.createUser([email, picture, subscriptions, subscribers, memes, likes, comments, username, headline, userId, name]).then((response)=>{
+      db.createUser([email, picture, subscriptions, subscribers, memes, likes, comments, username, headline, userId, name]).then((response)=>{ // creates a user with all of the options set above.
         return done(null, { user_id: response[0].user_id })
       })
     }
   })
 }));
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser(function (user, done) { // serializes user.
   console.log('SERIALIZING');
   done(null, user);
 })
 
-passport.deserializeUser(function (obj, done) {
+passport.deserializeUser(function (obj, done) { // deserializes user.
   console.log('DESERIALIZING')
   const db = app.get('db');
   db.findUser([obj.user_id]).then((response) => { 
@@ -116,17 +117,17 @@ passport.deserializeUser(function (obj, done) {
 
 // endpoints
 
-app.get('/auth', (req, res, next) => {
+app.get('/auth', (req, res, next) => { // begins the authentication process.
   console.log("start authentication");
   next();
 }, passport.authenticate('auth0'));
 
-app.get('/auth/callback', passport.authenticate('auth0', {
+app.get('/auth/callback', passport.authenticate('auth0', { // selects what to send depending on status.
   successRedirect: process.env.AUTH_SUCCESS,
   failureRedirect: process.env.AUTH_FAILURE
 }))
 
-app.get('/auth/me', cors(corsOptions), (req, res) => {
+app.get('/auth/me', cors(corsOptions), (req, res) => { // checks if there is a user or not.
   if (!req.user) {
     console.log("USER NOT FOUND");
     res.status(404).send('USER NOT FOUND');
@@ -157,25 +158,29 @@ app.get('/api/getFeaturedMemes', CTRL.getFeaturedMemes); // getting memes to dis
 app.get('/api/likes/:memeid/:userid', CTRL.checkMemeLikes); // getting liked memes by user and meme id.
 app.get('/api/checkCommentLikes/:memeid/:userid', CTRL.checkCommentLikes); // getting liked comments by user id and meme id
 app.get('/api/getReplies/:id', CTRL.getReplies); // getting replies by comment id.
-// app.get('/api/getUserProfile/:id', CTRL.getUserProfile); // getting profile page by user id.
-app.get('/api/getMemeDetails/:id', CTRL.getMemeDetails); // getting meme details by meme id. ()
-app.delete('/api/deleteRecentSearches', CTRL.deleteRecentSearches);
-app.delete('/api/deleteComment/:memeid/:replyid', CTRL.deleteComment);
-app.delete('/api/deleteMeme/:memeid/:exactid', CTRL.deleteMeme);
-app.post('/api/postRecentSearch', CTRL.postRecentSearch);
-app.post('/api/unlike/:memeid', CTRL.unlikeMeme);
-app.post('/api/like/:memeid', CTRL.likeMeme);
-app.post('/api/featuredUnlike/:memeid', CTRL.featuredUnlikeMeme);
-app.post('/api/featuredLike/:memeid', CTRL.featuredLikeMeme);
-app.post('/api/commentUnlike/:commentid', CTRL.unlikeComment);
-app.post('/api/commentLike/:commentid', CTRL.likeComment);
-app.post('/api/submitUsername', CTRL.submitUsername);
-app.post('/api/postMeme', CTRL.postMeme);
-app.post('/api/featureMeme', CTRL.featureMeme);
-app.post('/api/unfeatureMeme', CTRL.unfeatureMeme);
-app.post('/api/postComment', CTRL.postComment);
-app.post('/api/postReply', CTRL.postReply);
-app.post('/api/upload',(req, res) => {
+app.get('/api/getMemeDetails/:id', CTRL.getMemeDetails); // getting meme details by meme id. (picture, caption, tags, comments, etc.)
+app.get('/api/getUserProfile/:id', CTRL.getUserProfile); // getting profile page by user id.
+
+// DELETE REQUESTS
+app.delete('/api/deleteRecentSearches', CTRL.deleteRecentSearches); // deleting recent searches by user.
+app.delete('/api/deleteComment/:memeid/:replyid', CTRL.deleteComment); // deleting comment by meme and or reply id. (also deletes any comment likes/replies associated with that comment.)
+app.delete('/api/deleteMeme/:memeid/:exactid', CTRL.deleteMeme); // deleting meme by id (also deletes any likes, comment likes, comments/replies associated with that meme.)
+
+// POST REQUESTS.
+app.post('/api/like/:memeid', CTRL.likeMeme); // posts a meme like into the db.
+app.post('/api/unlike/:memeid', CTRL.unlikeMeme); // deletes a meme like in the db.
+app.post('/api/featuredLike/:memeid', CTRL.featuredLikeMeme); // posts a featured meme like.
+app.post('/api/featuredUnlike/:memeid', CTRL.featuredUnlikeMeme); // deletes a featured meme like.
+app.post('/api/commentLike/:commentid', CTRL.likeComment); // posts a comment like.
+app.post('/api/commentUnlike/:commentid', CTRL.unlikeComment); // deletes a comment like.
+app.post('/api/submitUsername', CTRL.submitUsername); // posts a username to check if it is taken, then inserts into the db if it is not.
+app.post('/api/postMeme', CTRL.postMeme); // posts a meme into the db
+app.post('/api/featureMeme', CTRL.featureMeme); // alters a table row to set it to featured.
+app.post('/api/unfeatureMeme', CTRL.unfeatureMeme); // alters a table row to remove featured.
+app.post('/api/postRecentSearch', CTRL.postRecentSearch); // posts search by type (user/tag) on user.
+app.post('/api/postComment', CTRL.postComment); // posts a comment to a meme.
+app.post('/api/postReply', CTRL.postReply); // posts a reply to a comment of a meme.
+app.post('/api/upload',(req, res) => { // uploads a picture to aws.
   imageUpload.sendPics(req.body.pic, (response, err) => {
     if (err) {
       console.log("IMAGE UPLOAD ERRROR")
@@ -192,4 +197,5 @@ app.post('/api/upload',(req, res) => {
 //   res.sendFile(path.join(__dirname, '../build/index.html'));
 // })
 
+//listen on the unique backend port chosen. if you run "npm run build", the port should be the same as the frontend.
 app.listen(port, ()=> console.log(`listening on port ${port}`));
