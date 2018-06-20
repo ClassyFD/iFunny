@@ -7,3 +7,104 @@
   top: 55px;
   overflow-x: hidden;
 }
+.profile-cover-picture {
+  background-size: cover;
+  background-position: center center;
+  height: 191px;
+  width: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.profile-bottom-container {
+  background: #080d11;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.profile-picture {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  border-color: white;
+  border-style: solid;
+  margin-top: -51.5px;
+}
+.profile-username-heading {
+  font-size: 26px;
+  color: white;
+  font-family: 'iFunnyBold';
+  margin-top: 10px;
+}
+.profile-subs-container {
+  display: flex;
+  align-items: center;
+  color: white;
+  opacity: .6;
+  font-size: 16px;
+  font-family: 'iFunnyBold';
+  margin-top: 5px;
+}
+.profile-subscribers-heading {
+  font-family: 'iFunnyBlack';
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.profile-subscribers-text-heading {
+  margin-left: 5px;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.profile-dot-heading {
+  margin-left: 5px;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.profile-subscriptions-heading {
+  margin-left: 5px;
+  font-family: 'iFunnyBlack';
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.profile-subscriptions-text-heading {
+  margin-left: 5px;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+.profile-headline-heading {
+  color: white;
+  opacity: .7;
+  font-size: 16px;
+  font-family: 'iFunnyBold';
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+.profile-featured-container {
+  display: flex;
+  align-items: center;
+  color: white;
+  opacity: .6;
+  font-family: 'iFunnyBold';
+  font-size: 14px;
+  padding-bottom: 10px;
+}
+.profile-star-heading {
+  background: url('https://ifunny.co/images/icons/star-web.svg') no-repeat center center;
+  background-size: cover;
+  height: 22px;
+  width: 23px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.profile-featured-heading {
+  font-family: 'iFunnyBlack';
+  margin-bottom: 0;
+  margin-top: 0;
+  margin-left: 5px;
+}
+.profile-featured-text-heading {
+  margin-left: 5px;
+  margin-top: 0;
+  margin-bottom: 0;
+}

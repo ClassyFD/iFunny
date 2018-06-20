@@ -168,7 +168,11 @@ module.exports = {
     })
   },
   getUserProfile: (req, res)=>{ // getting profile page by user id.
-
+    let db = req.app.get('db'),
+        user = req.params.id;
+    db.getUserProfile([user]).then((response)=>{
+      res.status(200).send(response);
+    })
   },
 
   // DELETE REQUESTS
@@ -389,15 +393,19 @@ module.exports = {
   },
   featureMeme: (req, res)=>{ // alters a table row to set it to featured.
     let db = req.app.get('db'),
-        meme = req.query.id;
-    db.featureMeme([meme]).then((response)=>{ // updates the memes table to set the meme to "featured."
+        meme = req.query.id,
+        user = req.query.user;
+    db.featureMeme([meme, user]).then((response)=>{ // updates the memes table to set the meme to "featured."
+      console.log(response)
       res.status(200).send(response);
     })
   },
   unfeatureMeme: (req, res)=>{ // alters a table row to remove featured.
     let db = req.app.get('db'),
-        meme = req.query.id;
-    db.unfeatureMeme([meme]).then((response)=>{ // updates the memes table to set the meme to "regular."
+        meme = req.query.id, 
+        user = req.query.user,
+        limit = req.query.limit;
+    db.unfeatureMeme([meme, user, limit]).then((response)=>{ // updates the memes table to set the meme to "regular."
       res.status(200).send(response);
     })
   },

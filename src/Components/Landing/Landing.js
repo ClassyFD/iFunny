@@ -11,6 +11,7 @@ import Search from '../Search/Search';
 import Tags from '../Tags/Tags';
 import MemeDetails from '../MemeDetails/MemeDetails';
 import Collective from '../Collective/Collective';
+import Profile from '../Profile/Profile';
 import axios from 'axios';
 import moment from 'moment';
 import LoadingDot from '../../Images/Icons/loading_dot.svg';
@@ -205,6 +206,7 @@ class Landing extends Component {
               <Route path={'/app/search'} component={Search}/>
               <Route path={'/app/tags/:tag'} component={Tags}/>
               <Route path={'/app/memes/:id'} component={MemeDetails}/>
+              <Route path={'/app/profile/:id'} component={Profile}/>
               <Redirect from='*' to='/404' />
             </Switch>
           </section>
