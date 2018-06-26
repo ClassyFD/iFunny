@@ -321,13 +321,13 @@ class Profile extends Component {
                   </h3>
                 </div>
                 <h3 style={state.user&&props.user&&state.user.id===props.user.id?{cursor:'pointer'}:{cursor:'default'}} onClick={()=>{state.user&&props.user&&state.user.id===props.user.id?this.editHeadline():null}} onMouseEnter={()=>{state.user&&props.user&&state.user.id===props.user.id?this.hoverHeadline('.profile-headline-edit'):null}} onMouseLeave={()=>{state.user&&props.user&&state.user.id===props.user.id?this.leaveHeadline('.profile-headline-edit'):null}} className={`profile-headline-heading`}>
-                  {state.user && state.user.headline?
+                  {/* {state.user && state.user.headline?
                   (<div className={`profile-headline-edit`}>
                     {state.user.headline}
                   </div>):state.user&&props.user&&!state.user.headline&&state.user.id===props.user.id?
                   (<div className={`profile-headline-edit`}>
                     [ add headline ]
-                  </div>):null}
+                  </div>):null} */}
                 </h3>
                 {state.user.featured > 0?(<div className={`profile-featured-container`}>
                   <h2 className={`profile-star-heading`}/>
