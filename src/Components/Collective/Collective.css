@@ -15,12 +15,12 @@
   margin-bottom: 100px;
   font-family: 'iFunnyBold';
   font-size: 25px;
-  text-shadow: gray 1px 1px;
   position: relative;
   height: 200px;
   cursor: pointer;
   border-bottom-left-radius: 40px;
   border-bottom-right-radius: 40px;
+  color: white;
 }
 .collective-load-more-title {
   position: relative;

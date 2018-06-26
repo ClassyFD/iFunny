@@ -74,7 +74,6 @@
 }
 .profile-headline-heading {
   color: white;
-  opacity: .7;
   font-size: 16px;
   font-family: 'iFunnyBold';
   margin-top: 5px;
@@ -107,4 +106,16 @@
   margin-left: 5px;
   margin-top: 0;
   margin-bottom: 0;
+}
+.profile-count-section {
+  color: white;
+  opacity: .6;
+  margin-top: 60px;
+  border-bottom: 3px solid #080d11;
+  font-family: 'iFunnyBlack';
+  font-size: 24px;
+}
+.profile-headline-edit {
+  font-family: 'iFunnyBold';
+  opacity: .7;
 }

@@ -36,13 +36,14 @@ class Header extends Component {
         tl = new TimelineMax(),
         etl = new TimelineMax();
         console.log(this.state.mountedComp)
+        console.log(props)
     if (this.state.mountedComp !== props.comp) {
       tl.to(`.header-link`, .5, {color:'white'});
       mtl.to(`.header-nav-link`, .5, {color:'white'});
     }
     if (props.comp !== 'edit') {
-      etl.to(`.header-right-section-add-memes-li`, .5, {opacity:1})
-         .to(`.header-right-section-upload-heading`, .5, {color:'white'}, '-=.2');
+    etl.to(`.header-right-section-add-memes-li`, .5, {opacity:1})
+      .to(`.header-right-section-upload-heading`, .5, {color:'white'}, '-=.2');
     }
     tl.to(`.header-left-section-${props.comp}-text`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
     mtl.to(`.header-mobile-nav-${props.comp}`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');  
@@ -51,6 +52,10 @@ class Header extends Component {
       setTimeout(() => {
         etl.to(`.header-right-section-upload-heading`, .5, {color:'#fc0'});
       }, 50);
+    }
+    if (props.comp.split('-')[1]===props.user.id) {
+      let tl = new TimelineMax();
+      tl.to(`.header-left-section-profile-text`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
     }
     this.setState({
       mountedComp:props.comp
@@ -96,7 +101,7 @@ class Header extends Component {
           <a onMouseEnter={()=>{this.hoverLink('logout')}} onMouseLeave={()=>{this.leaveLink('logout')}} className='header-link header-left-section-logout-text header-right-section-logout hover-link-logout' href={ENV.REACT_APP_BACKEND + '/auth/logout'}>
             log Out
           </a>
-          <Link onMouseEnter={()=>{this.hoverLink('profile')}} onMouseLeave={()=>{this.leaveLink('profile')}} className='header-link header-left-section-profile-text header-right-section-login hover-link-profile' to={`/profile/${props.user.id}`}>
+          <Link onMouseEnter={()=>{this.hoverLink('profile')}} onMouseLeave={()=>{this.leaveLink('profile')}} className='header-link header-left-section-profile-text header-right-section-login hover-link-profile' to={`/app/profile/${props.user.id}`}>
             profile
           </Link>
           <Link onMouseEnter={()=>{this.hoverLink('edit')}} onMouseLeave={()=>{this.leaveLink('edit')}} to='/edit' className={`hover-link-edit`}>

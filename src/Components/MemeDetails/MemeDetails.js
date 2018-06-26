@@ -108,18 +108,19 @@ class MemeDetails extends Component {
         })
       }
     }
-    if (!this.state.memeDetails) {
-      IziToast.show({
-        title:'Meme not found!',
-        position:'bottomRight',
-        message:`either that page doesn't exist or monkeys stole your internet!`,
-        timeout:3000,
-        color:'red',
-        class:'izishow-login',
-        theme:'light'
-      })
-      this.props.history.goBack();
-    }
+    setTimeout(() => {
+      if (!this.state.memeDetails) {
+        IziToast.show({
+          title:'Meme not found!',
+          position:'bottomRight',
+          message:`either that page doesn't exist or monkeys stole your internet!`,
+          timeout:3000,
+          color:'red',
+          class:'izishow-login',
+          theme:'light'
+        })
+      }
+    }, 1500);
   }
   componentWillReceiveProps(props) {
   }

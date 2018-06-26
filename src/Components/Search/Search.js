@@ -258,7 +258,7 @@ class Search extends Component {
     } else if (state.searchResults && state.focus && state.tab==='ifunnyers' && state.inputVal.length > 0) {
       options = state.searchResults.map((el, i)=>{
         return (
-          <Link onMouseEnter={()=>{this.resultMouseEnter(i)}} onClick={()=>{state.user!=='popular' && !el.date?this.postSearch(el.username, 1):null}} onMouseLeave={()=>{this.resultMouseLeave(i)}} onMouseDown={(e)=>{e.preventDefault()}} key={i} className={`search-result-el-users search-result-el-${i} search-result-el-selector`} to={`/app/users/${el.username}`}>
+          <Link onMouseEnter={()=>{this.resultMouseEnter(i)}} onClick={()=>{state.user!=='popular' && !el.date?this.postSearch(el.username, 1):null}} onMouseLeave={()=>{this.resultMouseLeave(i)}} onMouseDown={(e)=>{e.preventDefault()}} key={i} className={`search-result-el-users search-result-el-${i} search-result-el-selector`} to={`/app/profile/${el.id}`}>
             <div className='search-result-el-tag-left-container'>
               <div className='search-result-el-tag-left-container-picture-container'>
                 <div style={{backgroundImage: `url(${el.profile_picture? el.profile_picture:'https://ifunny.co/images/icons/user.svg'})`, height:el.profile_picture? '32px':'16px', width:el.profile_picture? '32px':'16px'}} className='search-result-el-tag-left-container-picture'/>
