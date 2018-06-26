@@ -254,10 +254,71 @@ class Tags extends Component {
     })
   }
   featureMeme(meme) {
-    console.log(meme);
-    axios.post(ENV.REACT_APP_BACKEND+'/api/featureMeme?id='+meme.id).then((response)=>{
-      console.log(response);
-    })
+    if (meme.featured == 1) {
+      IziToast.show({
+        theme: 'dark',
+        title: 'Are you sure you want to remove this meme from featured?',
+        position: 'center',
+        class:'izishow-login',
+        buttons: [
+            ['<button>Yes, remove.</button>', (instance, toast)=>{
+              instance.hide({}, toast, 'buttonName');
+              axios.post(ENV.REACT_APP_BACKEND+'/api/unfeatureMeme?id='+meme.id + '&user=' + meme.user_id + '&limit=' + this.state.limit).then((response)=>{
+                this.state.memes.map((el, i)=>{
+                  if (el.id === meme.id) {
+                    el.featured = 0;
+                  }
+                })
+                IziToast.show({
+                  title:'This meme has been removed from featured!',
+                  timeout:2000,
+                  color:'green',
+                  class:'izishow-login',
+                  theme:'light'
+                })
+              }).catch((err)=>{
+                IziToast.show({
+                  color:'red',
+                  title:'Error',
+                  message:'Failed to remove meme. Please check your internet connection!',
+                  position:'bottomRight',
+                  class:'izishow-login',
+                })
+              })
+            }],
+            ['<button>No, keep.</button>', (instance, toast)=>{
+                instance.hide({}, toast, 'buttonName');
+            }, true]
+        ],
+        onOpening: (instance, toast)=>{
+          this.setState({
+            instance: true
+          })
+        },
+        onClosing: (instance, toast, closedBy)=>{
+          this.setState({
+            instance: false
+          })
+        }
+      });
+    } else {
+      axios.post(ENV.REACT_APP_BACKEND+'/api/featureMeme?id='+meme.id + '&user=' + meme.user_id).then((response)=>{
+        this.state.memes.map((el, i)=>{
+          if (el.id === meme.id) {
+            el.featured = 1;
+          }
+        })
+        IziToast.show({
+          title:'Featured!',
+          message:'Check the featured page to see this meme at the top!',
+          timeout:2000,
+          color:'green',
+          class:'izishow-login',
+          theme:'light'
+        })
+      })
+    }
+    this.forceUpdate();
   }
   render() {
     let state = this.state,

@@ -215,10 +215,50 @@ class Featured extends Component {
       .to('.collective-load-more-title', .3, {textShadow:'1px 1px gray'}, '-=.3')
   }
   unfeatureMeme(meme) {
-    console.log(meme);
-    axios.post(ENV.REACT_APP_BACKEND+'/api/unfeatureMeme?id='+meme.id).then((response)=>{
-      console.log(response);
-    })
+    IziToast.show({
+      theme: 'dark',
+      title: 'Are you sure you want to remove this meme from featured?',
+      position: 'center',
+      class:'izishow-login',
+      buttons: [
+          ['<button>Yes, remove.</button>', (instance, toast)=>{
+            instance.hide({}, toast, 'buttonName');
+            IziToast.show({
+              title:'This meme has been removed from featured!',
+              timeout:2000,
+              color:'green',
+              class:'izishow-login',
+              theme:'light'
+            })
+            axios.post(ENV.REACT_APP_BACKEND+'/api/unfeatureMeme?id='+meme.id + '&user=' + meme.user_id + '&limit=' + this.state.limit).then((response)=>{
+              this.setState({
+                memes:response.data
+              })
+            }).catch((err)=>{
+              IziToast.show({
+                color:'red',
+                title:'Error',
+                message:'Failed to remove meme. Please check your internet connection!',
+                position:'bottomRight',
+                class:'izishow-login',
+              })
+            })
+          }],
+          ['<button>No, keep.</button>', (instance, toast)=>{
+              instance.hide({}, toast, 'buttonName');
+          }, true]
+      ],
+      onOpening: (instance, toast)=>{
+        this.setState({
+          instance: true
+        })
+      },
+      onClosing: (instance, toast, closedBy)=>{
+        this.setState({
+          instance: false
+        })
+      }
+    });
   }
   render() {
     let state = this.state,
