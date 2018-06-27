@@ -278,9 +278,64 @@ class Profile extends Component {
     let tl = new TimelineMax();
     tl.to(target, .2, {opacity:.7});
   }
+  editHeadline() {
+    IziToast.question({
+      timeout: 30000,
+      close: false,
+      overlay: true,
+      toastOnce: true,
+      id: 'question',
+      title: 'Type your new headline!',
+      position: 'center',
+      buttons: [
+          ['<button>done</button>', (instance, toast)=>{
+            axios.post(ENV.REACT_APP_BACKEND+'/api/postHeadline', {headline:this.state.headlineVal, user:this.props.user.id}).then((response)=>{
+              this.setState({
+                headlineVal:this.state.user.headline,
+                user:Object.assign({}, this.state.user, {headline:this.state.headlineVal})
+              })
+              IziToast.show({
+                title:'Updated headline!',
+                timeout:2000,
+                color:'green',
+                class:'izishow-login',
+                theme:'light'
+              })
+              this.forceUpdate();
+            }).catch((err)=>{
+              this.setState({
+                headlineVal:this.state.user.headline
+              })
+              IziToast.show({
+                color:'red',
+                title:'Error',
+                message:'Failed to update headline. Please check your internet connection!',
+                position:'bottomRight',
+                class:'izishow-login',
+              })
+            })
+            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+          }],
+          ['<button>cancel</button>', (instance, toast)=>{
+            this.setState({
+              headlineVal:this.state.user.headline
+            })
+            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+          }],
+      ],
+      inputs: [
+        ['<input type="text">', 'keyup', (instance, toast, input, e)=>{
+          this.setState({
+            headlineVal:input.value
+          })
+      }, true],
+      ]
+    })
+  }
   render() {
     let {state, props} = this,
         details,
+        length,
         memes = (
           <section className='collective-loading'>
             <div className='collective-loading-text'>
@@ -360,13 +415,14 @@ class Profile extends Component {
           memes = (
             <div className='collective-memes-failed'>
               <div className='collective-memes-failed-top'>
-                memes failed to load
+                profile failed to load
               </div>
               <div className='collective-memes-failed-bottom'>
                 :(
               </div>
             </div>
           )
+          length = null
         } else if (state.memes) {
           memes = (
             state.memes.map((el, i)=>{
@@ -448,14 +504,17 @@ class Profile extends Component {
                 )
               }
             })
+          );
+          length = (
+            <section className={`profile-count-section`}>
+              {state.memes? state.memes.length: 0} memes
+            </section>
           )
         }
     return (
       <main className='Profile'>
         {details}
-        <section className={`profile-count-section`}>
-          {state.memes? state.memes.length: 0} memes
-        </section>
+        {length}
         {memes}
         {loadMore}
       </main>

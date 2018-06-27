@@ -180,6 +180,7 @@ app.post('/api/unfeatureMeme', CTRL.unfeatureMeme); // alters a table row to rem
 app.post('/api/postRecentSearch', CTRL.postRecentSearch); // posts search by type (user/tag) on user.
 app.post('/api/postComment', CTRL.postComment); // posts a comment to a meme.
 app.post('/api/postReply', CTRL.postReply); // posts a reply to a comment of a meme.
+app.post('/api/postHeadline', CTRL.postHeadline); // posts or updates the headline of a user.
 app.post('/api/upload',(req, res) => { // uploads a picture to aws.
   imageUpload.sendPics(req.body.pic, (response, err) => {
     if (err) {

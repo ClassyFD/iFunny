@@ -79,6 +79,9 @@
   margin-top: 5px;
   margin-bottom: 10px;
 }
+.asdf {
+  color: white;
+}
 .profile-featured-container {
   display: flex;
   align-items: center;

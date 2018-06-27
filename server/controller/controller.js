@@ -443,4 +443,11 @@ module.exports = {
       })
     })
   },
+  postHeadline: (req, res)=>{
+    let db = req.app.get('db'),
+      {headline, user} = req.body;
+    db.updateHeadline([headline, user]).then((response)=>{
+      res.status(200).send(response);
+    })
+  }
 }
