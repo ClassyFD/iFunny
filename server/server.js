@@ -169,6 +169,8 @@ app.delete('/api/deleteMeme/:memeid/:exactid', CTRL.deleteMeme); // deleting mem
 // POST REQUESTS.
 app.post('/api/like/:memeid', CTRL.likeMeme); // posts a meme like into the db.
 app.post('/api/unlike/:memeid', CTRL.unlikeMeme); // deletes a meme like in the db.
+app.post('/api/profileLike/:memeid', CTRL.profileLikeMeme); // posts a meme like into the db.
+app.post('/api/profileUnlike/:memeid', CTRL.profileUnlikeMeme); // deletes a meme like in the db.
 app.post('/api/featuredLike/:memeid', CTRL.featuredLikeMeme); // posts a featured meme like.
 app.post('/api/featuredUnlike/:memeid', CTRL.featuredUnlikeMeme); // deletes a featured meme like.
 app.post('/api/commentLike/:commentid', CTRL.likeComment); // posts a comment like.
