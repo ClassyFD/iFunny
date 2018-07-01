@@ -169,6 +169,8 @@ app.delete('/api/deleteMeme/:memeid/:exactid', CTRL.deleteMeme); // deleting mem
 // POST REQUESTS.
 app.post('/api/like/:memeid', CTRL.likeMeme); // posts a meme like into the db.
 app.post('/api/unlike/:memeid', CTRL.unlikeMeme); // deletes a meme like in the db.
+app.post('/api/profileLike/:memeid', CTRL.profileLikeMeme); // posts a meme like into the db.
+app.post('/api/profileUnlike/:memeid', CTRL.profileUnlikeMeme); // deletes a meme like in the db.
 app.post('/api/featuredLike/:memeid', CTRL.featuredLikeMeme); // posts a featured meme like.
 app.post('/api/featuredUnlike/:memeid', CTRL.featuredUnlikeMeme); // deletes a featured meme like.
 app.post('/api/commentLike/:commentid', CTRL.likeComment); // posts a comment like.
@@ -180,6 +182,7 @@ app.post('/api/unfeatureMeme', CTRL.unfeatureMeme); // alters a table row to rem
 app.post('/api/postRecentSearch', CTRL.postRecentSearch); // posts search by type (user/tag) on user.
 app.post('/api/postComment', CTRL.postComment); // posts a comment to a meme.
 app.post('/api/postReply', CTRL.postReply); // posts a reply to a comment of a meme.
+app.post('/api/postHeadline', CTRL.postHeadline); // posts or updates the headline of a user.
 app.post('/api/upload',(req, res) => { // uploads a picture to aws.
   imageUpload.sendPics(req.body.pic, (response, err) => {
     if (err) {

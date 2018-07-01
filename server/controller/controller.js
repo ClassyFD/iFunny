@@ -275,6 +275,47 @@ module.exports = {
       })
     })
   },
+  profileLikeMeme: (req, res)=>{ // posts a meme like into the db.
+    let db = req.app.get('db'),
+    user = req.body.user,
+    meme = req.params.memeid,
+    date = new Date(),
+        type = req.body.type,
+        obj = {};
+        db.likeMeme([date, user.id, meme]).then((response)=>{ // likes the meme. (posts a like row into the db.)
+          db.updateMemeLikes([meme]).then((response)=>{ // updates the amount of likes that a meme has
+            if (type >= 0) {
+              db.getUserProfile([user.id]).then((response)=>{ // gets multiple memes instead of only one.
+                res.status(200).send(response);
+              })
+            } else {
+              db.getMemeDetails([meme]).then((response)=>{ // gets only the one meme and its details.
+            res.status(200).send(response);
+          })
+        }
+      })
+    })
+  },
+  profileUnlikeMeme: (req, res)=>{ // deletes a meme like in the db.
+    let db = req.app.get('db'),
+        user = req.body.user,
+        meme = req.params.memeid,
+        type = req.body.type,
+        obj = {};
+    db.unlikeMeme([user.id, meme]).then((response)=>{ // unlikes the meme. (deletes a like from the db.)
+      db.updateMemeUnlikes([meme]).then((response)=>{ // updates the amount of likes that the meme has.
+        if (type >= 0) {
+          db.getUserProfile([user.id]).then((response)=>{ // gets multiple memes instead of only one.
+            res.status(200).send(response);
+          })
+        } else {
+          db.getMemeDetails([meme]).then((response)=>{ // gets only the one meme and its details
+            res.status(200).send(response);
+          })
+        }
+      })
+    })
+  },
   featuredLikeMeme: (req, res)=>{ // posts a featured meme like.
     let db = req.app.get('db'),
     user = req.body.user,
@@ -443,4 +484,11 @@ module.exports = {
       })
     })
   },
+  postHeadline: (req, res)=>{
+    let db = req.app.get('db'),
+      {headline, user} = req.body;
+    db.updateHeadline([headline, user]).then((response)=>{
+      res.status(200).send(response);
+    })
+  }
 }

@@ -18,12 +18,16 @@ class Profile extends Component {
       limit: 10,
       memes: '',
       memeStatus:true,
+      headlineVal:'',
+      usernameVal:'',
       clickable:true,
       loadMore:10
     };
   }
 
   componentDidMount() {
+    let windowTL = new TimelineMax();
+    windowTL.to(window, .2, {scrollTo:0});
     let loadingtl = new TimelineMax({
       repeat:-1
     });
@@ -39,6 +43,11 @@ class Profile extends Component {
       if (res.memes && res.memes.length > 0) {
         res.memes.sort((a, b)=>{
           return b.id - a.id;
+        })
+      }
+      if (!res.memes) {
+        this.setState({
+          memeStatus:false
         })
       }
       this.setState({
@@ -62,6 +71,9 @@ class Profile extends Component {
         this.setState({memeStatus:false})
       }
     })
+    setTimeout(() => {
+      this.likedStatus();
+    }, 800);
   }
 
   componentWillReceiveProps(props) {
@@ -125,11 +137,23 @@ class Profile extends Component {
         clickable:false,
         likeArr: state.likeArr.concat(id)
       })
-      axios.post(ENV.REACT_APP_BACKEND+'/api/like/'+id, {user:props.user, type:state.limit}).then((response)=>{
+      axios.post(ENV.REACT_APP_BACKEND+'/api/profileLike/'+id, {user:props.user, type:state.limit}).then((response)=>{
+        let res = response.data[0].json_build_object;
+        if (res.memes && res.memes.length > 0) {
+          res.memes.sort((a, b)=>{
+            return b.id - a.id;
+          })
+        }
+        if (!res.memes) {
+          this.setState({
+            memeStatus:false
+          })
+        }
         this.setState({
           likeArr:state.likeArr.concat(id),
           clickable:true,
-          memes:response.data
+          memes: res.memes,
+          user: res.user
         })
       }).catch((err)=>{
         console.log(err)
@@ -147,13 +171,25 @@ class Profile extends Component {
           return el!==id
         })
       })
-      axios.post(ENV.REACT_APP_BACKEND+'/api/unlike/'+id, {user:props.user, type:state.limit}).then((response)=>{
+      axios.post(ENV.REACT_APP_BACKEND+'/api/profileUnlike/'+id, {user:props.user, type:state.limit}).then((response)=>{
+        let res = response.data[0].json_build_object;
+        if (res.memes && res.memes.length > 0) {
+          res.memes.sort((a, b)=>{
+            return b.id - a.id;
+          })
+        }
+        if (!res.memes) {
+          this.setState({
+            memeStatus:false
+          })
+        }
         this.setState({
           likeArr:state.likeArr.filter((el, i)=>{
             return el!==id
           }),
+          memes: res.memes,
           clickable:true,
-          memes:response.data
+          user: res.user
         })
       }).catch((err)=>{
         console.log(err)
@@ -192,6 +228,30 @@ class Profile extends Component {
     setTimeout(() => {
       this.likedStatus();
     }, 800);
+  }
+  likedStatus() {
+    let likeArr = [];
+    console.log('liked status')
+    if (this.props.user) {
+      console.log('reached')
+      axios.get(ENV.REACT_APP_BACKEND+'/api/checkLikes/'+this.props.user.id + '?offset='+this.state.limit).then((response)=>{
+        console.log('reached2')
+        console.log(response.data)
+        if (response.data && this.state.memes) {
+          this.state.memes.map((el, i)=>{
+            response.data.map((resEl, resI)=>{
+              if (el.id === resEl.meme_id) {
+                likeArr.push(el.id);
+              }
+            })
+          })
+          this.setState({
+            likeArr
+          })
+        }
+      })
+    }
+    console.log(likeArr);
   }
   enterLoadMore() {
     let tl = new TimelineMax();
@@ -278,9 +338,217 @@ class Profile extends Component {
     let tl = new TimelineMax();
     tl.to(target, .2, {opacity:.7});
   }
+  hoverUsername(target) {
+    let tl = new TimelineMax();
+    tl.to(target, .2, {opacity:.7});
+  }
+  leaveUsername(target) {
+    let tl = new TimelineMax();
+    tl.to(target, .2, {opacity:1});
+  }
+  editHeadline() {
+    IziToast.show({
+      timeout: false,
+      close: false,
+      overlay: true,
+      toastOnce: true,
+      id: 'question',
+      title: 'Type your new headline!',
+      message:'(leave blank to delete)',
+      position: 'center',
+      buttons: [
+          ['<button>done</button>', (instance, toast)=>{
+            if (!this.state.headlineVal) {
+              IziToast.question({
+                timeout:false,
+                close:false,
+                toastOnce:true,
+                id:'verify',
+                title:'Are you sure you want set a blank headline?',
+                position:'center',
+                buttons: [
+                  ['<button>Yes, set</button>', (instance, toast)=>{
+                    axios.post(ENV.REACT_APP_BACKEND+'/api/postHeadline', {headline:this.state.headlineVal, user:this.props.user.id}).then((response)=>{
+                      instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                      this.setState({
+                        headlineVal:'',
+                        user:Object.assign({}, this.state.user, {headline:this.state.headlineVal})
+                      })
+                      IziToast.show({
+                        title:'Updated headline!',
+                        timeout:2000,
+                        color:'green',
+                        class:'izishow-login',
+                        theme:'light'
+                      })
+                      this.forceUpdate();
+                    }).catch((err)=>{
+                      this.setState({
+                        headlineVal:''
+                      })
+                      IziToast.show({
+                        color:'red',
+                        title:'Error',
+                        message:'Failed to update headline. Please check your internet connection!',
+                        position:'bottomRight',
+                        class:'izishow-login',
+                      })
+                    })
+                  }],
+                  ['<button>No, keep old one</button>', (instance, toast)=>{
+                    this.setState({
+                      headlineVal:''
+                    })
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                  }]
+                ]
+              })
+            } else {
+              axios.post(ENV.REACT_APP_BACKEND+'/api/postHeadline', {headline:this.state.headlineVal, user:this.props.user.id}).then((response)=>{
+                this.setState({
+                  headlineVal:'',
+                  user:Object.assign({}, this.state.user, {headline:this.state.headlineVal})
+                })
+                IziToast.show({
+                  title:'Updated headline!',
+                  timeout:2000,
+                  color:'green',
+                  class:'izishow-login',
+                  theme:'light'
+                })
+                this.forceUpdate();
+              }).catch((err)=>{
+                this.setState({
+                  headlineVal:''
+                })
+                IziToast.show({
+                  color:'red',
+                  title:'Error',
+                  message:'Failed to update headline. Please check your internet connection!',
+                  position:'bottomRight',
+                  class:'izishow-login',
+                })
+              })
+            }
+            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+          }],
+          ['<button>cancel</button>', (instance, toast)=>{
+            this.setState({
+              headlineVal:''
+            })
+            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+          }],
+      ],
+      inputs: [
+        ['<input maxLength="600" type="text">', 'keyup', (instance, toast, input, e)=>{
+          this.setState({
+            headlineVal:input.value
+          })
+      }, true],
+      ]
+    })
+  }
+  editUsername() {
+    IziToast.show({
+      timeout: false,
+      close: false,
+      overlay: true,
+      toastOnce: true,
+      id: 'question',
+      title: 'Type your new username!',
+      message:'(can not be empty)',
+      position: 'center',
+      buttons: [
+          ['<button>done</button>', (instance, toast)=>{
+            if (this.state.usernameVal.length < 4) {
+              IziToast.show({
+                color:'red',
+                title:'Error',
+                message:'Username is too short!',
+                position:'bottomRight',
+                class:'izishow-login',
+              })
+            } else if (this.state.usernameVal.length > 25) {
+              IziToast.show({
+                color:'red',
+                title:'Error',
+                message:'Username is too long!',
+                position:'bottomRight',
+                class:'izishow-login',
+              })
+            } else if (!(/^\w+$/i.test(this.state.usernameVal))) {
+              IziToast.show({
+                color:'red',
+                title:'Error',
+                message:'Username can only contain numbers and letters!',
+                position:'bottomRight',
+                class:'izishow-login',
+              })
+            } else {
+              axios.post(ENV.REACT_APP_BACKEND+'/api/submitUsername', {username:this.state.usernameVal, user:this.props.user.id}).then((response)=>{
+                console.log(response);
+                if (response.data === 'Username Taken') {
+                  IziToast.show({
+                    title:'Username Taken!',
+                    message:'Unfortunately, somebody already owns that username.',
+                    timeout:3000,
+                    color:'red',
+                    class:'izishow-login',
+                    theme:'light',
+                    position:'bottomRight'
+                  })
+                  this.setState({
+                    usernameVal:'',
+                  })
+                } else {
+                  IziToast.show({
+                    title:'Updated username!',
+                    timeout:2000,
+                    color:'green',
+                    class:'izishow-login',
+                    theme:'light'
+                  })
+                  this.setState({
+                    usernameVal:'',
+                    user:Object.assign({}, this.state.user, {username:this.state.usernameVal})
+                  })
+                  this.forceUpdate();
+                }
+              }).catch((err)=>{
+                this.setState({
+                  usernameVal:''
+                })
+                IziToast.show({
+                  color:'red',
+                  title:'Error',
+                  message:'Failed to update username. Please check your internet connection!',
+                  position:'bottomRight',
+                  class:'izishow-login',
+                })
+              })
+            }
+            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+          }],
+          ['<button>cancel</button>', (instance, toast)=>{
+            this.setState({
+              usernameVal:''
+            })
+            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+          }],
+      ],
+      inputs: [
+        ['<input maxLength="600" type="text">', 'keyup', (instance, toast, input, e)=>{
+          this.setState({
+            usernameVal:input.value
+          })
+      }, true],
+      ]
+    })
+  }
   render() {
     let {state, props} = this,
         details,
+        length,
         memes = (
           <section className='collective-loading'>
             <div className='collective-loading-text'>
@@ -300,8 +568,8 @@ class Profile extends Component {
               <div style={{backgroundImage: state.user.cover_photo? `url('${state.user.cover_photo}')`:`url('https://img.ifcdn.com/user_covers/bcb604832ae943605c2e8e38ecdbdc6694c2662b_0.jpg?1389824103')`}} className={`profile-cover-picture`}/>
               <div className={`profile-bottom-container`}>
                 <div style={{backgroundImage: state.user.profile_picture? `url('${state.user.profile_picture}')`:`url('https://ifunny.co/images/icons/profile.svg')`}} className={`profile-picture`}/>
-                <h1 className={`profile-username-heading`}>
-                  {state.user.username? state.user.username : 'unknown user...'}
+                <h1 style={state.user&&props.user&&state.user.id===props.user.id?{cursor:'pointer'}:{cursor:'auto'}} onMouseEnter={()=>{state.user&&props.user&&state.user.id===props.user.id?this.hoverUsername('.profile-username-heading'):null}} onMouseLeave={()=>{state.user&&props.user&&state.user.id===props.user.id?this.leaveUsername('.profile-username-heading'):null}} onClick={()=>{state.user&&props.user&&state.user.id===props.user.id?this.editUsername():null}} className={`profile-username-heading`}>
+                  {state.user.username? state.user.username : 'anonymous memer'}
                 </h1>
                 <div className={`profile-subs-container`}>
                   <h2 className={`profile-subscribers-heading`}>
@@ -320,8 +588,8 @@ class Profile extends Component {
                     subscriptions
                   </h3>
                 </div>
-                <h3 style={state.user&&props.user&&state.user.id===props.user.id?{cursor:'pointer'}:{cursor:'default'}} onClick={()=>{state.user&&props.user&&state.user.id===props.user.id?this.editHeadline():null}} onMouseEnter={()=>{state.user&&props.user&&state.user.id===props.user.id?this.hoverHeadline('.profile-headline-edit'):null}} onMouseLeave={()=>{state.user&&props.user&&state.user.id===props.user.id?this.leaveHeadline('.profile-headline-edit'):null}} className={`profile-headline-heading`}>
-                  {/* {state.user && state.user.headline?
+                <h3 style={state.user&&props.user&&state.user.id===props.user.id?{cursor:'pointer'}:{cursor:'auto'}} onClick={()=>{state.user&&props.user&&state.user.id===props.user.id?this.editHeadline():null}} onMouseEnter={()=>{state.user&&props.user&&state.user.id===props.user.id?this.hoverHeadline('.profile-headline-edit'):null}} onMouseLeave={()=>{state.user&&props.user&&state.user.id===props.user.id?this.leaveHeadline('.profile-headline-edit'):null}} className={`profile-headline-heading`}>
+                  {state.user && state.user.headline?
                   (<div className={`profile-headline-edit`}>
                     {state.user.headline}
                   </div>):state.user&&props.user&&!state.user.headline&&state.user.id===props.user.id?
@@ -360,13 +628,14 @@ class Profile extends Component {
           memes = (
             <div className='collective-memes-failed'>
               <div className='collective-memes-failed-top'>
-                memes failed to load
+                no memes found
               </div>
               <div className='collective-memes-failed-bottom'>
                 :(
               </div>
             </div>
           )
+          length = null
         } else if (state.memes) {
           memes = (
             state.memes.map((el, i)=>{
@@ -390,10 +659,10 @@ class Profile extends Component {
                         <div style={el.tags?null:{width:'auto'}} className='meme-details-details-top-container'>
                         {el.tags && el.tags.length>0? (
                           <div className='meme-details-details-tags'>
-                            {el.tags.map((el, index)=>{
+                            {el.tags.map((element, index)=>{
                               return (
-                                <Link to={`/app/tags/${el.tag_text}`} key={index} onMouseLeave={()=>{this.leaveTag(i, index)}} onMouseEnter={()=>{this.hoverTag(i, index)}} className={`meme-details-details-tag-el meme-tag-${i}-${index}`}> 
-                                  #{el.tag_text}
+                                <Link to={`/app/tags/${element.tag_text}`} key={index} onMouseLeave={()=>{this.leaveTag(i, index)}} onMouseEnter={()=>{this.hoverTag(i, index)}} className={`meme-details-details-tag-el meme-tag-${i}-${index}`}> 
+                                  #{element.tag_text}
                                 </Link>
                               )
                             })}
@@ -427,7 +696,7 @@ class Profile extends Component {
                               <TwitterShareButton 
                                 style={{height:'36px', width:'36px', borderRadius:'50%', outline:'none', cursor:'pointer'}}
                                 title={el.caption}
-                                hashtags={el.tags? el.tags.map((el)=>{return el.tag_text}) : ['iFunny']}
+                                hashtags={el.tags?el.tags.map((tag)=>{return tag.tag_text}) : ['iFunny']}
                                 windowWidth={800}
                                 windowHeight={530}
                                 url={ENV.REACT_APP_FRONTEND+`/app/memes/${el.id}`}
@@ -448,14 +717,17 @@ class Profile extends Component {
                 )
               }
             })
+          );
+          length = (
+            <section className={`profile-count-section`}>
+              {state.memes? state.memes.length: 0} memes
+            </section>
           )
         }
     return (
       <main className='Profile'>
         {details}
-        <section className={`profile-count-section`}>
-          {state.memes? state.memes.length: 0} memes
-        </section>
+        {length}
         {memes}
         {loadMore}
       </main>

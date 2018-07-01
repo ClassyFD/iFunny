@@ -37,7 +37,8 @@ class Header extends Component {
         etl = new TimelineMax();
         console.log(this.state.mountedComp)
         console.log(props)
-    if (this.state.mountedComp !== props.comp) {
+        console.log(props.comp.split('-'))
+    if (this.state.mountedComp !== props.comp || this.state.mountedComp != props.comp.split('-')[0]) {
       tl.to(`.header-link`, .5, {color:'white'});
       mtl.to(`.header-nav-link`, .5, {color:'white'});
     }
@@ -46,6 +47,7 @@ class Header extends Component {
       .to(`.header-right-section-upload-heading`, .5, {color:'white'}, '-=.2');
     }
     tl.to(`.header-left-section-${props.comp}-text`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
+    tl.to(`.header-left-section-${props.comp.split('-')[0]}-text`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
     mtl.to(`.header-mobile-nav-${props.comp}`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');  
     if (props.comp === 'edit') {
       console.log('edit')
@@ -53,13 +55,18 @@ class Header extends Component {
         etl.to(`.header-right-section-upload-heading`, .5, {color:'#fc0'});
       }, 50);
     }
-    if (props.comp.split('-')[1]===props.user.id) {
-      let tl = new TimelineMax();
-      tl.to(`.header-left-section-profile-text`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
+    if (props.comp.split('-')[0]==='profile' && props.comp.split('-')[1]==props.user.id) {
+      this.setState({
+        mountedComp:'profile'
+      })
+      setTimeout(() => {
+        tl.to(`.header-left-section-${props.comp.split('-')[0]}-text`, .5, {color:'#ffcc00'}, '-=1');
+      }, 50);
+    } else {
+      this.setState({
+        mountedComp:props.comp
+      })
     }
-    this.setState({
-      mountedComp:props.comp
-    })
     tl.staggerTo('.header-nav-link', .5, {left:'0vw'}, '.03')
     this.setState({
       navExpanded:false
@@ -77,7 +84,7 @@ class Header extends Component {
       let tl = new TimelineMax();
       tl.to(`.header-right-section-add-memes-li`, .2, {opacity:.6})
         .to(target!==this.props.comp?`.header-right-section-upload-heading`:`null`, .2, {color:'#fc0'}, '-=.2');
-    } else if (target!==this.props.comp || target==='icon' || target==='search') {
+    } else if ((target!==this.props.comp && target!==this.props.comp.split('-')[0]) || target==='icon' || target==='search') {
       let tl = new TimelineMax();
       tl.to(`.hover-link-${target}`, .2, target==='icon'||target==='search'?{opacity:.6}:{color:'#fc0'});
     }
@@ -87,7 +94,7 @@ class Header extends Component {
       let tl = new TimelineMax();
       tl.to(`.header-right-section-add-memes-li`, .2, {opacity:1})
         .to(target!==this.props.comp?`.header-right-section-upload-heading`:`null`, .2, {color:'white'}, '-=.2');
-    } else if (target!==this.props.comp || target==='icon' || target==='search') {
+    } else if ((target!==this.props.comp && target!==this.props.comp.split('-')[0]) || target==='icon' || target==='search') {
       let tl = new TimelineMax();
       tl.to(`.hover-link-${target}`, .2, target==='icon'||target==='search'?{opacity:1}:{color:'white'});
     }
