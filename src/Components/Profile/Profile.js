@@ -595,7 +595,7 @@ class Profile extends Component {
                   </div>):state.user&&props.user&&!state.user.headline&&state.user.id===props.user.id?
                   (<div className={`profile-headline-edit`}>
                     [ add headline ]
-                  </div>):null} */}
+                  </div>):null}
                 </h3>
                 {state.user.featured > 0?(<div className={`profile-featured-container`}>
                   <h2 className={`profile-star-heading`}/>
