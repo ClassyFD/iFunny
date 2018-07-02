@@ -27,7 +27,7 @@ class Profile extends Component {
 
   componentDidMount() {
     let windowTL = new TimelineMax();
-    windowTL.to(window, .2, {scrollTo:0});
+    windowTL.to(window, .5, {scrollTo:0});
     let loadingtl = new TimelineMax({
       repeat:-1
     });

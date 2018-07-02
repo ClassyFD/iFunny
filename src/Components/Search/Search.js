@@ -86,7 +86,7 @@ class Search extends Component {
   }
   postSearch(text, type) {
     let date = new Date;
-    date = moment(date).utc().format('MM-DD-YYYY');
+    date = moment(date).utc()
     if (this.state.user!=='popular') {
       axios.post(ENV.REACT_APP_BACKEND+'/api/postRecentSearch', {text, user:this.state.user, type, date}).then((response)=>{
       })
