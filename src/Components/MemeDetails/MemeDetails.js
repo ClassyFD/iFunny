@@ -442,9 +442,6 @@ class MemeDetails extends Component {
         TC2 = res.data[1].id
       }
       if (type === 'back' && this.state.commentPage > 1) {
-        this.setState({
-          commentPage: this.state.commentPage - 1
-        })
         axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage - 1)+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
           let commentExpanded = [];
           response.data.comments.map((el, i)=>{
@@ -457,6 +454,7 @@ class MemeDetails extends Component {
             memeDetails: response.data,
             commentExpanded,
             topComments:res.data,
+            commentPage: this.state.commentPage - 1
           })
           tl.to(window, .7, {scrollTo:target});
         }).catch((err)=>{
@@ -467,9 +465,6 @@ class MemeDetails extends Component {
           }
         });
       } else {
-        this.setState({
-          commentPage: this.state.commentPage + 1
-        })
         axios.get(ENV.REACT_APP_BACKEND+'/api/getMemeDetails/'+this.props.match.params.id + '?commentPage='+(this.state.commentPage + 1)+'&tc1='+TC1+'&tc2='+TC2).then((response)=>{
           let commentExpanded = [];
           response.data.comments.map((el, i)=>{
@@ -482,6 +477,7 @@ class MemeDetails extends Component {
             memeDetails: response.data,
             commentExpanded,
             topComments:res.data,
+            commentPage: this.state.commentPage + 1
           })
           tl.to(window, .7, {scrollTo:target});
         }).catch((err)=>{
