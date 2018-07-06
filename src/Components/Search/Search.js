@@ -86,9 +86,10 @@ class Search extends Component {
   }
   postSearch(text, type) {
     let date = new Date;
-    date = moment(date).utc().format('MM-DD-YYYY');
+    date = moment(date).utc()
     if (this.state.user!=='popular') {
       axios.post(ENV.REACT_APP_BACKEND+'/api/postRecentSearch', {text, user:this.state.user, type, date}).then((response)=>{
+        
       })
     }
   }
@@ -134,7 +135,14 @@ class Search extends Component {
     let user = 'popular';
     if (this.props.user && this.state.inputVal.length < 1) {
       user = this.props.user.id;
-      axios.get(ENV.REACT_APP_BACKEND+`/api/getRecentSearches?user=${user}`).then((response)=>{        
+      axios.get(ENV.REACT_APP_BACKEND+`/api/getRecentSearches?user=${user}`).then((response)=>{
+        response.data.map((el, i)=>{
+          if (el.type===1 && !el.user_id) {
+            axios.post(ENV.REACT_APP_BACKEND+'/api/updateOwnerId', {user:el.tag_text}).then((response)=>{
+              el.user_id = response.data.id
+            })
+          }
+        })       
         this.setState({
           searchResults: response.data,
         })
@@ -226,7 +234,7 @@ class Search extends Component {
     if (state.searchResults && state.focus && state.searchResults[0] && state.searchResults[0].tag_text) {
       options = state.searchResults.map((el, i)=>{
         return (
-          <Link onMouseEnter={()=>{this.resultMouseEnter(i)}} onMouseLeave={()=>{this.resultMouseLeave(i)}} onMouseDown={(e)=>{e.preventDefault()}} onClick={()=>{state.user!=='popular' && !el.date?this.postSearch(el.tag_text, 2):null}} to={`/app/${el.type && el.type===1?'users':'tags'}/${el.tag_text}`} key={i} className={`search-result-el search-result-el-${i} search-result-el-selector`}>
+          <Link onMouseEnter={()=>{this.resultMouseEnter(i)}} onMouseLeave={()=>{this.resultMouseLeave(i)}} onMouseDown={(e)=>{e.preventDefault()}} onClick={()=>{state.user!=='popular' && !el.date?this.postSearch(el.tag_text, 2):null}} to={`/app/${el.type && el.type===1?'profile':'tags'}/${el.type && el.type===1?el.user_id:el.tag_text}`} key={i} className={`search-result-el search-result-el-${i} search-result-el-selector`}>
             <div className='search-result-el-tag-left-container'>
               <div style={{backgroundImage:`url(${el.type && el.type===1?'https://ifunny.co/images/icons/user.svg':'https://ifunny.co/images/icons/hashtag.svg'})`}} className='search-result-el-tag-left-container-icon'/>
               <div className='search-result-el-tag-left-container-tag'>
@@ -242,7 +250,7 @@ class Search extends Component {
     } else if (state.searchResults && state.focus && state.tab==='ifunnyers' && state.searchResults[0] && state.searchResults[0].tag_text) {
       options = state.searchResults.map((el, i)=>{
         return (
-          <Link onMouseEnter={()=>{this.resultMouseEnter(i)}} onMouseLeave={()=>{this.resultMouseLeave(i)}} onMouseDown={(e)=>{e.preventDefault()}} onClick={()=>{state.user!=='popular' && !el.date?this.postSearch(el.tag_text, 2):null}} to={`/app/${el.type && el.type===1?'users':'tags'}/${el.tag_text}`} key={i} className={`search-result-el search-result-el-${i} search-result-el-selector`}>
+          <Link onMouseEnter={()=>{this.resultMouseEnter(i)}} onMouseLeave={()=>{this.resultMouseLeave(i)}} onMouseDown={(e)=>{e.preventDefault()}} onClick={()=>{state.user!=='popular' && !el.date?this.postSearch(el.tag_text, 2):null}} to={`/app/${el.type && el.type===1?'profile':'tags'}/${el.type && el.type===1?el.user_id:el.tag_text}`} key={i} className={`search-result-el search-result-el-${i} search-result-el-selector`}>
             <div className='search-result-el-tag-left-container'>
               <div style={{backgroundImage:`url(${el.type && el.type===1?'https://ifunny.co/images/icons/user.svg':'https://ifunny.co/images/icons/hashtag.svg'})`}} className='search-result-el-tag-left-container-icon'/>
               <div className='search-result-el-tag-left-container-tag'>

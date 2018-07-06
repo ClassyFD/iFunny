@@ -1017,16 +1017,16 @@ class MemeDetails extends Component {
                 return (
                   <section style={{backgroundColor: props.user && props.user.id === el.user_id? 'rgba(8, 13, 17, .3)' : 'transparent'}} key={i} className={`meme-details-comments-element-section`}>
                     <div className={`meme-details-comments-element-top`}>
-                      <div style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
+                      <Link to={`/app/profile/${el.user_id}`} style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
                       <div className={`meme-details-comments-element-right-side`}>
                         <p className={`meme-details-comments-element-paragraph`}>
                           {el.comment}
                         </p>
                         <div className={`meme-details-comments-element-user-container`}>
                           <div className={`meme-details-comments-element-top-comment`}/>
-                          <p className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                          <Link style={{color: 'hsla(0,0%,100%,.6)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
                             {el.username}
-                          </p>
+                          </Link>
                           <p className={`meme-details-comments-element-date-paragraph`}>
                             {moment(el.date).fromNow()}
                           </p>
@@ -1063,15 +1063,15 @@ class MemeDetails extends Component {
                               return (
                                 <section style={{backgroundColor: props.user && props.user.id === el.user_id? 'rgba(8, 13, 17, .3)' : 'transparent'}} key={i} className={`meme-details-comments-element-section`}>
                                   <div className={`meme-details-comments-element-top`}>
-                                    <div style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
+                                    <Link to={`/app/profile/${el.user_id}`} style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
                                     <div className={`meme-details-comments-element-right-side`}>
                                       <p className={`meme-details-comments-element-paragraph`}>
                                         {el.comment}
                                       </p>
                                       <div className={`meme-details-comments-element-user-container`}>
-                                        <p className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                                        <Link style={{color: 'hsla(0,0%,100%,.6)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
                                           {el.username}
-                                        </p>
+                                        </Link>
                                         <p className={`meme-details-comments-element-date-paragraph`}>
                                           {moment(el.date).fromNow()}
                                         </p>
@@ -1107,15 +1107,15 @@ class MemeDetails extends Component {
                 return (
                   <section style={{backgroundColor: props.user && props.user.id === el.user_id? 'rgba(8, 13, 17, .3)' : 'transparent'}} key={i} className={`meme-details-comments-element-section`}>
                     <div className={`meme-details-comments-element-top`}>
-                      <div style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
+                      <Link to={`/app/profile/${el.user_id}`} style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
                       <div className={`meme-details-comments-element-right-side`}>
                         <p className={`meme-details-comments-element-paragraph`}>
                           {el.comment}
                         </p>
                         <div className={`meme-details-comments-element-user-container`}>
-                          <p className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                          <Link style={{color: 'hsla(0,0%,100%,.6)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
                             {el.username}
-                          </p>
+                          </Link>
                           <p className={`meme-details-comments-element-date-paragraph`}>
                             {moment(el.date).fromNow()}
                           </p>
@@ -1152,15 +1152,15 @@ class MemeDetails extends Component {
                               return (
                                 <section style={{backgroundColor: props.user && props.user.id === el.user_id? 'rgba(8, 13, 17, .3)' : 'transparent'}} key={i} className={`meme-details-comments-element-section`}>
                                   <div className={`meme-details-comments-element-top`}>
-                                    <div style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
+                                    <Link to={`/app/profile/${el.user_id}`} style={{backgroundImage:`url(${el.profile_picture? `${el.profile_picture}` : 'https://ifunny.co/images/icons/profile.svg'})`}} className={`meme-details-comments-element-user-image meme-details-comments-element-user-image-${el.id}`}/>
                                     <div className={`meme-details-comments-element-right-side`}>
                                       <p className={`meme-details-comments-element-paragraph`}>
                                         {el.comment}
                                       </p>
                                       <div className={`meme-details-comments-element-user-container`}>
-                                        <p className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                                        <Link style={{color: 'hsla(0,0%,100%,.6)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
                                           {el.username}
-                                        </p>
+                                        </Link>
                                         <p className={`meme-details-comments-element-date-paragraph`}>
                                           {moment(el.date).fromNow()}
                                         </p>
@@ -1231,7 +1231,7 @@ class MemeDetails extends Component {
                       })}
                     </div>
                   ): null}
-                    <div className='meme-details-details-right-side'>
+                    <div style={{position:'relative', left: 10}} className='meme-details-details-right-side'>
                       <div onClick={()=>{this.likeMeme()}} style={state.liked?{opacity:1}:{opacity:.5}} className='meme-details-details-likes' onMouseLeave={()=>{this.leaveStats('likes')}} onMouseEnter={()=>{this.hoverStats('likes')}}>
                         {state.liked? (<div className='meme-details-likes-image'/>):(<img src='https://ifunny.co/images/icons/smile-small.svg' style={{height:'22px', width:'22px', minHeight:'22px', minWidth:'22px'}}/>)}
                         <p style={state.liked?{color:'#fc0'}:{color:'white'}} className='meme-details-details-likes-count'>{state.memeDetails.details.likes}</p>
@@ -1243,7 +1243,7 @@ class MemeDetails extends Component {
                     </div>
                   </div>
                   <div className='meme-details-details-username'>
-                    by <p onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} className='meme-details-details-username-text'>{state.memeDetails.details.username}</p>
+                    by <Link style={{color: 'hsla(0,0%,100%,.6)'}} to={`/app/profile/${this.state.memeDetails.details.user_id}`} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} className='meme-details-details-username-text'>{state.memeDetails.details.username}</Link>
                   </div>
                   <div className='meme-details-details-bottom-container'>  
                     <div className='meme-details-details-social-media'>
