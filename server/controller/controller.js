@@ -279,13 +279,14 @@ module.exports = {
     let db = req.app.get('db'),
     user = req.body.user,
     meme = req.params.memeid,
+    owner = req.body.owner,
     date = new Date(),
-        type = req.body.type,
-        obj = {};
+    type = req.body.type,
+    obj = {};
         db.likeMeme([date, user.id, meme]).then((response)=>{ // likes the meme. (posts a like row into the db.)
           db.updateMemeLikes([meme]).then((response)=>{ // updates the amount of likes that a meme has
             if (type >= 0) {
-              db.getUserProfile([user.id]).then((response)=>{ // gets multiple memes instead of only one.
+              db.getUserProfile([owner]).then((response)=>{ // gets multiple memes instead of only one.
                 res.status(200).send(response);
               })
             } else {
@@ -301,11 +302,12 @@ module.exports = {
         user = req.body.user,
         meme = req.params.memeid,
         type = req.body.type,
+        owner = req.body.owner,
         obj = {};
     db.unlikeMeme([user.id, meme]).then((response)=>{ // unlikes the meme. (deletes a like from the db.)
       db.updateMemeUnlikes([meme]).then((response)=>{ // updates the amount of likes that the meme has.
         if (type >= 0) {
-          db.getUserProfile([user.id]).then((response)=>{ // gets multiple memes instead of only one.
+          db.getUserProfile([owner]).then((response)=>{ // gets multiple memes instead of only one.
             res.status(200).send(response);
           })
         } else {
@@ -489,6 +491,17 @@ module.exports = {
       {headline, user} = req.body;
     db.updateHeadline([headline, user]).then((response)=>{
       res.status(200).send(response);
+    })
+  },
+  updateOwnerId: (req, res)=>{
+    let db = req.app.get('db'),
+      {user} = req.body;
+    db.getOwnerId([user]).then((response)=>{
+      console.log(response, 'first')
+      db.updateOwnerId([user, response[0].id]).then((response)=>{
+        console.log(response[0], 'second');
+        res.status(200).send(response[0])
+      })
     })
   }
 }

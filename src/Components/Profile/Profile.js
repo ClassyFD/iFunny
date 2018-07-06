@@ -137,7 +137,7 @@ class Profile extends Component {
         clickable:false,
         likeArr: state.likeArr.concat(id)
       })
-      axios.post(ENV.REACT_APP_BACKEND+'/api/profileLike/'+id, {user:props.user, type:state.limit}).then((response)=>{
+      axios.post(ENV.REACT_APP_BACKEND+'/api/profileLike/'+id, {user:props.user, type:state.limit, owner:props.match.params.id}).then((response)=>{
         let res = response.data[0].json_build_object;
         if (res.memes && res.memes.length > 0) {
           res.memes.sort((a, b)=>{
@@ -171,7 +171,7 @@ class Profile extends Component {
           return el!==id
         })
       })
-      axios.post(ENV.REACT_APP_BACKEND+'/api/profileUnlike/'+id, {user:props.user, type:state.limit}).then((response)=>{
+      axios.post(ENV.REACT_APP_BACKEND+'/api/profileUnlike/'+id, {user:props.user, type:state.limit, owner:props.match.params.id}).then((response)=>{
         let res = response.data[0].json_build_object;
         if (res.memes && res.memes.length > 0) {
           res.memes.sort((a, b)=>{
