@@ -207,7 +207,7 @@ class Landing extends Component {
               <Route path={'/app/tags/:tag'} component={Tags}/>
               <Route path={'/app/memes/:id'} component={MemeDetails}/>
               <Route path={'/app/profile/:id'} component={Profile}/>
-              <Redirect from='*' to='/404' />
+              <Redirect from='*' to='/404'/>
             </Switch>
           </section>
           <section className='landing-right-section'>
@@ -233,7 +233,7 @@ class Landing extends Component {
               </a>
             </div>
           </div>
-          <Link to='/cam' onMouseEnter={()=>{this.hoverCam()}} onMouseLeave={()=>{this.leaveCam()}} className='landing-right-side-cam'/>
+          <div onMouseEnter={()=>{this.hoverCam()}} onMouseLeave={()=>{this.leaveCam()}} className='landing-right-side-cam'/>
           <Sticky className='landing-right-side-sticky' topOffset={320} stickyStyle={{top:'80px', marginLeft:'0px'}}>
             <section className='landing-sticky-section'>
               <h1 className='landing-sticky-section-tags-title'>

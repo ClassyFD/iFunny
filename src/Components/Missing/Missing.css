@@ -1,0 +1,44 @@
+.Missing {
+  background:#171a1e;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  position: relative;
+  top: 55px;
+  overflow-x: hidden;
+}
+.missing-main-section {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  margin-top: 50px;
+  color: white;
+}
+.missing-404-heading {
+  font-size: 80px;
+  font-family: 'iFunnyBlack';
+  opacity: .3;
+}
+.missing-bottom-heading {
+  margin-top: 0;
+  font-family: 'iFunnyBlack';
+  opacity: .3;
+}
+.missing-colored-heading, .missing-colored-heading:link, .missing-colored-heading:visited {
+  color: #ffcc00;
+  font-family: 'iFunnyBlack';
+  opacity: 1;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+.missing-404-image {
+  background: url('../../Images/Icons/black-hole.png') no-repeat center center;
+  background-size: cover;
+  height: 300px;
+  width: 300px;
+  align-self: center;
+}
