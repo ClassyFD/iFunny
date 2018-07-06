@@ -263,11 +263,11 @@ class MemeDetails extends Component {
   }
   hoverUsername(target) {
     let tl = new TimelineMax();
-    tl.to(target, .1, {color: 'hsla(0,0%,100%,1)'});
+    tl.to(target, .1, {color: 'hsla(0,0%,100%,.8)'});
   }
   leaveUsername(target) {
     let tl = new TimelineMax();
-    tl.to(target, .1, {color: 'hsla(0,0%,100%,.6)'});
+    tl.to(target, .1, {color: 'hsla(0,0%,100%,.3)'});
   }
   hoverSocialMedia(target) {
     let tl = new TimelineMax();
@@ -1020,7 +1020,7 @@ class MemeDetails extends Component {
                         </p>
                         <div className={`meme-details-comments-element-user-container`}>
                           <div className={`meme-details-comments-element-top-comment`}/>
-                          <Link style={{color: 'hsla(0,0%,100%,.6)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                          <Link style={{color: 'hsla(0,0%,100%,.3)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
                             {el.username}
                           </Link>
                           <p className={`meme-details-comments-element-date-paragraph`}>
@@ -1065,7 +1065,7 @@ class MemeDetails extends Component {
                                         {el.comment}
                                       </p>
                                       <div className={`meme-details-comments-element-user-container`}>
-                                        <Link style={{color: 'hsla(0,0%,100%,.6)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                                        <Link style={{color: 'hsla(0,0%,100%,.3)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
                                           {el.username}
                                         </Link>
                                         <p className={`meme-details-comments-element-date-paragraph`}>
@@ -1109,7 +1109,7 @@ class MemeDetails extends Component {
                           {el.comment}
                         </p>
                         <div className={`meme-details-comments-element-user-container`}>
-                          <Link style={{color: 'hsla(0,0%,100%,.6)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                          <Link style={{color: 'hsla(0,0%,100%,.3)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
                             {el.username}
                           </Link>
                           <p className={`meme-details-comments-element-date-paragraph`}>
@@ -1154,7 +1154,7 @@ class MemeDetails extends Component {
                                         {el.comment}
                                       </p>
                                       <div className={`meme-details-comments-element-user-container`}>
-                                        <Link style={{color: 'hsla(0,0%,100%,.6)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
+                                        <Link style={{color: 'hsla(0,0%,100%,.3)'}} onMouseLeave={(e)=>{this.leaveUsername(e.target)}} onMouseEnter={(e)=>{this.hoverUsername(e.target)}} to={`/app/profile/${el.user_id}`} className={`meme-details-comments-element-username-paragraph meme-details-comments-element-username-paragraph-${el.id}`}>
                                           {el.username}
                                         </Link>
                                         <p className={`meme-details-comments-element-date-paragraph`}>
