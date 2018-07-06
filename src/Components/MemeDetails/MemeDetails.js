@@ -1231,7 +1231,7 @@ class MemeDetails extends Component {
                       })}
                     </div>
                   ): null}
-                    <div style={{position:'relative', left: 10}} className='meme-details-details-right-side'>
+                    <div className='meme-details-details-right-side'>
                       <div onClick={()=>{this.likeMeme()}} style={state.liked?{opacity:1}:{opacity:.5}} className='meme-details-details-likes' onMouseLeave={()=>{this.leaveStats('likes')}} onMouseEnter={()=>{this.hoverStats('likes')}}>
                         {state.liked? (<div className='meme-details-likes-image'/>):(<img src='https://ifunny.co/images/icons/smile-small.svg' style={{height:'22px', width:'22px', minHeight:'22px', minWidth:'22px'}}/>)}
                         <p style={state.liked?{color:'#fc0'}:{color:'white'}} className='meme-details-details-likes-count'>{state.memeDetails.details.likes}</p>
