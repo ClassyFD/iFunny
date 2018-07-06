@@ -271,6 +271,10 @@ class Landing extends Component {
               <h1 className='landing-sticky-section-copyright'>
                 © iFunny 2018
               </h1>
+              <a href={'https://classyfd.github.io/Portfolio'} onMouseEnter={()=>{this.hoverTab('cloned')}} onMouseLeave={()=>{this.leaveTab('cloned')}} target='_blank' className='landing-sticky-section-cloned landing-sticky-section-cloned'>
+                Cloned by: Fernando De la Vega
+              </a>
+
             </section>
           </Sticky>
           </section>
