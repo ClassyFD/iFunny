@@ -141,7 +141,6 @@ class Tags extends Component {
           memes:response.data
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           clickable:true,
           likeArr:state.likeArr.filter((el, i)=>{
@@ -165,7 +164,6 @@ class Tags extends Component {
           memes:response.data
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           clickable:true,
           likeArr:state.likeArr.concat(id)

@@ -318,7 +318,6 @@ class MemeDetails extends Component {
           clickable:true
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           liked:false,
           clickable:true,
@@ -337,7 +336,6 @@ class MemeDetails extends Component {
           clickable:true
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           liked:false,
           clickable:true,
@@ -406,7 +404,6 @@ class MemeDetails extends Component {
           }
         }).catch((err)=>{
           if (err) {
-            console.log(err);
             IziToast.show({
               title:'Posting Failed!',
               message:'Please check your internet connection, or wait a few moments and try again.',
@@ -522,7 +519,6 @@ class MemeDetails extends Component {
           commentClickable:true,
         })
       }).catch((err)=>{
-        console.log(err)
         if (type==='top') {
           this.state.topComments.map((el, i)=>{
             if (el.id === id) {
@@ -591,7 +587,6 @@ class MemeDetails extends Component {
           commentClickable:true,
         })
       }).catch((err)=>{
-        console.log(err)
         if (type==='top') {
           this.state.topComments.map((el, i)=>{
             if (el.id === id) {
@@ -782,8 +777,6 @@ class MemeDetails extends Component {
         if (element.reply_id) {
           replyid = element.reply_id
         }
-      console.log(element)
-      console.log(this.state.memeDetails)
       IziToast.show({
         theme: 'dark',
         title: 'Are you sure you want to delete this comment?',

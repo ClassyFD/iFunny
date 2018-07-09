@@ -26,8 +26,7 @@ class Header extends Component {
           type:'SET_USER',
           val:response.data
         })
-    }).catch((error)=>{
-      console.log(error);
+    }).catch((err)=>{
     });
   }
 
@@ -35,9 +34,6 @@ class Header extends Component {
     let mtl = new TimelineMax(),
         tl = new TimelineMax(),
         etl = new TimelineMax();
-        console.log(this.state.mountedComp)
-        console.log(props)
-        console.log(props.comp.split('-'))
     if (this.state.mountedComp !== props.comp || this.state.mountedComp != props.comp.split('-')[0]) {
       tl.to(`.header-link`, .5, {color:'white'});
       mtl.to(`.header-nav-link`, .5, {color:'white'});
@@ -50,7 +46,6 @@ class Header extends Component {
     tl.to(`.header-left-section-${props.comp.split('-')[0]}-text`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
     mtl.to(`.header-mobile-nav-${props.comp}`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');  
     if (props.comp === 'edit') {
-      console.log('edit')
       setTimeout(() => {
         etl.to(`.header-right-section-upload-heading`, .5, {color:'#fc0'});
       }, 50);

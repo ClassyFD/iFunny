@@ -16,7 +16,6 @@ class Missing extends Component {
 
   }
   componentDidMount() {
-    console.log('mounted');
     let tl = new TimelineMax({
       repeat:-1
     });

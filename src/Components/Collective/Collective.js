@@ -68,7 +68,6 @@ class Collective extends Component {
     let likeArr = [];
     if (this.props.user) {
       axios.get(ENV.REACT_APP_BACKEND+'/api/checkLikes/'+this.props.user.id + '?offset='+this.state.limit).then((response)=>{
-        console.log(response.data)
         if (response.data && this.state.memes) {
           this.state.memes.map((el, i)=>{
             response.data.map((resEl, resI)=>{
@@ -83,7 +82,6 @@ class Collective extends Component {
         }
       })
     }
-    console.log(likeArr);
   }
   
   hoverStats(target, num, id) {
@@ -146,7 +144,6 @@ class Collective extends Component {
           memes:response.data
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           clickable:true,
           likeArr:state.likeArr.filter((el, i)=>{
@@ -170,7 +167,6 @@ class Collective extends Component {
           memes:response.data
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           clickable:true,
           likeArr:state.likeArr.concat(id)
