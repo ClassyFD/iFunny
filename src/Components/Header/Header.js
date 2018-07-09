@@ -152,7 +152,7 @@ class Header extends Component {
             <a href={'http://ifunnyoriginal.spreadshirt.com/'} target='_blank' className='header-nav-link header-mobile-nav-store'>
               store
             </a>
-            {this.props.user?(<Link to={'/profile/'+this.props.user.id} className='header-nav-link header-mobile-nav-profile'>
+            {this.props.user?(<Link to={'/app/profile/'+this.props.user.id} className='header-nav-link header-mobile-nav-profile'>
               profile
             </Link>):null}
             <Link to={'/app/privacy'} className='header-nav-link header-mobile-nav-privacy'>
