@@ -18,7 +18,8 @@ class Tags extends Component {
       loadMore:10,
       method:'',
       results:0,
-      memeStatus:true
+      memeStatus:true,
+      clickable:true
     };
   }
 
