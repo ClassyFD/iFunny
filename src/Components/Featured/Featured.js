@@ -33,7 +33,6 @@ class Featured extends Component {
     loadingtl.staggerTo('.collective-dots-el', .3, {top:10, height:20, width:20}, .1)
     .staggerTo('.collective-dots-el', .3, {top:30, height:15, width:15}, .1, '-=.1');
     axios.get(ENV.REACT_APP_BACKEND + '/api/getFeaturedMemes?limit='+this.state.limit).then((response)=>{
-      console.log(response)
       this.setState({
         memes:response.data,
         loadMore:response.data.length
