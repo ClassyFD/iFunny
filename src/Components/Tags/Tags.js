@@ -135,7 +135,7 @@ class Tags extends Component {
         clickable:false,
         likeArr: state.likeArr.concat(id)
       })
-      axios.post(ENV.REACT_APP_BACKEND+'/api/like/'+id, {user:props.user, type:state.limit}).then((response)=>{
+      axios.post(ENV.REACT_APP_BACKEND+'/api/tagLike/'+id, {user:props.user, type:state.limit, tag:props.match.params.id}).then((response)=>{
         this.setState({
           likeArr:state.likeArr.concat(id),
           clickable:true,
@@ -156,7 +156,7 @@ class Tags extends Component {
           return el!==id
         })
       })
-      axios.post(ENV.REACT_APP_BACKEND+'/api/unlike/'+id, {user:props.user, type:state.limit}).then((response)=>{
+      axios.post(ENV.REACT_APP_BACKEND+'/api/tagUnlike/'+id, {user:props.user, type:state.limit}).then((response)=>{
         this.setState({
           likeArr:state.likeArr.filter((el, i)=>{
             return el!==id

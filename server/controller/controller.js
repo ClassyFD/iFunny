@@ -275,6 +275,48 @@ module.exports = {
       })
     })
   },
+  tagLikeMeme: (req, res)=>{ // posts a meme like into the db.
+    let db = req.app.get('db'),
+    user = req.body.user,
+    meme = req.params.memeid,
+    date = new Date(),
+    limit = req.body.type,
+    tag = req.body.tag,
+    obj = {};
+        db.likeMeme([date, user.id, meme]).then((response)=>{ // likes the meme. (posts a like row into the db.)
+          db.updateMemeLikes([meme]).then((response)=>{ // updates the amount of likes that a meme has
+            if (type >= 0) {
+              db.getMemesByTag([tag, limit]).then((response)=>{ // gets the memes by the tag. (also has a limit depending on how many memes are being displayed.)
+                res.status(200).send(response);
+              })
+            } else {
+              db.getMemeDetails([meme]).then((response)=>{ // gets only the one meme and its details.
+            res.status(200).send(response);
+          })
+        }
+      })
+    })
+  },
+  tagUnlikeMeme: (req, res)=>{ // deletes a meme like in the db.
+    let db = req.app.get('db'),
+        user = req.body.user,
+        meme = req.params.memeid,
+        type = req.body.type,
+        obj = {};
+    db.unlikeMeme([user.id, meme]).then((response)=>{ // unlikes the meme. (deletes a like from the db.)
+      db.updateMemeUnlikes([meme]).then((response)=>{ // updates the amount of likes that the meme has.
+        if (type >= 0) {
+          db.getMemes([type]).then((response)=>{ // gets multiple memes instead of only one.
+            res.status(200).send(response);
+          })
+        } else {
+          db.getMemeDetails([meme]).then((response)=>{ // gets only the one meme and its details
+            res.status(200).send(response);
+          })
+        }
+      })
+    })
+  },
   profileLikeMeme: (req, res)=>{ // posts a meme like into the db.
     let db = req.app.get('db'),
     user = req.body.user,
