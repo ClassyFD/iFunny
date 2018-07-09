@@ -59,21 +59,18 @@ class Search extends Component {
                 popularTags:response.data
               })
             }).catch((err)=>{
-              console.log(err);
               this.setState({
                 popularStatus:false
               })
             })
           }
         }).catch((err)=>{
-          console.log(err);
           this.setState({
             popularStatus:false
           })
         })
       }
     }).catch((err)=>{
-      console.log(err);
       this.setState({
         popularStatus:false
       })

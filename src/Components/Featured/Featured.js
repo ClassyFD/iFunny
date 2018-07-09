@@ -143,7 +143,6 @@ class Featured extends Component {
           memes:response.data
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           clickable:true,
           likeArr:state.likeArr.filter((el, i)=>{
@@ -167,7 +166,6 @@ class Featured extends Component {
           memes:response.data
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           clickable:true,
           likeArr:state.likeArr.concat(id)

@@ -439,7 +439,6 @@ module.exports = {
         meme = req.query.id,
         user = req.query.user;
     db.featureMeme([meme, user]).then((response)=>{ // updates the memes table to set the meme to "featured."
-      console.log(response)
       res.status(200).send(response);
     })
   },
@@ -475,7 +474,6 @@ module.exports = {
     let db = req.app.get('db'),
         {user, date, comment, replyid, memeid, limit} = req.body,
         obj = {};
-    console.log(req.body);
     db.postReply([date, comment, user.id, memeid, replyid]).then((response)=>{ // posts the reply into the comments table with a reply id.
       db.updateCommentReplies([replyid]).then((response)=>{ // updates the comments table to set the number of replies to +=1.
         obj = Object.assign({}, obj, {comment: response});
@@ -497,9 +495,7 @@ module.exports = {
     let db = req.app.get('db'),
       {user} = req.body;
     db.getOwnerId([user]).then((response)=>{
-      console.log(response, 'first')
       db.updateOwnerId([user, response[0].id]).then((response)=>{
-        console.log(response[0], 'second');
         res.status(200).send(response[0])
       })
     })

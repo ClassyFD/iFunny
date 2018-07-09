@@ -67,7 +67,6 @@ class Profile extends Component {
       ttl.to('.collective-load-more-title', .8, {top:'15px'})
     }).catch((err)=>{
       if (err) {
-        console.log(err)
         this.setState({memeStatus:false})
       }
     })
@@ -156,7 +155,6 @@ class Profile extends Component {
           user: res.user
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           clickable:true,
           likeArr:state.likeArr.filter((el, i)=>{
@@ -192,7 +190,6 @@ class Profile extends Component {
           user: res.user
         })
       }).catch((err)=>{
-        console.log(err)
         this.setState({
           clickable:true,
           likeArr:state.likeArr.concat(id)
@@ -231,12 +228,8 @@ class Profile extends Component {
   }
   likedStatus() {
     let likeArr = [];
-    console.log('liked status')
     if (this.props.user) {
-      console.log('reached')
       axios.get(ENV.REACT_APP_BACKEND+'/api/checkLikes/'+this.props.user.id + '?offset='+this.state.limit).then((response)=>{
-        console.log('reached2')
-        console.log(response.data)
         if (response.data && this.state.memes) {
           this.state.memes.map((el, i)=>{
             response.data.map((resEl, resI)=>{
@@ -251,7 +244,6 @@ class Profile extends Component {
         }
       })
     }
-    console.log(likeArr);
   }
   enterLoadMore() {
     let tl = new TimelineMax();
@@ -486,7 +478,6 @@ class Profile extends Component {
               })
             } else {
               axios.post(ENV.REACT_APP_BACKEND+'/api/submitUsername', {username:this.state.usernameVal, user:this.props.user.id}).then((response)=>{
-                console.log(response);
                 if (response.data === 'Username Taken') {
                   IziToast.show({
                     title:'Username Taken!',

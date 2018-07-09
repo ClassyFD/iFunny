@@ -107,7 +107,6 @@ class MemeEditing extends Component {
           image:response.data
         })
       }).catch((err)=>{
-        console.log(err);
       })
     };
     reader.readAsDataURL(file);
@@ -134,7 +133,6 @@ class MemeEditing extends Component {
           preview:true
         })
       }).catch((err)=>{
-        console.log(err);
       })
     }
   }
