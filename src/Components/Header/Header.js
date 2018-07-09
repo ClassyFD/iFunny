@@ -45,6 +45,7 @@ class Header extends Component {
     tl.to(`.header-left-section-${props.comp}-text`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
     tl.to(`.header-left-section-${props.comp.split('-')[0]}-text`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');
     mtl.to(`.header-mobile-nav-${props.comp}`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');  
+    mtl.to(`.header-mobile-nav-${props.comp.split('-')[0]}`, .5, {color:'#ffcc00'}, this.state.mountedComp!==props.comp?'-=.5':'-=0');  
     if (props.comp === 'edit') {
       setTimeout(() => {
         etl.to(`.header-right-section-upload-heading`, .5, {color:'#fc0'});
@@ -55,6 +56,7 @@ class Header extends Component {
         mountedComp:'profile'
       })
       setTimeout(() => {
+        mtl.to(`.header-mobile-nav-${props.comp.split('-')[0]}`, .5, {color:'#ffcc00'},'-=1');
         tl.to(`.header-left-section-${props.comp.split('-')[0]}-text`, .5, {color:'#ffcc00'}, '-=1');
       }, 50);
     } else {
@@ -62,10 +64,12 @@ class Header extends Component {
         mountedComp:props.comp
       })
     }
-    tl.staggerTo('.header-nav-link', .5, {left:'0vw'}, '.03')
-    this.setState({
-      navExpanded:false
-    })
+    setTimeout(() => {
+      tl.staggerTo('.header-nav-link', .5, {left:'0vw'}, '.03')
+      this.setState({
+        navExpanded:false
+      })
+    }, 50);
   }
   expandNav() {
     let tl = new TimelineMax();
@@ -152,7 +156,7 @@ class Header extends Component {
             <a href={'http://ifunnyoriginal.spreadshirt.com/'} target='_blank' className='header-nav-link header-mobile-nav-store'>
               store
             </a>
-            {this.props.user?(<Link to={'/profile'} className='header-nav-link header-mobile-nav-profile'>
+            {this.props.user?(<Link to={'/app/profile/'+this.props.user.id} className='header-nav-link header-mobile-nav-profile'>
               profile
             </Link>):null}
             <Link to={'/app/privacy'} className='header-nav-link header-mobile-nav-privacy'>
